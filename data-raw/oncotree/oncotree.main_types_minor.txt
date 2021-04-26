@@ -1,0 +1,42 @@
+Adenocarcinoma In Situ
+Adrenocortical Adenoma
+Adrenocortical Carcinoma
+Angiomatoid Fibrous Histiocytoma
+Infantile Figrosarcoma
+Malignant Glomus TUmor
+Myofibromatosis
+Anal Cancer
+Appendiceal Cancer
+Blastic Plasmacytoid Dendritic Cell Neoplasm
+Clear Cell Sarcoma of Kidney
+Choroid Plexus Tumor
+Eye Cancer, NOS
+Embryonal Tumor
+Gastrointestinal Neuroendocrine Tumor
+Gestational Trophoblastic Disease
+Infantile Fibrosarcoma
+Histiocytosis
+Lacrimal Gland Tumor
+Malignant Glomus Tumor
+Mastocytosis
+Melanocytoma
+Myelodysplastic Syndromes
+Myelodysplastic/Myeloproliferative Neoplasms
+Myeloid Neoplasms with Germ Line Predisposition
+Myeloproliferative Neoplasms
+Miscellaneous Neuroepithelial Tumor
+Parathyroid Cancer
+Paraganglioma
+Penile Cancer
+Penile Cancer, NOS
+Pheochromocytoma
+Pineal Tumor
+Primary CNS Melanocytic Tumors
+Posttransplant Lymphoproliferative Disorders
+Rhabdoid Cancer
+Sellar Tumor
+Salivary Gland Cancer
+Sialoblastoma
+Sex Cord Stromal Tumor
+Undifferentiated Embryonal Sarcoma of the Liver
+Uterine Sarcoma
