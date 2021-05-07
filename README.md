@@ -15,6 +15,8 @@ Currently, the following versions are used to create the mapping:
 
 `devtools::install_github('sigven/oncoPhenoMap')`
 
+- Phenotype mapping records are found in the exported _opm_slim_ object:
+
 `head(oncoPhenoMap::opm_slim)`
 
 
