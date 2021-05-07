@@ -14,7 +14,8 @@ Currently, the following versions are used to create the mapping:
 #### Usage
 
 `devtools::install_github('sigven/oncoPhenoMap')`
-`head(oncoPhenoMap::onco_pheno_slim)`
+
+`head(oncoPhenoMap::opm_slim)`
 
 
 #### Contact
