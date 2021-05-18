@@ -5,7 +5,7 @@ library(stringr)
 library(ontologyIndex)
 
 map_efo <- function(umls_map,
-                    efo_release = "v3.29.1",
+                    efo_release = "v3.30.0",
                     update = T,
                     basedir = NULL){
 
@@ -1474,7 +1474,7 @@ get_umls_children <- function(c, umls_map = NULL, umls_cui2name = NULL){
 
 
 disease_ontology_release <- '2021-04-29'
-efo_release <- 'v3.29.1'
+efo_release <- 'v3.30.0'
 oncotree_stable_release <- 'oncotree_2020_10_01'
 
 ## Get UMLS / DiseaseOntology / EFO mappings
