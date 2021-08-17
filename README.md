@@ -7,7 +7,7 @@ This R data package attempts to provide a crossmapped set of phenotype ontology 
 Currently, the following versions are used to create the mapping:
 
  - OncoTree (2020_10_01)
- - Experimental Factor Ontology v32.0 (2021-07-15)
+ - Experimental Factor Ontology v33.0 (2021-08-16)
  - Disease Ontology (Late July 2021 release)
 
 
