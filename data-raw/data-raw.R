@@ -1267,7 +1267,11 @@ onco_pheno_mapping <- function(umls_map){
     dplyr::filter(!(stringr::str_detect(cui_name,"(K|k)idney") & stringr::str_detect(tissue,"Bladder"))) %>%
     #dplyr::filter(!(stringr::str_detect(cui_name,"(E|e)sophag") & stringr::str_detect(tissue,"Head"))) %>%
     dplyr::filter(!(stringr::str_detect(cui_name,"^Lung| lung ") & stringr::str_detect(tissue,"Skin"))) %>%
-
+    dplyr::filter(!(stringr::str_detect(tolower(cui_name), "lympho|lympha") & !stringr::str_detect(tolower(cui_name),"skin|papulosis") & (!is.na(tissue) & tissue == "Skin"))) %>%
+    dplyr::filter(!(stringr::str_detect(tolower(cui_name), "ewing sarcom") & !stringr::str_detect(tolower(cui_name),"neuro") & (!is.na(tissue) & tissue == "CNS/Brain"))) %>%
+    dplyr::filter(!(stringr::str_detect(tolower(cui_name), "sarcoma") & (!is.na(tissue) & tissue == "Myeloid" | tissue == "Lymphoid"))) %>%
+    dplyr::filter(!(stringr::str_detect(tolower(cui_name), "renal cell") & (!is.na(tissue) & tissue == "Bladder/Urinary Tract"))) %>%
+    
     dplyr::arrange(group) %>%
     dplyr::mutate(group = stringr::str_replace_all(group," |/|, ","_")) %>%
     dplyr::mutate(group = stringr::str_replace_all(group,"_and_","_And_")) %>%
@@ -1473,7 +1477,7 @@ get_umls_children <- function(c, umls_map = NULL, umls_cui2name = NULL){
 }
 
 
-disease_ontology_release <- '2021-07-30'
+disease_ontology_release <- '2021-08-17v2'
 efo_release <- 'v3.33.0'
 oncotree_stable_release <- 'oncotree_2020_10_01'
 

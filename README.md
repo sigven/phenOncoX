@@ -8,7 +8,7 @@ Currently, the following versions are used to create the mapping:
 
  - OncoTree (2020_10_01)
  - Experimental Factor Ontology v33.0 (2021-08-16)
- - Disease Ontology (Late July 2021 release)
+ - Disease Ontology (August 2021 release)
 
 
 #### Usage
