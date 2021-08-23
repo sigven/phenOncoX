@@ -39,6 +39,8 @@ map_efo <- function(umls_map,
   msh_id <- NA
   cui_all <- c()
   cui_close_all <- c()
+  cui_exact <- NA
+  cui_exact_all <- c()
   msh_all <- c()
   nci_all <- c()
   efo_map <- NULL
@@ -50,8 +52,9 @@ map_efo <- function(umls_map,
   ancestors <- c()
   while(i <= length(lines)){
     line <- lines[i]
+    #cat(line,'\n')
     ## only include major ontologies (phenotype-related)
-    if(stringr::str_detect(line, "id: (EFO|HP|DOID|MONDO|GO|Orphanet):[0-9]{1,}$")){
+    if(stringr::str_detect(line, "^id: (EFO|HP|DOID|MONDO|GO|Orphanet):[0-9]{1,}$")){
       if(!is.na(efo_id) &
          !is.na(name) &
          !stringr::str_detect(name, "measurement|^CS") &
@@ -61,6 +64,7 @@ map_efo <- function(umls_map,
                      "nci_t" = paste(unique(nci_all),collapse = ","),
                      "msh" = paste(unique(msh_all),collapse = ","),
                      "cui" = paste(unique(cui_all),collapse = ","),
+                     "cui_exact" = paste(unique(cui_exact_all), collapse=","),
                      "efo_name" = name,
                      "cui_close" = paste(unique(cui_close_all), collapse = ","),
                      "ancestors" = paste(ancestors,collapse = ","),
@@ -73,15 +77,17 @@ map_efo <- function(umls_map,
       msh_id <- NA
       cui <- NA
       cui_close <- NA
+      cui_exact <- NA
       cui_all <- c()
       cui_close_all <- c()
+      cui_exact_all <- c()
       msh_all <- c()
       nci_all <- c()
       cell_line <- FALSE
       obsolete <- FALSE
       ancestor <- NA
       ancestors <- c()
-      efo_id <- stringr::str_replace(line,"id: ","")
+      efo_id <- stringr::str_replace(line,"^id: ","")
     }
     if(stringr::str_detect(line,"name: .+$")){
       name <- stringr::str_replace(line, "name: ","")
@@ -98,13 +104,13 @@ map_efo <- function(umls_map,
       ancestors <- c(ancestors,ancestor)
     }
 
-    if(stringr::str_detect(line,"xref: NCIt:[A-Z]{1,2}[0-9]{1,}")){
-      nci_t <- stringr::str_replace(
-        stringr::str_match(line,
-                           "xref: NCIt:[A-Z]{1,2}[0-9]{1,}")[[1]],
-        "xref: NCIt:","")
-      nci_all <- c(nci_all,nci_t)
-    }
+    # if(stringr::str_detect(line,"xref: NCI(T|t):[A-Z]{1,2}[0-9]{1,}")){
+    #   nci_t <- stringr::str_replace(
+    #     stringr::str_match(line,
+    #                        "xref: NCI(t|T)[A-Z]{1,2}[0-9]{1,}")[[1]],
+    #     "xref: NCI(T|t):","")
+    #   nci_all <- c(nci_all,nci_t)
+    # }
 
     if(stringr::str_detect(line,"xref: MSH:[A-Z]{1,2}[0-9]{1,}")){
       msh_id <- stringr::str_replace_all(line,"xref: MSH:","")
@@ -124,6 +130,22 @@ map_efo <- function(umls_map,
         "property_value: \"closeMatch\" http://linkedlifedata.com/resource/umls/id/","")
       cui_close_all <- c(cui_close_all, cui_close)
     }
+    if(stringr::str_detect(
+      line,
+      "property_value: exactMatch http://linkedlifedata.com/resource/umls/id/")){
+      cui_exact <- stringr::str_replace_all(
+        line,
+        "property_value: exactMatch http://linkedlifedata.com/resource/umls/id/","")
+      cui_exact_all <- c(cui_exact_all, cui_exact)
+    }
+    if(stringr::str_detect(
+      line,
+      "property_value: exactMatch NCIT:")){
+      nci_t <- stringr::str_replace_all(
+        line,
+        "property_value: exactMatch NCIT:","")
+      nci_all <- c(nci_all, nci_t)
+    }
     i <- i + 1
   }
 
@@ -138,7 +160,10 @@ map_efo <- function(umls_map,
                                          as.character(NA),msh)) %>%
       dplyr::mutate(cui = dplyr::if_else(cui == "",
                                          as.character(NA),cui)) %>%
+      dplyr::mutate(cui_exact = dplyr::if_else(cui_exact == "",
+                                         as.character(NA),cui_exact)) %>%
       tidyr::separate_rows(cui,sep = ",") %>%
+      tidyr::separate_rows(cui_exact,sep = ",") %>%
       tidyr::separate_rows(cui_close,sep = ",") %>%
       tidyr::separate_rows(nci_t,sep = ",") %>%
       tidyr::separate_rows(msh,sep = ",") %>%
