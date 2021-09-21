@@ -5,7 +5,7 @@ library(stringr)
 library(ontologyIndex)
 
 map_efo <- function(umls_map,
-                    efo_release = "v3.33.0",
+                    efo_release = "v3.34.0",
                     update = T,
                     basedir = NULL){
 
@@ -37,12 +37,16 @@ map_efo <- function(umls_map,
   efo_id <- NA
   nci_t <- NA
   msh_id <- NA
+  icd10_id <- NA
+  snomed_id <- NA
   cui_all <- c()
   cui_close_all <- c()
   cui_exact <- NA
   cui_exact_all <- c()
   msh_all <- c()
   nci_all <- c()
+  icd10_all <- c()
+  snomed_all <- c()
   efo_map <- NULL
   name <- NA
   cui <- NA
@@ -64,6 +68,8 @@ map_efo <- function(umls_map,
                      "nci_t" = paste(unique(nci_all),collapse = ","),
                      "msh" = paste(unique(msh_all),collapse = ","),
                      "cui" = paste(unique(cui_all),collapse = ","),
+                     "icd10" = paste(unique(icd10_all), collapse=","),
+                     "snomed" = paste(unique(snomed_all), collapse=","),
                      "cui_exact" = paste(unique(cui_exact_all), collapse=","),
                      "efo_name" = name,
                      "cui_close" = paste(unique(cui_close_all), collapse = ","),
@@ -76,11 +82,15 @@ map_efo <- function(umls_map,
       nci_t <- NA
       msh_id <- NA
       cui <- NA
+      icd10_id <- NA
       cui_close <- NA
       cui_exact <- NA
+      snomed_id <- NA
+      icd10_all <- c()
       cui_all <- c()
       cui_close_all <- c()
       cui_exact_all <- c()
+      snomed_all <- c()
       msh_all <- c()
       nci_all <- c()
       cell_line <- FALSE
@@ -104,17 +114,18 @@ map_efo <- function(umls_map,
       ancestors <- c(ancestors,ancestor)
     }
 
-    # if(stringr::str_detect(line,"xref: NCI(T|t):[A-Z]{1,2}[0-9]{1,}")){
-    #   nci_t <- stringr::str_replace(
-    #     stringr::str_match(line,
-    #                        "xref: NCI(t|T)[A-Z]{1,2}[0-9]{1,}")[[1]],
-    #     "xref: NCI(T|t):","")
-    #   nci_all <- c(nci_all,nci_t)
-    # }
-
     if(stringr::str_detect(line,"xref: MSH:[A-Z]{1,2}[0-9]{1,}")){
       msh_id <- stringr::str_replace_all(line,"xref: MSH:","")
       msh_all <- c(msh_all, msh_id)
+    }
+    if(stringr::str_detect(line,"xref: SNOMEDCT:[0-9]{1,}")){
+      snomed_id <- stringr::str_replace_all(line,"xref: SNOMEDCT:","")
+      snomed_all <- c(snomed_all, snomed_id)
+    }
+    if(stringr::str_detect(line,"xref: ICD10:[A-Z]{1}[0-9]{1,2}\\.[0-9]{1,2}")){
+      icd10_id <- stringr::str_trim(stringr::str_replace_all(line, "xref: ICD10:",""))
+      icd10_id <- stringr::str_replace_all(icd10_id," \\{.+\\}$","")
+      icd10_all <- c(icd10_all, icd10_id)
     }
     if(stringr::str_detect(line,"xref: UMLS:[A-Z]{1,2}[0-9]{1,}")){
       cui <- stringr::str_replace_all(
@@ -156,16 +167,22 @@ map_efo <- function(umls_map,
                                      as.character(NA),cui_close)) %>%
       dplyr::mutate(nci_t = dplyr::if_else(nci_t == "",
                                            as.character(NA),nci_t)) %>%
+      # dplyr::mutate(icd10 = dplyr::if_else(icd10 == "",
+      #                                      as.character(NA),icd10)) %>%
+      # dplyr::mutate(snomed = dplyr::if_else(snomed == "",
+      #                                      as.character(NA),snomed)) %>%
       dplyr::mutate(msh = dplyr::if_else(msh == "",
                                          as.character(NA),msh)) %>%
       dplyr::mutate(cui = dplyr::if_else(cui == "",
                                          as.character(NA),cui)) %>%
-      dplyr::mutate(cui_exact = dplyr::if_else(cui_exact == "",
-                                         as.character(NA),cui_exact)) %>%
-      tidyr::separate_rows(cui,sep = ",") %>%
-      tidyr::separate_rows(cui_exact,sep = ",") %>%
+      #dplyr::mutate(cui_exact = dplyr::if_else(cui_exact == "",
+      #                                   as.character(NA),cui_exact)) %>%
+      tidyr::separate_rows(cui, sep = ",") %>%
+      #tidyr::separate_rows(cui_exact,sep = ",") %>%
       tidyr::separate_rows(cui_close,sep = ",") %>%
+      #tidyr::separate_rows(snomed, sep = ",") %>%
       tidyr::separate_rows(nci_t,sep = ",") %>%
+      #tidyr::separate_rows(icd10,sep = ",") %>%
       tidyr::separate_rows(msh,sep = ",") %>%
       dplyr::mutate(
         efo_name =
@@ -186,7 +203,7 @@ map_efo <- function(umls_map,
     dplyr::mutate(
       primary_site = dplyr::if_else(
         stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplasm|tumor") &
-          stringr::str_detect(tolower(efo_name), "colon|anal|anus|cecum|rectum|small intestine|rectal|colorectal"),
+          stringr::str_detect(tolower(efo_name), "colon|anal|anus|cecum|rectum|intestinal|small intestine|rectal|colorectal"),
         "Colon/Rectum",
         as.character(NA)
       )
@@ -196,6 +213,13 @@ map_efo <- function(umls_map,
         stringr::str_detect(tolower(efo_name), "bladder|urinary|ureter|urethra|urothelial") &
           stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplasm|tumor"),
         "Bladder/Urinary Tract",
+        as.character(primary_site)
+      )
+    )%>%
+    dplyr::mutate(
+      primary_site = dplyr::if_else(
+        stringr::str_detect(tolower(efo_name), "ampulla of vater"),
+        "Ampulla of Vater",
         as.character(primary_site)
       )
     )%>%
@@ -253,7 +277,7 @@ map_efo <- function(umls_map,
     ) %>%
     dplyr::mutate(
       primary_site = dplyr::if_else(
-        stringr::str_detect(tolower(efo_name), "eye|ocular |retinal ") &
+        stringr::str_detect(tolower(efo_name), "eye|ocular |retinal |lacrimal gland|palbrepal ") &
           stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplas|tumor"),
         "Eye",
         as.character(primary_site)
@@ -279,7 +303,7 @@ map_efo <- function(umls_map,
     dplyr::mutate(
       primary_site = dplyr::if_else(
         !stringr::str_detect(tolower(efo_name), "bone") &
-          stringr::str_detect(tolower(efo_name), "sarcom|soft tissue|leiomy|connective tissue"),
+          stringr::str_detect(tolower(efo_name), "sarcom|soft tissue|gastrointestinal stromal|leiomy|connective tissue"),
         "Soft Tissue",
         as.character(primary_site)
       )
@@ -296,7 +320,7 @@ map_efo <- function(umls_map,
       primary_site = dplyr::if_else(
         stringr::str_detect(tolower(efo_name), "ovary|ovarian|fallopian tube") &
           stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplas|blastom|tumor"),
-        "Ovary",
+        "Ovary/Fallopian Tube",
         as.character(primary_site)
       )
     ) %>%
@@ -318,7 +342,7 @@ map_efo <- function(umls_map,
     ) %>%
     dplyr::mutate(
       primary_site = dplyr::if_else(
-        stringr::str_detect(tolower(efo_name), "head and neck|mouth|neck|glottis|larynx|parotid gland|salivary gland|oral squamous|tongue|nasal cavity|nasopharyngeal|oral cavity|oropharynx") &
+        stringr::str_detect(tolower(efo_name), "head and neck|mouth|neck|glottis|larynx|parotid gland|salivary gland|oral squamous|tongue|nasal cavity|nasopharyngeal|laryngeal|sinus |hypopharyn|oral cavity|oropharynx") &
           stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplas|tumor"),
         "Head and Neck",
         as.character(primary_site)
@@ -329,6 +353,22 @@ map_efo <- function(umls_map,
         stringr::str_detect(tolower(efo_name), "liver|hepatocellular") &
           stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplas|tumor"),
         "Liver",
+        as.character(primary_site)
+      )
+    ) %>%
+    dplyr::mutate(
+      primary_site = dplyr::if_else(
+        stringr::str_detect(tolower(efo_name), "peritone") &
+          stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplas|tumor|mesotheliom"),
+        "Peritoneum",
+        as.character(primary_site)
+      )
+    ) %>%
+    dplyr::mutate(
+      primary_site = dplyr::if_else(
+        stringr::str_detect(tolower(efo_name), "penis|penile") &
+          stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplas|tumor"),
+        "Penis",
         as.character(primary_site)
       )
     ) %>%
@@ -351,7 +391,7 @@ map_efo <- function(umls_map,
     ) %>%
     dplyr::mutate(
       primary_site = dplyr::if_else(
-        stringr::str_detect(tolower(efo_name), "neuroblastom|meningiom|glioblastom|medulloblastom|glioma|astrocytom") |
+        stringr::str_detect(tolower(efo_name), "neuroblastom|meningiom|glioblastom|medulloblastom|glioma|cerebellum cancer|cereballar neoplasm|astrocytom|scwhannom") |
           (stringr::str_detect(tolower(efo_name), "central nervous|nervous system|brain") &
           stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplas|tumor")),
         "CNS/Brain",
@@ -429,44 +469,66 @@ map_efo <- function(umls_map,
         as.character(primary_site)
       )
     )
+  
   cui_map <- efo_map %>%
     dplyr::filter(!is.na(cui)) %>%
     dplyr::select(efo_id, cui) %>%
     dplyr::left_join(dplyr::filter(umls_map$concept, main_term == T),
                      by = "cui") %>%
-    dplyr::select(efo_id,cui,cui_name) %>%
+    dplyr::mutate(xref_source = "UMLS") %>%
+    dplyr::select(efo_id,cui,cui_name, xref_source) %>%
     dplyr::distinct()
 
-  cui_map_close <- efo_map %>%
-    dplyr::filter(!is.na(cui_close)) %>%
-    dplyr::select(efo_id, cui_close) %>%
-    dplyr::left_join(dplyr::filter(umls_map$concept, main_term == T),
-                     by = c("cui_close" = "cui")) %>%
-    dplyr::select(efo_id,cui_close,cui_name) %>%
-    dplyr::rename(cui = cui_close) %>%
-    dplyr::distinct()
+  # cui_map_close <- efo_map %>%
+  #   dplyr::filter(!is.na(cui_close)) %>%
+  #   dplyr::select(efo_id, cui_close) %>%
+  #   dplyr::left_join(dplyr::filter(umls_map$concept, main_term == T),
+  #                    by = c("cui_close" = "cui")) %>%
+  #   dplyr::mutate(xref_source = "UMLS_CLOSE") %>%
+  #   dplyr::select(efo_id,cui_close,cui_name, xref_source) %>%
+  #   dplyr::rename(cui = cui_close) %>%
+  #   dplyr::distinct()
 
   nci_map <- efo_map %>%
     dplyr::filter(!is.na(nci_t)) %>%
     dplyr::select(efo_id, nci_t) %>%
-    dplyr::left_join(umls_map$nci, by = "nci_t") %>%
+    dplyr::left_join(umls_map$nciXref, by = "nci_t") %>%
     dplyr::left_join(dplyr::filter(umls_map$concept,
                                    main_term == T), by = "cui") %>%
     dplyr::filter(!is.na(cui)) %>%
-    dplyr::select(efo_id,cui,cui_name) %>%
+    dplyr::mutate(xref_source = "NCI") %>%
+    dplyr::select(efo_id,cui,cui_name, xref_source) %>%
     dplyr::distinct()
 
   msh_map <- efo_map %>%
     dplyr::filter(!is.na(msh)) %>%
     dplyr::select(efo_id,msh) %>%
-    dplyr::left_join(umls_map$msh, by = "msh") %>%
+    dplyr::left_join(umls_map$mshXref, by = "msh") %>%
     dplyr::left_join(dplyr::filter(umls_map$concept, main_term == T),
                      by = "cui") %>%
     dplyr::filter(!is.na(cui)) %>%
-    dplyr::select(efo_id,cui,cui_name) %>%
+    dplyr::mutate(xref_source = "MESH") %>%
+    dplyr::select(efo_id,cui,cui_name, xref_source) %>%
+    dplyr::distinct()
+  
+  snomed_map <- efo_map %>%
+    dplyr::filter(!is.na(snomed)) %>%
+    dplyr::select(efo_id, snomed) %>%
+    tidyr::separate_rows(snomed) %>%
+    dplyr::left_join(umls_map$snomedXref, by = "snomed") %>%
+    dplyr::left_join(dplyr::filter(umls_map$concept, main_term == T),
+                     by = "cui") %>%
+    dplyr::filter(!is.na(cui)) %>%
+    dplyr::mutate(xref_source = "SNOMED") %>%
+    dplyr::select(efo_id,cui,cui_name,xref_source) %>%
     dplyr::distinct()
 
-  efo2xref <- dplyr::bind_rows(cui_map, cui_map_close, msh_map, nci_map) %>%
+  efo2xref <- dplyr::bind_rows(
+    cui_map, 
+    #cui_map_close, 
+    msh_map, 
+    nci_map, 
+    snomed_map) %>%
     dplyr::distinct() %>%
     dplyr::left_join(efo2name, by = "efo_id") %>%
     dplyr::filter(is.na(cui) | (!is.na(cui) & !is.na(cui_name)))
@@ -842,7 +904,8 @@ map_disease_ontology <- function(
   return(do_map)
 }
 
-map_umls <- function(update = T,
+map_umls <- function(
+  update = T,
                      basedir = NULL){
 
   if(is.null(basedir)){
@@ -926,12 +989,6 @@ map_umls <- function(update = T,
                     dplyr::if_else(is.na(main_term),
                                    FALSE,TRUE,TRUE))
 
-  # saveRDS(concept_summary_data,
-  #         file.path(
-  #           basedir,"output","cui_umls_data.rds"
-  #         )
-  # )
-
   umls_nci <- dplyr::filter(umls, SAB == "NCI") %>%
     dplyr::select(CUI,SCUI) %>%
     dplyr::distinct() %>%
@@ -941,56 +998,183 @@ map_umls <- function(update = T,
     dplyr::select(CUI,SDUI) %>%
     dplyr::distinct() %>%
     dplyr::rename(cui = CUI, msh = SDUI)
+  
+  umls_snomed <- dplyr::filter(umls, SAB == "SNOMEDCT_US") %>%
+    dplyr::select(CUI, SCUI) %>%
+    dplyr::distinct() %>%
+    dplyr::rename(cui = CUI, snomed = SCUI)
 
   umls <- list("concept" = concept_summary_data,
                "relation" = umls_rel,
+               "snomedXref" = umls_snomed,
                "nciXref" = umls_nci,
                "mshXref" = umls_msh)
   return(umls)
 }
 
-onco_pheno_mapping <- function(umls_map){
 
+get_oncotree_entry_df <- function(
+  tree_entry){
+  
+  main_type <- tree_entry$mainType
+  tissue_name <- tree_entry$tissue
+  name <- tree_entry$name
+  code <- tree_entry$code
+  level <- tree_entry$level
+  cui <- NA
+  nci_t <- NA
+  if("UMLS" %in% names(tree_entry$externalReferences)){
+    cui <- tree_entry$externalReferences$UMLS
+  }
+  if("NCI" %in% names(tree_entry$externalReferences)){
+    nci_t <- tree_entry$externalReferences$NCI
+  }
+  
+  df <- data.frame(
+    'tissue' = tissue_name,
+    'main_type' = main_type,
+    'name' = name,
+    'code' = code,
+    'level' = level,
+    'cui' = cui,
+    'nci_t' = nci_t,
+    stringsAsFactors = F)
+  
+  return(df)
+  
+}
+
+onco_pheno_map <- function(
+  umls_map = NULL, 
+  efo_map = NULL,
+  do_map = NULL,
+  oncotree_release = "2020_10_01",
+  efo_release = NA,
+  do_release = NA){
+  
   main_types_minor <-
     read.table(file="data-raw/oncotree/oncotree.main_types_minor.txt",
                header = F,stringsAsFactors = F,
                quote="",sep="\t") %>%
     dplyr::rename(main_type = V1) %>%
     dplyr::mutate(minor_type = T)
-
-  nci_map <- umls_map$nci %>%
+  
+  nci_map <- umls_map$nciXref %>%
     dplyr::rename(cui_2 = cui)
-
+  
   cui_name_map <- umls_map$concept %>%
     dplyr::filter(main_term == T) %>%
     dplyr::select(cui,cui_name) %>%
     dplyr::distinct()
-
-  ot_tumor_types <-
-    jsonlite::fromJSON("http://oncotree.mskcc.org/api/tumorTypes")
-  cui <- data.frame(
-    "cui" =
-      as.character(ot_tumor_types$externalReferences$UMLS),
-    stringsAsFactors = F)
-  nci_t <- data.frame(
-    "nci_t" =
-      as.character(ot_tumor_types$externalReferences$NCI),
-    stringsAsFactors = F)
-  onco_tree <- data.frame("main_type" = ot_tumor_types$mainType,
-                          "name" = ot_tumor_types$name,
-                          "code" = ot_tumor_types$code,
-                          "tissue" = ot_tumor_types$tissue,
-                          "level" = ot_tumor_types$level,
-                          "cui" = cui,
-                          "nci_t" = nci_t, stringsAsFactors = F) %>%
-    dplyr::mutate(cui = dplyr::if_else(cui == "NULL",
-                                       as.character(NA),
-                                       as.character(cui))) %>%
-    dplyr::mutate(nci_t = dplyr::if_else(nci_t == "NULL",
-                                         as.character(NA),
-                                         as.character(nci_t))) %>%
-    dplyr::filter(!is.na(main_type)) %>%
-    dplyr::arrange(tissue,main_type,desc(level)) %>%
+  
+  ot_tumor_types_tree <-
+    jsonlite::fromJSON("http://oncotree.mskcc.org/api/tumorTypes/tree")
+  
+  
+  oncotree_entries <- data.frame()
+  
+  for(tissue in names(ot_tumor_types_tree$TISSUE$children)){
+    
+    ## LEVEL 1 - PRIMARY TUMORS, NOS (TISSUE)
+    tree_entry_level1 <- ot_tumor_types_tree$TISSUE$children[[tissue]]
+    
+    level1_df <- get_oncotree_entry_df(tree_entry = tree_entry_level1)
+    code_path_level1 <- level1_df$code
+    level1_df$code_path <- code_path_level1
+    
+    oncotree_entries <- oncotree_entries %>%
+      dplyr::bind_rows(level1_df)
+    
+    for(subtype in names(tree_entry_level1$children)){
+      
+      ## LEVEL 2 - TUMOR SUBTYPES
+      tree_entry_level2 <- tree_entry_level1$children[[subtype]]
+      
+      level2_df <- get_oncotree_entry_df(tree_entry = tree_entry_level2)
+      code_path_level2 <- paste(code_path_level1, 
+                                level2_df$code, sep="-")
+      level2_df$code_path <- code_path_level2
+      
+      oncotree_entries <- oncotree_entries %>%
+        dplyr::bind_rows(level2_df)
+      
+      for(subtype2 in names(tree_entry_level2$children)){
+        
+        ## LEVEL 3 - TUMOR SUBTYPES
+        tree_entry_level3 <- tree_entry_level2$children[[subtype2]]
+        
+        level3_df <- get_oncotree_entry_df(
+          tree_entry = tree_entry_level3)
+        
+        code_path_level3 <- paste(code_path_level2, 
+                                  level3_df$code, sep="-")
+        
+        level3_df$code_path <- code_path_level3
+        
+        oncotree_entries <- oncotree_entries %>%
+          dplyr::bind_rows(level3_df)
+        
+        for(subtype3 in names(tree_entry_level3$children)){
+          
+          ## LEVEL 4 - TUMOR SUBTYPES
+          tree_entry_level4 <- tree_entry_level3$children[[subtype3]]
+          
+          level4_df <- get_oncotree_entry_df(
+            tree_entry = tree_entry_level4
+          )
+          code_path_level4 <- paste(code_path_level3, 
+                                    level4_df$code, sep="-")
+          
+          level4_df$code_path <- code_path_level4
+          
+          oncotree_entries <- oncotree_entries %>%
+            dplyr::bind_rows(level4_df)
+          
+          for(subtype4 in names(tree_entry_level4$children)){
+            
+            ## LEVEL 4 - TUMOR SUBTYPES
+            tree_entry_level5 <- tree_entry_level4$children[[subtype4]]
+            
+            level5_df <- get_oncotree_entry_df(
+              tree_entry = tree_entry_level5)
+            code_path_level5 <- paste(code_path_level4, 
+                                      level5_df$code, sep="-")
+            
+            level5_df$code_path <- code_path_level5
+            
+            oncotree_entries <- oncotree_entries %>%
+              dplyr::bind_rows(level5_df)
+            
+            for(subtype5 in names(tree_entry_level5$children)){
+              
+              ## LEVEL 4 - TUMOR SUBTYPES
+              tree_entry_level6 <- tree_entry_level5$children[[subtype5]]
+              
+              level6_df <- get_oncotree_entry_df(
+                tree_entry = tree_entry_level6)
+              
+              code_path_level6 <- paste(code_path_level5, 
+                                        level6_df$code, sep="-")
+              
+              level6_df$code_path <- code_path_level6
+              
+              oncotree_entries <- oncotree_entries %>%
+                dplyr::bind_rows(level6_df)
+              
+            }
+            
+          }
+          
+        }
+        
+      }
+      
+    }
+    
+  }
+  
+  onco_tree <- oncotree_entries %>%
+    dplyr::arrange(tissue, level) %>%
     dplyr::filter(code != "SRCCR") %>%
     dplyr::mutate(tissue =
                     dplyr::if_else(tissue == "Bowel",
@@ -1003,7 +1187,7 @@ onco_pheno_mapping <- function(umls_map){
                     dplyr::if_else(main_type == "Hodgkin Lymphoma",
                                    "Lymphoma Hodgkin, NOS",
                                    as.character(main_type))) %>%
-
+    
     dplyr::mutate(name =
                     dplyr::if_else(name == "Bowel","Colon/Rectum",
                                    as.character(name))) %>%
@@ -1012,23 +1196,23 @@ onco_pheno_mapping <- function(umls_map){
                                      main_type == "Small Bowel Cancer",
                                    "Colorectal Cancer",
                                    as.character(main_type)))
-
+  
   cui_name_map_lower <- cui_name_map %>%
     dplyr::mutate(cui_name_lc = tolower(cui_name))
-
+  
   umls_map_lower <- umls_map$concept %>%
     dplyr::mutate(cui_name_lc = tolower(cui_name))
-
+  
   onco_tree_cui <- onco_tree %>%
     dplyr::filter(!is.na(cui)) %>%
     dplyr::left_join(cui_name_map,by=c("cui"))
-
+  
   onco_tree_cui1 <- onco_tree_cui %>%
     dplyr::filter(!is.na(cui) & !is.na(cui_name))
   onco_tree_cui2 <- onco_tree_cui %>%
     dplyr::filter(!is.na(cui) & is.na(cui_name)) %>%
     dplyr::select(-cui_name)
-
+  
   onco_tree_cui_matched <- onco_tree %>%
     dplyr::filter(is.na(cui)) %>%
     dplyr::bind_rows(onco_tree_cui2) %>%
@@ -1047,9 +1231,10 @@ onco_pheno_mapping <- function(umls_map){
     dplyr::inner_join(cui_name_map_lower, by = c("name_lc" = "cui_name_lc"))  %>%
     dplyr::left_join(nci_map, by = c("cui" = "cui_2")) %>%
     dplyr::select(-c(name_lc))
-
-
-  found <- dplyr::bind_rows(onco_tree_cui1, onco_tree_cui_matched)
+  
+  
+  found <- 
+    dplyr::bind_rows(onco_tree_cui1, onco_tree_cui_matched)
   remain <- onco_tree %>%
     dplyr::anti_join(found, by = c("name")) %>%
     dplyr::select(-c(cui,nci_t)) %>%
@@ -1060,32 +1245,46 @@ onco_pheno_mapping <- function(umls_map){
     dplyr::inner_join(umls_map_lower, by = c("name_lc" = "cui_name_lc"))  %>%
     dplyr::select(-name_lc) %>%
     dplyr::left_join(nci_map, by = c("cui" = "cui_2"))
-
+  
   remain1 <- dplyr::filter(remain, source == "NCI") %>%
     dplyr::select(-source) %>%
     dplyr::distinct()
-
+  
   remain2 <- remain %>% dplyr::anti_join(remain1, by = c("name")) %>%
-    dplyr::filter(name != "Transient Abnormal Myelopoiesis" | (name == "Transient Abnormal Myelopoiesis" & source == "MSH")) %>%
-    dplyr::filter(name != "Brenner Tumor, Malignant" | (name == "Brenner Tumor, Malignant" & source == "MSH")) %>%
-    dplyr::filter(name != "Neuroendocrine Tumor, NOS" | (name == "Neuroendocrine Tumor, NOS" & source == "MSH")) %>%
+    dplyr::filter(name != "Transient Abnormal Myelopoiesis" | 
+                    (name == "Transient Abnormal Myelopoiesis" & source == "MSH")) %>%
+    dplyr::filter(name != "Brenner Tumor, Malignant" | 
+                    (name == "Brenner Tumor, Malignant" & source == "MSH")) %>%
+    dplyr::filter(name != "Neuroendocrine Tumor, NOS" | 
+                    (name == "Neuroendocrine Tumor, NOS" & source == "MSH")) %>%
     dplyr::select(-source)
-
-  mapped_all <- as.data.frame(dplyr::bind_rows(found, remain1, remain2) %>%
-                                dplyr::select(-main_term) %>%
-                                dplyr::group_by(main_type, tissue, code, name, level, cui, cui_name) %>%
-                                dplyr::summarise(nci_t = paste(nci_t, collapse="&"),
-                                                 .groups = "drop"))
-
-  remain <- dplyr::anti_join(onco_tree, mapped_all, by = c("name")) %>%
-    dplyr::select(-c(cui,nci_t))
-
+  
+  mapped_all <- as.data.frame(
+    dplyr::bind_rows(found, remain1, remain2) %>%
+      dplyr::select(-main_term) %>%
+      dplyr::group_by(main_type, tissue, code, name, 
+                      level, cui, cui_name, code_path) %>%
+      dplyr::summarise(nci_t = paste(nci_t, collapse="&"),
+                       .groups = "drop")) %>%
+    dplyr::mutate(cui = dplyr::if_else(name == "Skin","C0007114",as.character(cui))) %>%
+    dplyr::mutate(cui = dplyr::if_else(name == "Thymus","C0751552",as.character(cui))) %>%
+    dplyr::mutate(cui = dplyr::if_else(name == "Thyroid","C0007115",as.character(cui))) %>%
+    dplyr::mutate(cui = dplyr::if_else(name == "Breast Invasive Carcinoma, NOS" | name == "Breast Invasive Cancer, NOS","C0853879",
+                                       as.character(cui))) %>%
+    dplyr::mutate(cui = dplyr::if_else(name == "Cervix","C0007847",as.character(cui))) %>%
+    dplyr::mutate(cui = dplyr::if_else(name == "Other","C0220647",as.character(cui)))
+  
+  
+  remain <- dplyr::anti_join(onco_tree, 
+                             mapped_all, by = c("name","tissue"))
+  #dplyr::select(-c(cui))
+  
   #onco_tree_mapped <- onco_tree %>% dplyr::filter(!is.na(cui_name))
   level1_mapped <- remain %>%
     dplyr::filter(level == 1) %>%
+    
     dplyr::mutate(cui = dplyr::if_else(name == "Adrenal Gland","C0750887",as.character(cui))) %>%
-    dplyr::mutate(cui = dplyr::if_else(name == "Breast Invasive Carcinoma, NOS" | name == "Breast Invasive Cancer, NOS","C0853879",
-                                       as.character(cui))) %>%
+    
     dplyr::mutate(cui = dplyr::if_else(name == "Ampulla of Vater","C0262401",as.character(cui))) %>%
     dplyr::mutate(cui = dplyr::if_else(name == "Biliary Tract","C0005426",as.character(cui))) %>%
     dplyr::mutate(cui = dplyr::if_else(name == "Bladder/Urinary Tract","C0042076",as.character(cui))) %>%
@@ -1095,7 +1294,7 @@ onco_pheno_mapping <- function(umls_map){
     dplyr::mutate(cui = dplyr::if_else(name == "Cervix","C0302592",as.character(cui))) %>%
     dplyr::mutate(cui = dplyr::if_else(name == "CNS/Brain","C0153633",as.character(cui))) %>%
     dplyr::mutate(cui = dplyr::if_else(name == "Esophagus/Stomach","C0152018",as.character(cui))) %>%
-    dplyr::mutate(cui = dplyr::if_else(name == "Eye","C0848866",as.character(cui))) %>%
+    dplyr::mutate(cui = dplyr::if_else(name == "Eye","C0496836",as.character(cui))) %>%
     dplyr::mutate(cui = dplyr::if_else(name == "Head and Neck","C0018671",as.character(cui))) %>%
     dplyr::mutate(cui = dplyr::if_else(name == "Kidney","C0022665",as.character(cui))) %>%
     dplyr::mutate(cui = dplyr::if_else(name == "Liver","C0023903",as.character(cui))) %>%
@@ -1108,59 +1307,140 @@ onco_pheno_mapping <- function(umls_map){
     dplyr::mutate(cui = dplyr::if_else(name == "Peripheral Nervous System","C0031118",as.character(cui))) %>%
     dplyr::mutate(cui = dplyr::if_else(name == "Peritoneum","C0153467",as.character(cui))) %>%
     dplyr::mutate(cui = dplyr::if_else(name == "Pleura","C0153494",as.character(cui))) %>%
-    dplyr::mutate(cui = dplyr::if_else(name == "Prostate","C0600139",as.character(cui))) %>%
+    dplyr::mutate(cui = dplyr::if_else(name == "Prostate","C0376358",as.character(cui))) %>%
     dplyr::mutate(cui = dplyr::if_else(name == "Skin","C0037286",as.character(cui))) %>%
-    dplyr::mutate(cui = dplyr::if_else(name == "Soft Tissue","C0037579",as.character(cui))) %>%
-    dplyr::mutate(cui = dplyr::if_else(name == "Testis","C0039590",as.character(cui))) %>%
-    dplyr::mutate(cui = dplyr::if_else(name == "Thymus","C0751552",as.character(cui))) %>%
-    dplyr::mutate(cui = dplyr::if_else(name == "Thyroid","C0007115",as.character(cui))) %>%
-    dplyr::mutate(cui = dplyr::if_else(name == "Uterus","C0042138",as.character(cui))) %>%
-    dplyr::mutate(cui = dplyr::if_else(name == "Vulva/Vagina","C0042237",as.character(cui))) %>%
-    dplyr::filter(name != "Other") %>%
+    dplyr::mutate(cui = dplyr::if_else(name == "Soft Tissue","C4551686",as.character(cui))) %>%
+    dplyr::mutate(cui = dplyr::if_else(name == "Testis","C0153594",as.character(cui))) %>%
+    dplyr::mutate(cui = dplyr::if_else(name == "Uterus","C0153574",as.character(cui))) %>%
+    dplyr::mutate(cui = dplyr::if_else(name == "Vulva/Vagina","C0375071",as.character(cui))) %>%
+    #dplyr::filter(name != "Other") %>%
     dplyr::left_join(cui_name_map, by = c("cui"))
-
-  mapped_all <- mapped_all %>% dplyr::bind_rows(level1_mapped) %>%
+  
+  remain <- remain %>%
+    dplyr::filter(level > 1) %>%
+    dplyr::select(-cui) %>%
+    dplyr::mutate(lc_name = tolower(name)) %>%
+    dplyr::filter(nchar(lc_name) > 3)
+  
+  umls_candidates <- 
+    umls_map$concept %>% 
+    dplyr::select(cui, cui_name, main_term) %>% 
+    dplyr::mutate(lc_name = tolower(cui_name)) %>% 
+    dplyr::filter(nchar(lc_name) >= min(nchar(remain$lc_name)) - 2 &
+                    nchar(lc_name) <= max(nchar(remain$lc_name)) + 2)
+  
+  fuzzy_join_mapped <- fuzzyjoin::stringdist_inner_join(
+    remain, umls_candidates, by = "lc_name", method = "lv", 
+    max_dist = 2, distance_col = "distance") %>% 
+    dplyr::select(-lc_name.y) %>%
+    dplyr::distinct() %>%
+    dplyr::filter(!stringr::str_detect(lc_name.x,"^renal")) %>%
+    dplyr::filter(!stringr::str_detect(lc_name.x,"lymphoblastic") |
+                    (stringr::str_detect(lc_name.x, "lymphoblastic") &
+                       stringr::str_sub(tolower(lc_name.x),1,1) == 
+                       stringr::str_sub(tolower(cui_name),1,1))) %>%
+    dplyr::select(-c(lc_name.x,main_term,cui_name,distance)) %>%
+    dplyr::filter(!(code_path == "MYELOID-MNM-ALAL-MPALBNOS" & 
+                      (cui == "C2826055" | cui == "C4726606"))) %>%
+    dplyr::filter(!(code_path == "MYELOID-MNM-ALAL-MPALTNOS" & 
+                      (cui == "C3472616" | cui == "C4726606"))) %>%
+    dplyr::filter(!(code_path == "MYELOID-MNM-MPN-MPNU" & 
+                      (cui == "C1333046" | cui == "CN294221"))) %>%
+    dplyr::filter(!(code_path == "LYMPH-LNM-NHL-MBN-AHCD" & 
+                      cui == "C5209276")) %>%
+    dplyr::filter(!(code_path == "LYMPH-LNM-BLL" & 
+                      cui == "C1292769")) %>%
+    dplyr::filter(!(code_path == "TESTIS-NSGCT" &
+                      cui == "C1336708")) %>%
+    dplyr::filter(!(code_path == "TESTIS-TSCST" &
+                      cui == "C0600113")) %>%
+    dplyr::filter(!(code_path == "LYMPH-LNM-NHL-MTNN-SEBVTLC" &
+                      cui == "C4303422")) %>%
+    dplyr::distinct() %>%
+    dplyr::left_join(cui_name_map, by = "cui")
+  
+  
+  mapped_all2 <- mapped_all %>% 
+    dplyr::bind_rows(level1_mapped) %>%
+    dplyr::bind_rows(fuzzy_join_mapped) %>%
     dplyr::rename(ot_level = level, ot_code = code) %>%
     dplyr::left_join(main_types_minor,by=c("main_type")) %>%
     dplyr::distinct() %>%
-    dplyr::mutate(main_type = dplyr::if_else(stringr::str_detect(main_type,"^(Prostate Cancer|Peripheral Nervous System|Penile Cancer|Thyroid Cancer|Pancreatic Cancer|Soft Tissue Cancer|Head and Neck Cancer|Hepatobiliary Cancer|Hodgkin Lymphoma|Leukemia|Melanoma|Mesothelioma|Glioma|Germ Cell Tumor|Endometrial Cancer|Colorectal Cancer|Cervical Cancer|Breast Cancer|Bone Cancer)$"),
-                                             paste0(main_type,", NOS"),as.character(main_type))) %>%
-    dplyr::mutate(main_type = dplyr::if_else(main_type == "Bladder Cancer","Bladder/Urinary Tract Cancer, NOS",as.character(main_type))) %>%
-    dplyr::mutate(main_type = dplyr::if_else(main_type == "CNS Cancer","CNS/Brain Cancer, NOS",as.character(main_type))) %>%
-    dplyr::mutate(main_type = dplyr::if_else(main_type == "Miscellaneous Neuroepithelial Tumor","CNS/Brain Cancer, NOS",as.character(main_type))) %>%
-    dplyr::mutate(main_type = dplyr::if_else(main_type == "Esophagogastric Cancer","Esophageal/Stomach Cancer, NOS",as.character(main_type))) %>%
-    dplyr::mutate(main_type = dplyr::if_else(main_type == "Ovarian Cancer","Ovarian/Fallopian Tube Cancer, NOS",as.character(main_type))) %>%
-    dplyr::mutate(main_type = dplyr::if_else(main_type == "Thymic Tumor","Thymic Cancer, NOS",as.character(main_type))) %>%
-    dplyr::mutate(main_type = dplyr::if_else(main_type == "Soft Tissue Sarcoma","Soft Tissue Cancer, NOS",as.character(main_type))) %>%
-    dplyr::mutate(main_type = dplyr::if_else(main_type == "Vulvar Carcinoma" | main_type == "Vaginal Cancer","Vulvar/Vaginal Cancer, NOS",as.character(main_type))) %>%
-    dplyr::mutate(main_type = dplyr::if_else(main_type == "Small Bowel Cancer","Bowel Cancer, NOS",as.character(main_type))) %>%
-    dplyr::mutate(main_type = dplyr::if_else(main_type == "Peripheral Nervous System, NOS" | main_type == "Nerve Sheath Tumor","Peripheral Nervous System Cancer, NOS",as.character(main_type))) %>%
-    dplyr::mutate(main_type = dplyr::if_else(main_type == "Renal Cell Carcinoma","Kidney Cancer, NOS",as.character(main_type))) %>%
-    dplyr::mutate(main_type = dplyr::if_else(main_type == "Retinoblastoma","Eye Cancer, NOS",as.character(main_type))) %>%
-    dplyr::mutate(main_type = dplyr::if_else(main_type == "Ampullary Cancer","Ampullary Carcinoma, NOS",as.character(main_type))) %>%
+    dplyr::mutate(main_type = dplyr::if_else(
+      stringr::str_detect(main_type,"^(Prostate Cancer|Peripheral Nervous System|Penile Cancer|Thyroid Cancer|Pancreatic Cancer|Soft Tissue Cancer|Head and Neck Cancer|Hepatobiliary Cancer|Hodgkin Lymphoma|Leukemia|Melanoma|Mesothelioma|Glioma|Germ Cell Tumor|Endometrial Cancer|Colorectal Cancer|Cervical Cancer|Breast Cancer|Bone Cancer)$"),
+      paste0(main_type,", NOS"),as.character(main_type))) %>%
+    dplyr::mutate(main_type = dplyr::if_else(
+      main_type == "Bladder Cancer","Bladder/Urinary Tract Cancer, NOS",as.character(main_type))) %>%
+    dplyr::mutate(main_type = dplyr::if_else(
+      main_type == "CNS Cancer","CNS/Brain Cancer, NOS",as.character(main_type))) %>%
+    dplyr::mutate(main_type = dplyr::if_else(
+      main_type == "Miscellaneous Neuroepithelial Tumor","CNS/Brain Cancer, NOS",as.character(main_type))) %>%
+    dplyr::mutate(main_type = dplyr::if_else(
+      main_type == "Esophagogastric Cancer","Esophageal/Stomach Cancer, NOS",as.character(main_type))) %>%
+    dplyr::mutate(main_type = dplyr::if_else(
+      main_type == "Ovarian Cancer","Ovarian/Fallopian Tube Cancer, NOS",as.character(main_type))) %>%
+    dplyr::mutate(main_type = dplyr::if_else(
+      main_type == "Thymic Tumor","Thymic Cancer, NOS",as.character(main_type))) %>%
+    dplyr::mutate(main_type = dplyr::if_else(
+      main_type == "Soft Tissue Sarcoma","Soft Tissue Cancer, NOS",as.character(main_type))) %>%
+    dplyr::mutate(main_type = dplyr::if_else(
+      main_type == "Vulvar Carcinoma" | main_type == "Vaginal Cancer","Vulvar/Vaginal Cancer, NOS",as.character(main_type))) %>%
+    dplyr::mutate(main_type = dplyr::if_else(
+      main_type == "Small Bowel Cancer","Bowel Cancer, NOS",as.character(main_type))) %>%
+    dplyr::mutate(main_type = dplyr::if_else(
+      main_type == "Peripheral Nervous System, NOS" | main_type == "Nerve Sheath Tumor","Peripheral Nervous System Cancer, NOS",as.character(main_type))) %>%
+    dplyr::mutate(main_type = dplyr::if_else(
+      main_type == "Renal Cell Carcinoma","Kidney Cancer, NOS",as.character(main_type))) %>%
+    dplyr::mutate(main_type = dplyr::if_else(
+      main_type == "Retinoblastoma","Eye Cancer, NOS",as.character(main_type))) %>%
+    dplyr::mutate(main_type = dplyr::if_else(
+      main_type == "Ampullary Cancer","Ampullary Carcinoma, NOS",as.character(main_type))) %>%
     dplyr::mutate(main_type = stringr::str_replace(main_type,",NOS",", NOS")) %>%
-    dplyr::filter(main_type != "Miscellaneous Brain Tumor") %>%
-    dplyr::filter(name != "Paraganglioma") %>%
-    dplyr::filter(main_type != "Cancer of Unknown Primary" | (main_type == "Cancer of Unknown Primary" & ot_code == "CUP")) %>%
     dplyr::mutate(cui = dplyr::if_else(ot_code == "CUP","C0027667",as.character(cui)))
-
-  onco_tree <- mapped_all %>%
+  
+  oncotree_basic <- mapped_all2 %>%
     dplyr::arrange(main_type) %>%
     dplyr::filter(!is.na(cui_name)) %>%
-    dplyr::select(-c(nci_t,ot_code,ot_level)) %>%
+    dplyr::select(-nci_t) %>%
     dplyr::distinct() %>%
-    dplyr::mutate(primary_site = tissue, group = main_type) %>%
+    dplyr::rename(ot_tissue = tissue, ot_main_type = main_type) %>%
+    dplyr::mutate(primary_site = ot_tissue, group = ot_main_type) %>%
     dplyr::filter(cui != "C0346202" |
                     cui == "C0346202" &
                     group == "Cervical Cancer, NOS") %>%
     dplyr::filter(cui != "C1332912" |
                     cui == "C1332912" &
                     group == "Cervical Cancer, NOS") %>%
+    dplyr::filter(name != "urachal carcinoma") %>%
     dplyr::filter(cui != "C0024299" |
                     cui == "C0024299" &
                     group == "Lymphatic Cancer, NOS") %>%
+    dplyr::filter(!(group == "Cancer of Unknown Primary" & cui == "C0206685")) %>%
+    
+    dplyr::distinct() %>%
+    dplyr::rename(ot_code_path = code_path) %>%
+    dplyr::rename(ot_name = name) %>%
+    dplyr::mutate(source = "oncotree_basic") %>%
+    dplyr::select(ot_tissue, ot_main_type, ot_level, dplyr::everything()) %>%
+    dplyr::arrange(ot_tissue, ot_main_type, ot_level)
+  
+  n_mapped_internally <- oncotree_entries %>% dplyr::filter(!is.na(cui)) %>% nrow()
+  n_mapped_externally <- oncotree_basic %>% dplyr::filter(!is.na(cui)) %>% nrow()
+  n_mapped_externally <- n_mapped_externally - n_mapped_internally
+  n_nonmapped <- nrow(oncotree_entries) - nrow(oncotree_basic)
+  cat("OncoTree entries - UMLS-mapped internally: ", n_mapped_internally, '\n')
+  cat("OncoTree entries - UMLS-mapped by oncoPhenoMap (by name/fuzzy join): ", n_mapped_externally, '\n')
+  cat("OncoTree entries - NOT UMLS mapped: ", n_nonmapped, '\n')
+  
+  umls_icd10_mapping <- read.table(
+    gzfile("data-raw/disgenet/disease_mappings.tsv.gz"), 
+    sep="\t", header = T, stringsAsFactors = F, quote="") %>% 
+    dplyr::rename(cui = diseaseId, cui_name = name, icd10_code = code) %>% 
+    dplyr::filter(vocabulary == "ICD10") %>%
+    dplyr::select(cui, icd10_code) %>%
     dplyr::distinct()
-
+  
+  
   syndromes_ding <-
     openxlsx::read.xlsx("data-raw/other/ding_pancancer_cell_2018.xlsx",
                         sheet = 4,startRow = 1) %>%
@@ -1170,7 +1450,7 @@ onco_pheno_mapping <- function(umls_map){
     dplyr::rename(cui = cui_syndrome) %>%
     dplyr::mutate(cui = stringr::str_trim(cui), name = "Hereditary Cancer Syndrome, NOS") %>%
     dplyr::distinct()
-
+  
   susceptibility_ding <-
     openxlsx::read.xlsx("data-raw/other/ding_pancancer_cell_2018.xlsx",
                         sheet = 4,startRow = 1) %>%
@@ -1182,18 +1462,20 @@ onco_pheno_mapping <- function(umls_map){
                   name = "Hereditary Cancer Susceptibility, NOS") %>%
     dplyr::filter(cui != "C0238198" & cui != "C0027819" & cui != "C1333989") %>%
     dplyr::distinct()
-
+  
   hereditary_cancers <- openxlsx::read.xlsx("data-raw/other/tumor_nos_umls.xlsx",sheet = 1) %>%
     dplyr::mutate(cui = stringr::str_trim(cui)) %>%
     dplyr::filter(name == "Hereditary_Cancer_Susceptibility_NOS") %>%
     dplyr::mutate(name = "Hereditary Cancer Susceptibility, NOS") %>%
     dplyr::bind_rows(syndromes_ding, susceptibility_ding) %>%
+    #dplyr::mutate(ot_main_type = "Hereditary Cancer Susceptibility, NOS") %>%
     dplyr::mutate(group = name) %>%
-    dplyr::distinct()
-
-  main_cancers_oncotree <- dplyr::bind_rows(onco_tree, hereditary_cancers) %>%
+    dplyr::distinct() %>%
+    dplyr::select(-c(tcga_cohort, tmb_high, cosmic_mutational_signatures))
+  
+  oncotree_plus_hereditary <- dplyr::bind_rows(oncotree_basic, hereditary_cancers) %>%
     dplyr::mutate(minor_type = dplyr::if_else(is.na(minor_type),FALSE,as.logical(minor_type))) %>%
-    dplyr::select(cui, group, tissue, minor_type) %>%
+    dplyr::select(ot_tissue, ot_main_type, ot_level, ot_code, cui, minor_type, primary_site, group, source) %>%
     dplyr::filter(cui != "C0008479" | cui == "C0008479" & group == "Bone Cancer, NOS") %>%
     dplyr::filter(cui != "C0279672" | cui == "C0279672" & group == "Soft Tissue Cancer, NOS") %>%
     dplyr::filter(cui != "C0029463" | cui == "C0029463" & group == "Bone Cancer, NOS") %>%
@@ -1207,62 +1489,93 @@ onco_pheno_mapping <- function(umls_map){
     dplyr::filter(cui != "C1266111" | cui == "C1266111" & group == "Soft Tissue Cancer, NOS") %>%
     dplyr::filter(cui != "C1332564" | cui == "C1332564" & group == "Bladder/Urinary Tract Cancer, NOS") %>%
     dplyr::filter(cui != "C0007134" | cui == "C0007134" & group == "Kidney Cancer, NOS") %>%
-    dplyr::filter(cui != "C0334524" | cui == "C0334524" & tissue == "Vulva/Vagina") %>%
-    dplyr::filter(cui != "C0346185" | cui == "C0346185" & tissue == "Ovary/Fallopian Tube") %>%
+    dplyr::filter(cui != "C0334524" | cui == "C0334524" & ot_tissue == "Vulva/Vagina") %>%
+    dplyr::filter(cui != "C0346185" | cui == "C0346185" & ot_tissue == "Ovary/Fallopian Tube") %>%
     dplyr::bind_rows(data.frame(cui = "C2608055", group = "Hereditary Cancer Susceptibility, NOS", stringsAsFactors = F)) %>%
-    dplyr::bind_rows(data.frame(cui = "C0686584", tissue = "Myeloid", group = "Leukemia, NOS", stringsAsFactors = F)) %>%
-    dplyr::bind_rows(data.frame(cui = "C0699791", tissue = "Esophagus/Stomach", group = "Esophageal/Stomach Cancer, NOS", stringsAsFactors = F)) %>%
-    dplyr::bind_rows(data.frame(cui = "C0677055", tissue = "Vulva/Vagina", group = "Vulvar/Vaginal Cancer, NOS", stringsAsFactors = F)) %>%
-    dplyr::bind_rows(data.frame(cui = "C1880169", tissue = "Soft Tissue", group = "Soft Tissue Cancer, NOS", stringsAsFactors = F)) %>%
-    dplyr::bind_rows(data.frame(cui = "C0025500", tissue = "Pleura", group = "Pleural Cancer, NOS", stringsAsFactors = F)) %>%
-    dplyr::bind_rows(data.frame(cui = "C0238122", tissue = "Ovary/Fallopian Tube", group = "Ovarian/Fallopian Tube Cancer, NOS", stringsAsFactors = F)) %>%
-    dplyr::bind_rows(data.frame(cui = "C0023798", tissue = "Soft Tissue", group = "Soft Tissue Cancer, NOS", stringsAsFactors = F)) %>%
-    dplyr::bind_rows(data.frame(cui = "C0279000", tissue = "Liver", group = "Liver Cancer, NOS", stringsAsFactors = F)) %>%
-    dplyr::bind_rows(data.frame(cui = "C0348374", tissue = "CNS/Brain", group = "CNS/Brain Cancer, NOS", stringsAsFactors = F)) %>%
-    dplyr::bind_rows(data.frame(cui = "C0346647", tissue = "Pancreas", group = "Pancreatic Cancer, NOS", stringsAsFactors = F)) %>%
-    dplyr::bind_rows(data.frame(cui = "C0220624", tissue = "CNS/Brain", group = "CNS/Brain Cancer, NOS", stringsAsFactors = F)) %>%
-    dplyr::bind_rows(data.frame(cui = "C0038874", tissue = "CNS/Brain", group = "CNS/Brain Cancer, NOS", stringsAsFactors = F)) %>%
-    dplyr::bind_rows(data.frame(cui = "C0006118", tissue = "CNS/Brain", group = "CNS/Brain Cancer, NOS", stringsAsFactors = F)) %>%
-    dplyr::bind_rows(data.frame(cui = "C0936223", tissue = "Prostate", group = "Prostate Cancer, NOS", stringsAsFactors = F)) %>%
-    dplyr::bind_rows(data.frame(cui = "C0376358", tissue = "Prostate", group = "Prostate Cancer, NOS", stringsAsFactors = F)) %>%
-    dplyr::bind_rows(data.frame(cui = "C0033578", tissue = "Prostate", group = "Prostate Cancer, NOS", stringsAsFactors = F)) %>%
-    dplyr::bind_rows(data.frame(cui = "C0007102", tissue = "Colon/Rectum", group = "Colorectal Cancer, NOS", stringsAsFactors = F)) %>%
-    dplyr::bind_rows(data.frame(cui = "C0009404", tissue = "Colon/Rectum", group = "Colorectal Cancer, NOS", stringsAsFactors = F)) %>%
-    dplyr::bind_rows(data.frame(cui = "C0034885", tissue = "Colon/Rectum", group = "Colorectal Cancer, NOS", stringsAsFactors = F)) %>%
-    dplyr::bind_rows(data.frame(cui = "C0009375", tissue = "Colon/Rectum", group = "Colorectal Cancer, NOS", stringsAsFactors = F)) %>%
-    dplyr::bind_rows(data.frame(cui = "C1333976", tissue = "Liver", group = "Liver Cancer, NOS", stringsAsFactors = F)) %>%
-    dplyr::bind_rows(data.frame(cui = "C0750952", tissue = "Biliary Tract", group = "Biliary Tract Cancer, NOS", stringsAsFactors = F)) %>%
-    dplyr::bind_rows(data.frame(cui = "C0030297", tissue = "Pancreas", group = "Pancreatic Cancer, NOS", stringsAsFactors = F)) %>%
-    dplyr::bind_rows(data.frame(cui = "C0015558", tissue = "Ovary/Fallopian Tube", group = "Ovarian/Fallopian Tube Cancer, NOS", stringsAsFactors = F)) %>%
-    dplyr::bind_rows(data.frame(cui = "C0042995", tissue = "Vulva/Vagina", group = "Vulvar/Vaginal Cancer, NOS", stringsAsFactors = F)) %>%
-    dplyr::bind_rows(data.frame(cui = "C0206765", tissue = "Soft Tissue", group = "Soft Tissue Cancer, NOS", stringsAsFactors = F)) %>%
-    dplyr::bind_rows(data.frame(cui = "C0024623", tissue = "Esophagus/Stomach", group = "Esophageal/Stomach Cancer, NOS", stringsAsFactors = F)) %>%
-    dplyr::bind_rows(data.frame(cui = "C0038356", tissue = "Esophagus/Stomach", group = "Esophageal/Stomach Cancer, NOS", stringsAsFactors = F)) %>%
-
+    dplyr::bind_rows(data.frame(cui = "C0686584", ot_tissue = "Myeloid", group = "Leukemia, NOS", stringsAsFactors = F)) %>%
+    dplyr::bind_rows(data.frame(cui = "C0699791", ot_tissue = "Esophagus/Stomach", group = "Esophageal/Stomach Cancer, NOS", stringsAsFactors = F)) %>%
+    dplyr::bind_rows(data.frame(cui = "C0677055", ot_tissue = "Vulva/Vagina", group = "Vulvar/Vaginal Cancer, NOS", stringsAsFactors = F)) %>%
+    dplyr::bind_rows(data.frame(cui = "C0042237", ot_tissue = "Vulva/Vagina", group = "Vulvar/Vaginal Cancer, NOS", stringsAsFactors = F)) %>%
+    dplyr::bind_rows(data.frame(cui = "C1880169", ot_tissue = "Soft Tissue", group = "Soft Tissue Cancer, NOS", stringsAsFactors = F)) %>%
+    dplyr::bind_rows(data.frame(cui = "C0025500", ot_tissue = "Pleura", group = "Pleural Cancer, NOS", stringsAsFactors = F)) %>%
+    dplyr::bind_rows(data.frame(cui = "C0238122", ot_tissue = "Ovary/Fallopian Tube", group = "Ovarian/Fallopian Tube Cancer, NOS", stringsAsFactors = F)) %>%
+    dplyr::bind_rows(data.frame(cui = "C0023798", ot_tissue = "Soft Tissue", group = "Soft Tissue Cancer, NOS", stringsAsFactors = F)) %>%
+    dplyr::bind_rows(data.frame(cui = "C0037286", ot_tissue = "Skin", group = "Skin Cancer, NOS", stringsAsFactors = F)) %>%
+    dplyr::bind_rows(data.frame(cui = "C1516416", ot_tissue = "Cervix", group = "Cervical Cancer, NOS", stringsAsFactors = F)) %>%
+    dplyr::bind_rows(data.frame(cui = "C0279000", ot_tissue = "Liver", group = "Liver Cancer, NOS", stringsAsFactors = F)) %>%
+    dplyr::bind_rows(data.frame(cui = "C0348374", ot_tissue = "CNS/Brain", group = "CNS/Brain Cancer, NOS", stringsAsFactors = F)) %>%
+    dplyr::bind_rows(data.frame(cui = "C0220624", ot_tissue = "CNS/Brain", group = "CNS/Brain Cancer, NOS", stringsAsFactors = F)) %>%
+    dplyr::bind_rows(data.frame(cui = "C0038874", ot_tissue = "CNS/Brain", group = "CNS/Brain Cancer, NOS", stringsAsFactors = F)) %>%
+    dplyr::bind_rows(data.frame(cui = "C0006118", ot_tissue = "CNS/Brain", group = "CNS/Brain Cancer, NOS", stringsAsFactors = F)) %>%
+    dplyr::bind_rows(data.frame(cui = "C0936223", ot_tissue = "Prostate", group = "Prostate Cancer, NOS", stringsAsFactors = F)) %>%
+    dplyr::bind_rows(data.frame(cui = "C0376358", ot_tissue = "Prostate", group = "Prostate Cancer, NOS", stringsAsFactors = F)) %>%
+    dplyr::bind_rows(data.frame(cui = "C0033578", ot_tissue = "Prostate", group = "Prostate Cancer, NOS", stringsAsFactors = F)) %>%
+    dplyr::bind_rows(data.frame(cui = "C0007102", ot_tissue = "Colon/Rectum", group = "Colorectal Cancer, NOS", stringsAsFactors = F)) %>%
+    dplyr::bind_rows(data.frame(cui = "C0009404", ot_tissue = "Colon/Rectum", group = "Colorectal Cancer, NOS", stringsAsFactors = F)) %>%
+    dplyr::bind_rows(data.frame(cui = "C0034885", ot_tissue = "Colon/Rectum", group = "Colorectal Cancer, NOS", stringsAsFactors = F)) %>%
+    dplyr::bind_rows(data.frame(cui = "C0009375", ot_tissue = "Colon/Rectum", group = "Colorectal Cancer, NOS", stringsAsFactors = F)) %>%
+    dplyr::bind_rows(data.frame(cui = "C0496779", ot_tissue = "Colon/Rectum", group = "Colorectal Cancer, NOS", stringsAsFactors = F)) %>%
+    dplyr::bind_rows(data.frame(cui = "C1333976", ot_tissue = "Liver", group = "Liver Cancer, NOS", stringsAsFactors = F)) %>%
+    dplyr::bind_rows(data.frame(cui = "C0750952", ot_tissue = "Biliary Tract", group = "Biliary Tract Cancer, NOS", stringsAsFactors = F)) %>%
+    dplyr::bind_rows(data.frame(cui = "C0346647", ot_tissue = "Pancreas", group = "Pancreatic Cancer, NOS", stringsAsFactors = F)) %>%
+    dplyr::bind_rows(data.frame(cui = "C0030297", ot_tissue = "Pancreas", group = "Pancreatic Cancer, NOS", stringsAsFactors = F)) %>%
+    dplyr::bind_rows(data.frame(cui = "C1842408", ot_tissue = "Pancreas", group = "Pancreatic Cancer, NOS", stringsAsFactors = F)) %>%
+    dplyr::bind_rows(data.frame(cui = "C0015558", ot_tissue = "Ovary/Fallopian Tube", group = "Ovarian/Fallopian Tube Cancer, NOS", stringsAsFactors = F)) %>%
+    dplyr::bind_rows(data.frame(cui = "C0042995", ot_tissue = "Vulva/Vagina", group = "Vulvar/Vaginal Cancer, NOS", stringsAsFactors = F)) %>%
+    dplyr::bind_rows(data.frame(cui = "C0206765", ot_tissue = "Soft Tissue", group = "Soft Tissue Cancer, NOS", stringsAsFactors = F)) %>%
+    dplyr::bind_rows(data.frame(cui = "C0024623", ot_tissue = "Esophagus/Stomach", group = "Esophageal/Stomach Cancer, NOS", stringsAsFactors = F)) %>%
+    dplyr::bind_rows(data.frame(cui = "C0038356", ot_tissue = "Esophagus/Stomach", group = "Esophageal/Stomach Cancer, NOS", stringsAsFactors = F)) %>%
+    
     dplyr::mutate(minor_type = dplyr::if_else(is.na(minor_type),FALSE,as.logical(minor_type))) %>%
+    dplyr::mutate(source = dplyr::if_else(is.na(source),"hereditary_and_extra",as.character(source))) %>%
     dplyr::distinct() %>%
     dplyr::arrange(group)
-
-  all_cancer_subtypes <- data.frame()
+  
+  oncotree_plus_hereditary_expanded <- data.frame()
   i <- 1
-  for(c in main_cancers_oncotree$cui){
+  for(c in oncotree_plus_hereditary$cui){
     if(is.na(c)){
       next
     }
-    gr <- unique(main_cancers_oncotree[!is.na(main_cancers_oncotree$cui) & main_cancers_oncotree$cui == c, ]$group)
-    ti <- unique(main_cancers_oncotree[!is.na(main_cancers_oncotree$cui) & main_cancers_oncotree$cui == c, ]$tissue)
-    minor_type <- unique(main_cancers_oncotree[!is.na(main_cancers_oncotree$cui) & main_cancers_oncotree$cui == c,]$minor_type)
-
-    cancer_subtypes <- get_umls_children(c, umls_map = umls_map, umls_cui2name = cui_name_map) %>%
-      dplyr::mutate(group = gr, tissue = ti, minor_type = minor_type)
-
-    all_cancer_subtypes <- dplyr::bind_rows(all_cancer_subtypes, cancer_subtypes)
-    cat(i, c,gr,nrow(all_cancer_subtypes),sep=" - ")
-    cat("\n")
+    group <- unique(oncotree_plus_hereditary[!is.na(oncotree_plus_hereditary$cui) & oncotree_plus_hereditary$cui == c, ]$group)
+    tissue <- unique(oncotree_plus_hereditary[!is.na(oncotree_plus_hereditary$cui) & oncotree_plus_hereditary$cui == c, ]$ot_tissue)
+    minor_type <- unique(oncotree_plus_hereditary[!is.na(oncotree_plus_hereditary$cui) & oncotree_plus_hereditary$cui == c,]$minor_type)
+    ot_level <- unique(oncotree_plus_hereditary[!is.na(oncotree_plus_hereditary$cui) & oncotree_plus_hereditary$cui == c,]$ot_level)
+    ot_main_type <- unique(oncotree_plus_hereditary[!is.na(oncotree_plus_hereditary$cui) & oncotree_plus_hereditary$cui == c,]$ot_main_type)
+    ot_code <- unique(oncotree_plus_hereditary[!is.na(oncotree_plus_hereditary$cui) & oncotree_plus_hereditary$cui == c,]$ot_code)
+    primary_site <- unique(oncotree_plus_hereditary[!is.na(oncotree_plus_hereditary$cui) & oncotree_plus_hereditary$cui == c,]$primary_site)
+    
+    cancer_subtypes <- 
+      get_umls_children(c, 
+                        umls_map = umls_map, 
+                        umls_cui2name = cui_name_map) %>%
+      dplyr::mutate(group = group, 
+                    ot_tissue = tissue, 
+                    #ot_main_type = ot_main_type,
+                    #primary_site = primary_site,
+                    #ot_code = ot_code,
+                    minor_type = minor_type) %>% 
+                    #ot_level = ot_level) %>%
+      dplyr::mutate(source = "oncotree_basic_hereditary_extra_expanded") %>%
+      dplyr::select(ot_tissue, 
+                    #ot_main_type, 
+                    #ot_level,
+                    #ot_code, cui, 
+                    cui, cui_name, 
+                    minor_type,
+                    #primary_site, 
+                    group, 
+                    source, 
+                    dplyr::everything())
+    
+    oncotree_plus_hereditary_expanded <- 
+      dplyr::bind_rows(oncotree_plus_hereditary_expanded, cancer_subtypes)
+    #cat(i, c, group, nrow(oncotree_plus_hereditary_expanded),sep=" - ")
+    #cat("\n")
     i <- i + 1
   }
-
-  all_cancer_subtypes_final <- all_cancer_subtypes %>%
+  
+  oncotree_plus_hereditary_expanded_final <- oncotree_plus_hereditary_expanded %>%
     dplyr::filter(cui != "C0920349") %>% # Short Limb Dwarfism-Saddle Nose-Spinal Alterations-Metaphyseal Striation Syndrome
     dplyr::filter(cui != "C0009324") %>% # Ulcerative colitis
     dplyr::filter(cui != "C0566602") %>% # Primary sclerosing cholangitis
@@ -1286,24 +1599,24 @@ onco_pheno_mapping <- function(umls_map){
     dplyr::filter(!stringr::str_detect(tolower(cui_name),"aplastic anemia|atrophic gastritis|leukoplakia|agammaglobulinemia|dyskeratosis")) %>%
     dplyr::filter(!stringr::str_detect(tolower(cui_name),"hypertension|erythroplakia|heel spur|grannuloma annulare| goiter")) %>%
     dplyr::filter(!stringr::str_detect(tolower(cui_name),"parapsoriasis | encephalitis | progression| heart disease| hyperplasia")) %>%
-    dplyr::filter(!(stringr::str_detect(cui_name,"^Leio|Angioleiomyoma| Leio| leio") & stringr::str_detect(tissue,"Esophagus"))) %>%
-    dplyr::filter(!(stringr::str_detect(cui_name,"(O|o)varian|(T|t)esticular|seminoma") & stringr::str_detect(tissue,"CNS/Brain"))) %>%
-    dplyr::filter(!(stringr::str_detect(cui_name,"Wilms") & stringr::str_detect(tissue,"CNS|Bladder"))) %>%
-    dplyr::filter(!(stringr::str_detect(cui_name,"(K|k)idney") & stringr::str_detect(tissue,"Bladder"))) %>%
+    dplyr::filter(!(stringr::str_detect(cui_name,"^Leio|Angioleiomyoma| Leio| leio") & stringr::str_detect(ot_tissue,"Esophagus"))) %>%
+    dplyr::filter(!(stringr::str_detect(cui_name,"(O|o)varian|(T|t)esticular|seminoma") & stringr::str_detect(ot_tissue,"CNS/Brain"))) %>%
+    dplyr::filter(!(stringr::str_detect(cui_name,"Wilms") & stringr::str_detect(ot_tissue,"CNS|Bladder"))) %>%
+    dplyr::filter(!(stringr::str_detect(cui_name,"(K|k)idney") & stringr::str_detect(ot_tissue,"Bladder"))) %>%
     #dplyr::filter(!(stringr::str_detect(cui_name,"(E|e)sophag") & stringr::str_detect(tissue,"Head"))) %>%
-    dplyr::filter(!(stringr::str_detect(cui_name,"^Lung| lung ") & stringr::str_detect(tissue,"Skin"))) %>%
-    dplyr::filter(!(stringr::str_detect(tolower(cui_name), "lympho|lympha") & !stringr::str_detect(tolower(cui_name),"skin|papulosis") & (!is.na(tissue) & tissue == "Skin"))) %>%
-    dplyr::filter(!(stringr::str_detect(tolower(cui_name), "ewing sarcom") & !stringr::str_detect(tolower(cui_name),"neuro") & (!is.na(tissue) & tissue == "CNS/Brain"))) %>%
-    dplyr::filter(!(stringr::str_detect(tolower(cui_name), "sarcoma") & (!is.na(tissue) & tissue == "Myeloid" | tissue == "Lymphoid"))) %>%
-    dplyr::filter(!(stringr::str_detect(tolower(cui_name), "renal cell") & (!is.na(tissue) & tissue == "Bladder/Urinary Tract"))) %>%
+    dplyr::filter(!(stringr::str_detect(cui_name,"^Lung| lung ") & stringr::str_detect(ot_tissue,"Skin"))) %>%
+    dplyr::filter(!(stringr::str_detect(tolower(cui_name), "lympho|lympha") & !stringr::str_detect(tolower(cui_name),"skin|papulosis") & (!is.na(ot_tissue) & ot_tissue == "Skin"))) %>%
+    dplyr::filter(!(stringr::str_detect(tolower(cui_name), "ewing sarcom") & !stringr::str_detect(tolower(cui_name),"neuro") & (!is.na(ot_tissue) & ot_tissue == "CNS/Brain"))) %>%
+    dplyr::filter(!(stringr::str_detect(tolower(cui_name), "sarcoma") & (!is.na(ot_tissue) & ot_tissue == "Myeloid" | ot_tissue == "Lymphoid"))) %>%
+    dplyr::filter(!(stringr::str_detect(tolower(cui_name), "renal cell") & (!is.na(ot_tissue) & ot_tissue == "Bladder/Urinary Tract"))) %>%
     
     dplyr::arrange(group) %>%
     dplyr::mutate(group = stringr::str_replace_all(group," |/|, ","_")) %>%
     dplyr::mutate(group = stringr::str_replace_all(group,"_and_","_And_")) %>%
-    dplyr::mutate(tissue = dplyr::if_else(
-      tissue == "Other","Other/Unknown",
-      as.character(tissue))) %>%
-    dplyr::mutate(primary_site = tissue) %>%
+    dplyr::mutate(ot_tissue = dplyr::if_else(
+      ot_tissue == "Other","Other/Unknown",
+      as.character(ot_tissue))) %>%
+    dplyr::mutate(primary_site = ot_tissue) %>%
     dplyr::mutate(group =
                     dplyr::if_else(stringr::str_detect(tolower(cui_name),
                                                        "thyroid") &
@@ -1312,13 +1625,13 @@ onco_pheno_mapping <- function(umls_map){
                                    "Thyroid_Cancer_NOS",
                                    as.character(group))) %>%
     dplyr::mutate(
-      tissue =
+      ot_tissue =
         dplyr::if_else(stringr::str_detect(tolower(cui_name),
                                            "thyroid") &
                          !is.na(primary_site) &
                          primary_site == "Head and Neck",
                        "Thyroid",
-                       as.character(tissue))) %>%
+                       as.character(ot_tissue))) %>%
     dplyr::mutate(
       primary_site =
         dplyr::if_else(stringr::str_detect(tolower(cui_name),
@@ -1327,7 +1640,7 @@ onco_pheno_mapping <- function(umls_map){
                          !is.na(primary_site),
                        "Thyroid",
                        as.character(primary_site))) %>%
-
+    
     dplyr::mutate(
       group =
         dplyr::if_else(stringr::str_detect(tolower(cui_name),
@@ -1337,13 +1650,13 @@ onco_pheno_mapping <- function(umls_map){
                        "Esophageal_Stomach_Cancer_NOS",
                        as.character(group))) %>%
     dplyr::mutate(
-      tissue =
+      ot_tissue =
         dplyr::if_else(stringr::str_detect(tolower(cui_name),
                                            "barrett") &
                          primary_site == "Head and Neck"&
                          !is.na(primary_site),
                        "Esophagus/Stomach",
-                       as.character(tissue))) %>%
+                       as.character(ot_tissue))) %>%
     dplyr::mutate(
       primary_site =
         dplyr::if_else(stringr::str_detect(tolower(cui_name),
@@ -1352,32 +1665,102 @@ onco_pheno_mapping <- function(umls_map){
                          !is.na(primary_site),
                        "Esophagus/Stomach",
                        as.character(primary_site))) %>%
+    dplyr::filter(group != "Adenocarcinoma_In_Situ") %>%
+    dplyr::filter(!(group != "CNS_Brain_Cancer_NOS" &
+                      stringr::str_detect(tolower(cui_name),"meningioma"))) %>%
+    dplyr::filter(!(group == "Skin_Cancer_NOS" &
+                      stringr::str_detect(tolower(cui_name),"esophag"))) %>%
+    dplyr::filter(!((group == "Bone_Cancer_NOS" | group == "Soft_Tissue_Cancer_NOS") &
+                      stringr::str_detect(tolower(cui_name),"neuroblastom|glioblastom"))) %>%
+    dplyr::filter(!(group == "Head_And_Neck_Cancer_NOS" &
+                      stringr::str_detect(tolower(cui_name),"esophag"))) %>%
+    dplyr::filter(!(group == "Miscellaneous_Brain_Tumor" &
+                      !stringr::str_detect(
+                        tolower(cui_name),
+                        "brain|glioblastom|medulloblastom|neuroblastom|retinoblastom|pineoblastom"))) %>%
+    dplyr::filter(!(group == "Hereditary_Cancer_Susceptibility_NOS" &
+                      !stringr::str_detect(
+                        tolower(cui_name),
+                        "familial|hereditary|xeroderma|increased risk|fanconi|susceptibility|polyposis|brca|colorectal cancer [1-9]|neuroblastoma [1-9]|pancreatic cancer [1-9]|syndrome"))) %>%
+    dplyr::filter(!(group == "Cancer_of_Unknown_Primary" & 
+                      !stringr::str_detect(tolower(cui_name), "unknown (primary|origin)"))) %>%
     dplyr::distinct()
-
+  
   # remove overlapping entries in hereditary cancer syndrome group and cancer susceptibility group
   hereditary_condition_entries <-
-    dplyr::filter(all_cancer_subtypes_final, group == "Hereditary_Cancer_Susceptibility_NOS")
+    dplyr::filter(oncotree_plus_hereditary_expanded_final, group == "Hereditary_Cancer_Susceptibility_NOS")
   hereditary_syndrome_entries <-
-    dplyr::filter(all_cancer_subtypes_final, group == "Hereditary_Cancer_Syndrome_NOS")
+    dplyr::filter(oncotree_plus_hereditary_expanded_final, group == "Hereditary_Cancer_Syndrome_NOS")
   hereditary_condition_entries <-
     dplyr::anti_join(hereditary_condition_entries,
-                     dplyr::select(hereditary_syndrome_entries, cui))
+                     dplyr::select(hereditary_syndrome_entries, cui),
+                     by = "cui")
   sporadic_cancer_entries <-
-    dplyr::filter(all_cancer_subtypes_final, group != "Hereditary_Cancer_Susceptibility_NOS" &
+    dplyr::filter(oncotree_plus_hereditary_expanded_final, 
+                  group != "Hereditary_Cancer_Susceptibility_NOS" &
                     group != "Hereditary_Cancer_Syndrome_NOS")
-
+  
   final_tree <- dplyr::bind_rows(hereditary_condition_entries,
                                  hereditary_syndrome_entries,
                                  sporadic_cancer_entries) %>%
     dplyr::filter(!is.na(cui))
-
-  final_tree_slim <- final_tree %>% dplyr::filter(minor_type == F)
-  l <- list("full" = final_tree, "slim" = final_tree_slim)
-  return(l)
-
+  
+  final_tree_slim <- final_tree %>% 
+    dplyr::filter(minor_type == F)
+  onco_pheno_map <- 
+    list("oncotree_basic" = oncotree_basic,
+         "oncotree_expanded_full" = final_tree, 
+         "oncotree_expanded_slim" = final_tree_slim)
+  
+  ## Cross-reference OncoTree with EFO and DO
+  for(m in c('oncotree_basic',
+             'oncotree_expanded_full',
+             'oncotree_expanded_slim')){
+    onco_pheno_map[[m]] <- onco_pheno_map[[m]] %>%
+      dplyr::filter(cui_name != "urachal carcinoma") %>%
+      dplyr::left_join(
+        dplyr::select(efo_map$efo2xref, cui, 
+                      efo_id,  efo_name),
+        by = "cui") %>%
+      dplyr::left_join(do_map, by = "cui") %>%
+      dplyr::left_join(umls_icd10_mapping, by = "cui") %>%
+      dplyr::filter(!(cui == "C0006826" & efo_id == "EFO:0000311")) %>%
+      dplyr::filter(!(cui == "C0023467" & efo_id == "MONDO:0015667")) %>%
+      dplyr::filter(!(cui == "C0017075" & efo_id == "MONDO:0016730")) %>%
+      dplyr::filter(!(cui == "C0042133" & efo_id == "EFO:0000731")) %>%
+      dplyr::filter(!(cui == "C0021071" & efo_id == "EFO:1001798")) %>%
+      dplyr::filter(!(cui == "C0027708" & efo_id == "Orphanet:654")) %>%
+      dplyr::distinct() %>%
+      dplyr::mutate(
+        efo_id =
+          dplyr::if_else(
+            group == "Colorectal_Cancer_NOS" &
+              stringr::str_detect(tolower(cui_name),
+                                  "metasta"),
+            "EFO:1001480",as.character(efo_id))) %>%
+      dplyr::mutate(
+        efo_name =
+          dplyr::if_else(
+            group == "Colorectal_Cancer_NOS" &
+              stringr::str_detect(tolower(cui_name),
+                                  "metasta"),
+            "metastatic colorectal cancer",
+            as.character(efo_name))) %>%
+      dplyr::mutate(disease_ontology_release = do_release,
+                    efo_release = efo_release,
+                    oncotree_release = oncotree_release)
+  }
+  
+  onco_pheno_map$icd10_map <- umls_icd10_mapping
+  
+  return(onco_pheno_map)
+  
 }
 
-get_umls_children <- function(c, umls_map = NULL, umls_cui2name = NULL){
+get_umls_children <- function(
+  c, 
+  umls_map = NULL, 
+  umls_cui2name = NULL){
   children_level0 <- data.frame("cui" = c, stringsAsFactors = F) %>%
     dplyr::inner_join(umls_cui2name, by = c("cui"))
   cui_children <- dplyr::filter(umls_map$relation, cui == c) %>%
@@ -1407,7 +1790,7 @@ get_umls_children <- function(c, umls_map = NULL, umls_cui2name = NULL){
   if(nrow(children_level2) > 0){
     children_level2 <- children_level2 %>%
       dplyr::select(-level) %>%
-      dplyr::distinct() %>%
+      #dplyr::distinct() %>%
       dplyr::inner_join(umls_cui2name, by = c("cui"))
   }
 
@@ -1503,12 +1886,13 @@ get_umls_children <- function(c, umls_map = NULL, umls_cui2name = NULL){
 
 
 disease_ontology_release <- '2021-08-17v2'
-efo_release <- 'v3.33.0'
-oncotree_stable_release <- 'oncotree_2020_10_01'
+efo_release <- 'v3.34.0'
+oncotree_stable_release <- '2020_10_01'
 
 ## Get UMLS / DiseaseOntology / EFO mappings
-umls_map <- map_umls(update = T,
-                     basedir = here::here())
+umls_map <- map_umls(
+  update = F,
+  basedir = here::here())
 
 
 do_map <- map_disease_ontology(
@@ -1521,53 +1905,44 @@ do_map <- map_disease_ontology(
 efo_map <- map_efo(
   umls_map = umls_map,
   efo_release = efo_release,
-  update = T,
+  update = F,
   basedir = here::here())
 
-efo2xref <- efo_map$efo2xref
-efo2name <- efo_map$efo2name
-
 ## Use OncoTree as starting point for phenotype cross-map
-onco_pheno_map <- onco_pheno_mapping(umls_map = umls_map)
+onco_map <- onco_pheno_map(
+  umls_map = umls_map,
+  efo_map = efo_map,
+  do_map = do_map,
+  oncotree_release = oncotree_stable_release,
+  efo_release = efo_release,
+  do_release = disease_ontology_release)
 
-## Cross-reference OncoTree with EFO and DO
-for(m in c('slim','full')){
-  onco_pheno_map[[m]] <- onco_pheno_map[[m]] %>%
-    dplyr::left_join(dplyr::select(efo_map$efo2xref,cui,efo_id,efo_name),
-                     by = "cui") %>%
-    dplyr::left_join(do_map, by = "cui") %>%
-    dplyr::distinct() %>%
-    dplyr::mutate(
-      efo_id =
-        dplyr::if_else(
-          group == "Colorectal_Cancer_NOS" &
-            stringr::str_detect(tolower(cui_name),
-                                "metasta"),
-          "EFO:1001480",as.character(efo_id))) %>%
-    dplyr::mutate(
-      efo_name =
-        dplyr::if_else(
-          group == "Colorectal_Cancer_NOS" &
-            stringr::str_detect(tolower(cui_name),
-                                "metasta"),
-          "metastatic colorectal cancer",
-          as.character(efo_name))) %>%
-    dplyr::mutate(disease_ontology_release = disease_ontology_release,
-                  efo_release = efo_release,
-                  oncotree_release = oncotree_stable_release)
-}
+
+oncotree_basic <- onco_map$oncotree_basic
+oncotree_expanded_full <- onco_map$oncotree_expanded_full
+oncotree_expanded_slim <- onco_map$oncotree_expanded_slim
+auxiliary_maps <- list()
+auxiliary_maps[['umls']] <- umls_map
+auxiliary_maps[['do']] <- do_map
+auxiliary_maps[['efo']] <- efo_map
+auxiliary_maps[['icd10']] <- onco_map$icd10_map
+
 
 version_date <- format(Sys.Date(), format="%Y%m%d")
 
-opm_slim <- onco_pheno_map$slim
-opm_full <- onco_pheno_map$full
+usethis::use_data(oncotree_basic, overwrite = T)
+usethis::use_data(oncotree_expanded_full, overwrite = T)
+usethis::use_data(oncotree_expanded_slim, overwrite = T)
+usethis::use_data(auxiliary_maps, overwrite = T)
 
-usethis::use_data(umls_map, overwrite = T)
-usethis::use_data(do_map, overwrite = T)
-usethis::use_data(efo2xref, overwrite = T)
-usethis::use_data(efo2name, overwrite = T)
-usethis::use_data(opm_slim, overwrite = T)
-usethis::use_data(opm_full, overwrite = T)
+#usethis::use_data(umls_map, overwrite = T)
+#usethis::use_data(do_map, overwrite = T)
+#usethis::use_data(efo2xref, overwrite = T)
+#usethis::use_data(efo2name, overwrite = T)
+#usethis::use_data(opm_slim, overwrite = T)
+#usethis::use_data(opm_full, overwrite = T)
+
+
 
 
 
