@@ -18,7 +18,7 @@ Description: A semi-manually curated resource that maps relevant phenotype terms
     Experimental Factor Ontology (EFO) and the Disease Ontology (DO).
 Depends: 
     R (>= 4.0)
-Imports: tidyverse (>= 1.3.0), rlogging, magrittr (>= 2.0.1)
+Imports: tidyverse (>= 1.3.0), rlogging, magrittr (>= 2.0.1), ontologyIndex (>= 2.7)
 License: MIT
 Remotes: mjkallen/rlogging
 Encoding: UTF-8
