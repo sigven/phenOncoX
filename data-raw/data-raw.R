@@ -3,7 +3,7 @@ source('R/functions.R')
 
 disease_ontology_release <- 'v2021-10-11'
 efo_release <- 'v3.35.0'
-oncotree_stable_release <- '2021_11_02'
+oncotree_release <- '2021_11_02'
 
 ## Get UMLS / DiseaseOntology / EFO mappings
 umls_map <- map_umls(
@@ -29,7 +29,7 @@ onco_map <- onco_pheno_map(
   umls_map = umls_map,
   efo_map = efo_map,
   do_map = do_map,
-  oncotree_release = oncotree_stable_release,
+  oncotree_release = oncotree_release,
   efo_release = efo_release,
   do_release = disease_ontology_release)
 
