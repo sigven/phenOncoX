@@ -2,7 +2,7 @@ library(magrittr)
 source('R/functions.R')
 
 disease_ontology_release <- 'v2021-10-11'
-efo_release <- 'v3.35.0'
+efo_release <- 'v3.36.0'
 oncotree_release <- '2021_11_02'
 
 ## Get UMLS / DiseaseOntology / EFO mappings
