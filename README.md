@@ -20,7 +20,7 @@ Currently, the following ontology versions are used to create the mapping:
 
 -   OncoTree (2021_11_02)
 -   Experimental Factor Ontology v36.0 (2021-11-15)
--   Disease Ontology (October 2021 release)
+-   Disease Ontology (v2021-11-17)
 
 **IMPORTANT NOTE**: The mapping established by **oncoPhenoMap** attempts to be comprehensive, but we acknowledge that the presence of missing or erroneous cross-references might still occur.
 

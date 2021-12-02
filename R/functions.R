@@ -5,7 +5,7 @@ library(stringr)
 library(ontologyIndex)
 
 map_efo <- function(umls_map,
-                    efo_release = "v3.35.0",
+                    efo_release = "v3.36.0",
                     update = T,
                     basedir = NULL){
   
