@@ -1654,7 +1654,7 @@ onco_pheno_map <- function(
   while(i <= nrow(cancer_term_map)){
     term_regex <- cancer_term_map[i,]$tissue_regex
     mgroup <- cancer_term_map[i,]$group
-    ot_tissue <- cancer_term_map[i,]$ot_tissue
+    tissue <- cancer_term_map[i,]$ot_tissue
     
     if(cancer_term_map[i,]$extra_cancer_term_needed == 1){
       missing_cancer_terms <- missing_cancer_terms %>%
@@ -1668,7 +1668,7 @@ onco_pheno_map <- function(
         dplyr::mutate(ot_tissue = dplyr::if_else(
           is.na(ot_tissue) & stringr::str_detect(cui_name_lc, term_regex) &
             stringr::str_detect(cui_name_lc, "neoplasm|tumor|cancer|carcinoma"),
-          mgroup,
+          tissue,
           as.character(ot_tissue)
         ))
     }else{
@@ -1681,7 +1681,7 @@ onco_pheno_map <- function(
       missing_cancer_terms <- missing_cancer_terms %>%
         dplyr::mutate(ot_tissue = dplyr::if_else(
           is.na(ot_tissue) & stringr::str_detect(cui_name_lc, term_regex),
-          mgroup,
+          tissue,
           as.character(ot_tissue)
         ))
     }
