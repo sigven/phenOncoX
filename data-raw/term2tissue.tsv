@@ -1,0 +1,21 @@
+tissue_regex	ot_tissue	group	extra_cancer_term_needed
+( tongue| eyelid| lip| nasal | ear| mouth| gum|tonsillar| tonsil| oropharyn| nasophary| sinus| hypopharyng)	Head/Neck	Head and Neck Cancer, NOS	1
+(stomach|esophag)	Esophagus/Stomach	Esophageal/Stomach Cancer, NOS	1
+(gallbladder)	Biliary Tract	Biliary Tract Cancer, NOS	1
+bladder	Bladder/Urinary Tract	Bladder/Urinary Tract Cancer, NOS	1
+( (frontal|occipital|temporal|parietal) lobe|cerebral|cerebellum| nerve)	CNS/Brain	CNS/Brain Cancer, NOS	1
+prostate	Prostate	Prostate Cancer, NOS	1
+breast|mammary	Breast	Breast Cancer, NOS	1
+(melanoma)	Skin	Melanoma, NOS	0
+(skin)	Skin	Skin Cancer, NOS	1
+(lung)	Lung	Lung Cancer, NOS	1
+(medulloblastoma)	CNS/Brain	Medulloblastoma, NOS	0
+(^glioma | glioma)	CNS/Brain	Glioma, NOS	0
+(ovarian| ovary|fallopian tube)	Ovary/Fallopian Tube	Ovarian/Fallopian Tube Cancer, NOS	1
+(colon|colorectal| rectal)	Colon/Rectum	Colorectal Cancer, NOS	1
+(renal cell|kidney)	Kidney	Kidney Cancer, NOS	1
+(pancreas|pancreatic )	Pancreas	Pancreatic Cancer, NOS	1
+(soft tissue)	Soft Tissue	Soft Tissue Cancer, NOS	1
+sarcoma	Soft Tissue	Soft Tissue Cancer, NOS	0
+(lymphoma)	Lymphoid	Lymphatic Cancer, NOS	0
+(leukemia)	Myeloid	Leukemia, NOS	0

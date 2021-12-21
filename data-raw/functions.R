@@ -1627,6 +1627,74 @@ onco_pheno_map <- function(
     i <- i + 1
   }
   
+  cancer_phenotypes_regex_lc <- 
+    "tumor|cancer|carcinoma|leukemia|teratoma|seminoma|lymphoma|melanoma|myeloma|sarcoma|"
+  cancer_phenotypes_regex_lc <- 
+    paste0(cancer_phenotypes_regex_lc, 
+           "glioma|cholangiocar|medulloblastom|neoplasm|mesotheliom|(metastasis (from|to))|brca")
+  
+  non_cancer_terms_regex_lc <- 
+    "screening|declined|suspect|history|^rat |response of|progression of|extends|limited to|recurrence|hamster|porcine|horse|baboon|rhesus|rabbit|bovine|marmoset|xiphophoru|medaka|fish |tumor size|seen by|infiltration|category|related to|chicken| pig |canine|protection|poor risk|good risk|affecting|complicating|configuration|involving|involves|confined|number of|percent of|cancer diagnosis|therapy|assessed|surgery|surgical|( in (remission|relapse))|cancer-(related|associated)| the rat |benign |uncertain behavior|surgery|mouse|invades|finding|^t[0-9]|^p(t|m|(x|[0-9]{1,}))"
+  
+  cancer_terms <- cui_name_map_lower %>%
+    dplyr::filter(stringr::str_detect(cui_name_lc, cancer_phenotypes_regex_lc)) %>%
+    dplyr::filter(!stringr::str_detect(cui_name_lc, non_cancer_terms_regex_lc))
+  
+  missing_cancer_terms <- cancer_terms %>%
+    dplyr::anti_join(oncotree_plus_hereditary_expanded, by = "cui") %>%
+    dplyr::mutate(group = NA, 
+                  source = "oncotree_basic_hereditary_extra_expanded",
+                  ot_tissue = NA,
+                  minor_term = F)
+  
+  cancer_term_map <- read.table(file="data-raw/term2tissue.tsv", sep="\t",
+                                stringsAsFactors = F, header = T)
+  
+  i <- 1
+  while(i <= nrow(cancer_term_map)){
+    term_regex <- cancer_term_map[i,]$tissue_regex
+    mgroup <- cancer_term_map[i,]$group
+    ot_tissue <- cancer_term_map[i,]$ot_tissue
+    
+    if(cancer_term_map[i,]$extra_cancer_term_needed == 1){
+      missing_cancer_terms <- missing_cancer_terms %>%
+        dplyr::mutate(group = dplyr::if_else(
+          is.na(group) & stringr::str_detect(cui_name_lc, term_regex) &
+            stringr::str_detect(cui_name_lc, "neoplasm|tumor|cancer|carcinoma"),
+          mgroup,
+          as.character(group)
+        ))
+      missing_cancer_terms <- missing_cancer_terms %>%
+        dplyr::mutate(ot_tissue = dplyr::if_else(
+          is.na(ot_tissue) & stringr::str_detect(cui_name_lc, term_regex) &
+            stringr::str_detect(cui_name_lc, "neoplasm|tumor|cancer|carcinoma"),
+          mgroup,
+          as.character(ot_tissue)
+        ))
+    }else{
+      missing_cancer_terms <- missing_cancer_terms %>%
+        dplyr::mutate(group = dplyr::if_else(
+          is.na(group) & stringr::str_detect(cui_name_lc, term_regex),
+          mgroup,
+          as.character(group)
+        ))
+      missing_cancer_terms <- missing_cancer_terms %>%
+        dplyr::mutate(ot_tissue = dplyr::if_else(
+          is.na(ot_tissue) & stringr::str_detect(cui_name_lc, term_regex),
+          mgroup,
+          as.character(ot_tissue)
+        ))
+    }
+    i <- i + 1
+  }
+  
+  missing_cancer_terms <- missing_cancer_terms %>% 
+    dplyr::filter(!is.na(ot_tissue)) %>%
+    dplyr::select(-cui_name_lc)
+  
+  oncotree_plus_hereditary_expanded <- oncotree_plus_hereditary_expanded %>%
+    dplyr::bind_rows(missing_cancer_terms)
+  
   oncotree_plus_hereditary_expanded_final <- oncotree_plus_hereditary_expanded %>%
     dplyr::filter(cui != "C0920349") %>% # Short Limb Dwarfism-Saddle Nose-Spinal Alterations-Metaphyseal Striation Syndrome
     dplyr::filter(cui != "C0009324") %>% # Ulcerative colitis
