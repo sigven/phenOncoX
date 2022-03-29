@@ -2,12 +2,12 @@ library(magrittr)
 source('data-raw/functions.R')
 
 disease_ontology_release <- 'v2022-03-02'
-efo_release <- 'v3.39.1'
+efo_release <- 'v3.40.0'
 oncotree_release <- '2021_11_02'
 
 ## Get UMLS / DiseaseOntology / EFO mappings
 umls_map <- map_umls(
-  update = T,
+  update = F,
   basedir = here::here())
 
 
@@ -21,7 +21,7 @@ do_map <- map_disease_ontology(
 efo_map <- map_efo(
   umls_map = umls_map,
   efo_release = efo_release,
-  update = T,
+  update = F,
   basedir = here::here())
 
 ## Use OncoTree as starting point for phenotype cross-map
