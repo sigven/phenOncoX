@@ -19,8 +19,8 @@ For each entry in the final list of phenotype terms, we make cross-mappings with
 Currently, the following ontology versions are used to create the mapping:
 
 -   OncoTree (2021_11_02)
--   Experimental Factor Ontology v3.41.0 (2022-03-15)
--   Disease Ontology (v2022-04-19)
+-   Experimental Factor Ontology v3.42.0 (2022-04-16)
+-   Disease Ontology (v2022-04-28)
 
 **IMPORTANT NOTE**: The mapping established by **oncoPhenoMap** attempts to be comprehensive, but we acknowledge that the presence of missing or erroneous cross-references might still occur.
 
