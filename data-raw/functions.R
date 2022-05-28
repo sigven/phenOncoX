@@ -5,7 +5,7 @@ library(stringr)
 library(ontologyIndex)
 
 map_efo <- function(umls_map,
-                    efo_release = "v3.36.0",
+                    efo_release = "v3.42.0",
                     update = T,
                     basedir = NULL){
   
@@ -1972,6 +1972,73 @@ onco_pheno_map <- function(
       dplyr::mutate(disease_ontology_release = do_release,
                     efo_release = efo_release,
                     oncotree_release = oncotree_release)
+    
+    
+    ## MAP NON-MAPPED EFO IDENTIFIERS BY NAME
+    efo_map_lc <- efo_map$efo2name %>%
+      dplyr::mutate(efo_name_lc = tolower(efo_name))
+    
+    tmp1 <- onco_pheno_map[[m]] %>%
+      dplyr::filter(!is.na(primary_site) & is.na(efo_id)) %>%
+      dplyr::select(-c(efo_name, efo_id)) %>%
+      dplyr::mutate(cui_name_lc = tolower(cui_name)) %>%
+      dplyr::left_join(
+        dplyr::filter(efo_map_lc, !is.na(primary_site)),
+        by = c("cui_name_lc" = "efo_name_lc", 
+               "primary_site" = "primary_site")
+      ) %>%
+      dplyr::select(-cui_name_lc)
+    
+    tmp2 <- onco_pheno_map[[m]] %>%
+      dplyr::filter(is.na(primary_site) & is.na(efo_id)) %>%
+      dplyr::select(-c(efo_name, efo_id, primary_site)) %>%
+      dplyr::mutate(cui_name_lc = tolower(cui_name)) %>%
+      dplyr::left_join(
+        dplyr::filter(efo_map_lc, is.na(primary_site)),
+        by = c("cui_name_lc" = "efo_name_lc")
+      ) %>%
+      dplyr::select(-cui_name_lc)
+    
+    tmp3 <- onco_pheno_map[[m]] %>%
+      dplyr::filter((!is.na(primary_site) & !is.na(efo_id)) |
+                      (is.na(primary_site) & !is.na(efo_id)))
+    
+    onco_pheno_map[[m]] <- 
+      dplyr::bind_rows(tmp1,
+                       tmp2,
+                       tmp3)
+    
+    if(m != 'oncotree_basic'){
+      onco_pheno_map[[m]] <- onco_pheno_map[[m]] %>%
+        dplyr::select(
+          ot_tissue, cui, cui_name,
+          minor_type, group, source,
+          minor_term, primary_site,
+          efo_id, efo_name,
+          do_id, do_name,
+          do_cancer_slim,
+          icd10_code, disease_ontology_release,
+          efo_release, oncotree_release)
+    }else{
+      onco_pheno_map[[m]] <- onco_pheno_map[[m]] %>%
+        dplyr::select(
+          ot_tissue, ot_main_type,
+          ot_level, ot_name, ot_code,
+          cui, cui_name,
+          minor_type, primary_site,
+          group, source,
+          efo_id, efo_name,
+          do_id, do_name,
+          do_cancer_slim,
+          icd10_code, 
+          disease_ontology_release,
+          efo_release, 
+          oncotree_release)
+    }
+    
+    ## 1. get mappings with primary sites and non-mapped EFO
+    ##    - map by name (lowercase(cui) == lowercase(efo_name))
+    
   }
   
   onco_pheno_map$icd10_map <- umls_icd10_mapping
