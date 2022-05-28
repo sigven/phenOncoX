@@ -1729,6 +1729,8 @@ onco_pheno_map <- function(
     dplyr::filter(!(stringr::str_detect(tolower(cui_name), "ewing sarcom") & !stringr::str_detect(tolower(cui_name),"neuro") & (!is.na(ot_tissue) & ot_tissue == "CNS/Brain"))) %>%
     dplyr::filter(!(stringr::str_detect(tolower(cui_name), "sarcoma") & (!is.na(ot_tissue) & ot_tissue == "Myeloid" | ot_tissue == "Lymphoid"))) %>%
     dplyr::filter(!(stringr::str_detect(tolower(cui_name), "renal cell") & (!is.na(ot_tissue) & ot_tissue == "Bladder/Urinary Tract"))) %>%
+    dplyr::filter(!(stringr::str_detect(tolower(cui_name), "head and neck") & (!is.na(ot_tissue) & ot_tissue == "Skin"))) %>%
+    dplyr::filter(!(stringr::str_detect(tolower(cui_name), "hepatocellular") & (!is.na(ot_tissue) & ot_tissue == "CNS/Brain"))) %>%
     
     dplyr::arrange(group) %>%
     dplyr::mutate(group = stringr::str_replace_all(group," |/|, ","_")) %>%
@@ -1971,7 +1973,7 @@ onco_pheno_map <- function(
             as.character(efo_name))) %>%
       dplyr::mutate(disease_ontology_release = do_release,
                     efo_release = efo_release,
-                    oncotree_release = oncotree_release)
+                    oncotree_release = oncotree_release) 
     
     
     ## MAP NON-MAPPED EFO IDENTIFIERS BY NAME
@@ -2006,7 +2008,43 @@ onco_pheno_map <- function(
     onco_pheno_map[[m]] <- 
       dplyr::bind_rows(tmp1,
                        tmp2,
-                       tmp3)
+                       tmp3) %>%
+      dplyr::filter(
+        !(!is.na(efo_name) & 
+            stringr::str_detect(
+              tolower(efo_name),"wilms tumor") &
+            (!is.na(primary_site) & 
+               stringr::str_detect(
+              primary_site, "CNS/Brain|Bladder/Urinary Tract"
+            ))
+        )) %>%
+      dplyr::filter(
+        !(!is.na(efo_name) & 
+            stringr::str_detect(
+              tolower(efo_name),"ewing sarcoma") &
+            (!is.na(primary_site) & 
+               stringr::str_detect(
+                 primary_site, "CNS/Brain|Peripheral Nervous System"
+               ))
+        )) %>%
+      dplyr::filter(
+        !(!is.na(efo_name) & 
+            stringr::str_detect(
+              tolower(efo_name),"oropharynx|laryngeal|hypopharyngeal|oral squamous") &
+            (!is.na(primary_site) & 
+               stringr::str_detect(
+                 primary_site, "Skin"
+               ))
+        )) %>%
+      dplyr::filter(
+        !(!is.na(efo_name) & 
+            stringr::str_detect(
+              tolower(efo_name),"retinoblastoma") &
+            (!is.na(primary_site) & 
+               stringr::str_detect(
+                 primary_site, "Bone|CNS/Brain|Soft Tissue"
+               ))
+        )) 
     
     if(m != 'oncotree_basic'){
       onco_pheno_map[[m]] <- onco_pheno_map[[m]] %>%
