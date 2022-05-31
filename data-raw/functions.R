@@ -2103,6 +2103,14 @@ onco_pheno_map <- function(
       dplyr::filter(
         !(!is.na(efo_name) & 
             stringr::str_detect(
+              tolower(efo_name),"peritoneal") &
+            (!is.na(primary_site) &
+               (primary_site == "Pleura")
+            )
+        )) %>%
+      dplyr::filter(
+        !(!is.na(efo_name) & 
+            stringr::str_detect(
               tolower(efo_name),"^(malignant )?renal |collecting duct|hepatoblastoma|pleuropulmonary|kidney|seminoma|nephr") &
             (!is.na(primary_site) &
                (primary_site == "Bladder/Urinary Tract" |
