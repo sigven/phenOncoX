@@ -214,7 +214,7 @@ map_efo <- function(umls_map,
     )  %>%
     dplyr::mutate(
       primary_site = dplyr::if_else(
-        stringr::str_detect(tolower(efo_name), "bladder|urinary|ureter|urethra|urothelial") &
+        stringr::str_detect(tolower(efo_name), "bladder|urinary|ureter|urethra|urothelial|transitional cell ") &
           stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplasm|tumor"),
         "Bladder/Urinary Tract",
         as.character(primary_site)
@@ -237,8 +237,9 @@ map_efo <- function(umls_map,
     )%>%
     dplyr::mutate(
       primary_site = dplyr::if_else(
-        stringr::str_detect(tolower(efo_name), "thymic|thymus") &
-          stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplasm|tumor"),
+        stringr::str_detect(tolower(efo_name), "thymoma") |
+        (stringr::str_detect(tolower(efo_name), "thymic|thymus") &
+          stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplasm|tumor")),
         "Thymus",
         as.character(primary_site)
       )
@@ -281,8 +282,9 @@ map_efo <- function(umls_map,
     ) %>%
     dplyr::mutate(
       primary_site = dplyr::if_else(
-        stringr::str_detect(tolower(efo_name), "eye|ocular |retinal |lacrimal gland|palbrepal ") &
-          stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplas|tumor"),
+        stringr::str_detect(tolower(efo_name), "retinoblastoma") |
+        (stringr::str_detect(tolower(efo_name), "eye |ocular |orbit(al)? |retinal |((uveal|ocular) melanoma)|lacrimal gland|palbrepal ") &
+          stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplas|tumor")),
         "Eye",
         as.character(primary_site)
       )
@@ -346,7 +348,7 @@ map_efo <- function(umls_map,
     ) %>%
     dplyr::mutate(
       primary_site = dplyr::if_else(
-        stringr::str_detect(tolower(efo_name), "head and neck|mouth|neck|glottis|larynx|parotid gland|salivary gland|oral squamous|tongue|nasal cavity|nasopharyngeal|laryngeal|sinus |hypopharyn|oral cavity|oropharynx") &
+        stringr::str_detect(tolower(efo_name), "tonsil |tonsillar |head and neck|mouth|neck|glottis|larynx|pharynx |pharyngeal |gum |lip |parotid gland|salivary gland|oral squamous|tongue|nasal cavity|nasopharyngeal|laryngeal|sinus |hypopharyn|oral cavity|oropharynx") &
           stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplas|tumor"),
         "Head and Neck",
         as.character(primary_site)
@@ -378,7 +380,7 @@ map_efo <- function(umls_map,
     ) %>%
     dplyr::mutate(
       primary_site = dplyr::if_else(
-        stringr::str_detect(tolower(efo_name),"mesotheliom") |
+        stringr::str_detect(tolower(efo_name),"mesotheliom|mesothelial") |
           (stringr::str_detect(tolower(efo_name), "pleura") &
              stringr::str_detect(tolower(efo_name), "carcinoma|cancer|mesotheliom|neoplas|tumor")),
         "Pleura",
@@ -387,7 +389,7 @@ map_efo <- function(umls_map,
     ) %>%
     dplyr::mutate(
       primary_site = dplyr::if_else(
-        stringr::str_detect(tolower(efo_name), "lung|bronchi|bronchoalveolar") &
+        stringr::str_detect(tolower(efo_name), "thoracic|lung|bronchi|bronchogenic|bronchus|bronchoalveolar|respiratory system|large cell neuroendocrine") &
           stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplas|tumor"),
         "Lung",
         as.character(primary_site)
@@ -395,16 +397,16 @@ map_efo <- function(umls_map,
     ) %>%
     dplyr::mutate(
       primary_site = dplyr::if_else(
-        stringr::str_detect(tolower(efo_name), "neuroblastom|meningiom|glioblastom|medulloblastom|glioma|cerebellum cancer|cereballar neoplasm|astrocytom|scwhannom") |
-          (stringr::str_detect(tolower(efo_name), "central nervous|nervous system|brain") &
-             stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplas|tumor")),
+        stringr::str_detect(tolower(efo_name), "neuroblastom|meningiom|glioblastom|medulloblastom|glioma|cerebellum cancer|hemangioblastom|cerebellar neoplasm|astrocytom|scwhannom") |
+          (stringr::str_detect(tolower(efo_name), "glioneuronal|central nervous|skull |pituitary |nervous system|neuronal |brain|cerebellar|cerebral") &
+             stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplas|tumor|teratoma")),
         "CNS/Brain",
         as.character(primary_site)
       )
     ) %>%
     dplyr::mutate(
       primary_site = dplyr::if_else(
-        stringr::str_detect(tolower(efo_name), "breast") &
+        stringr::str_detect(tolower(efo_name), "breast|nipple") &
           stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplas|tumor"),
         "Breast",
         as.character(primary_site)
@@ -412,7 +414,8 @@ map_efo <- function(umls_map,
     ) %>%
     dplyr::mutate(
       primary_site = dplyr::if_else(
-        stringr::str_detect(tolower(efo_name), "kidney|renal|wilms") &
+        stringr::str_detect(tolower(efo_name), "kidney|renal|wilms|clear cell|nephroblastom") &
+          !stringr::str_detect(tolower(efo_name),"ovarian|cervical") &
           stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplas|tumor"),
         "Kidney",
         as.character(primary_site)
@@ -422,6 +425,7 @@ map_efo <- function(umls_map,
       primary_site = dplyr::if_else(
         stringr::str_detect(tolower(efo_name),"seminoma") |
           (stringr::str_detect(tolower(efo_name), "testis|testicular|embryonal|male reproductive|germ cell") &
+             !stringr::str_detect(tolower(efo_name),"female|endometri|ovarian") &
              stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplas|tumor")),
         "Testis",
         as.character(primary_site)
@@ -429,8 +433,8 @@ map_efo <- function(umls_map,
     ) %>%
     dplyr::mutate(
       primary_site = dplyr::if_else(
-        stringr::str_detect(tolower(efo_name),"melanoma") |
-          (stringr::str_detect(tolower(efo_name), "skin") &
+        stringr::str_detect(tolower(efo_name),"melanoma|ear cancer") |
+          (stringr::str_detect(tolower(efo_name), "skin|keratinocyte|eccrine") &
              stringr::str_detect(tolower(efo_name), "squamous cell|carcinoma|cancer|neoplas|tumor")),
         "Skin",
         as.character(primary_site)
@@ -438,7 +442,7 @@ map_efo <- function(umls_map,
     ) %>%
     dplyr::mutate(
       primary_site = dplyr::if_else(
-        (stringr::str_detect(tolower(efo_name), "vulva|vagina") &
+        (stringr::str_detect(tolower(efo_name), "vulva|vagina|bartholin gland") &
            stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplas|tumor")),
         "Vulva/Vagina",
         as.character(primary_site)
@@ -468,7 +472,7 @@ map_efo <- function(umls_map,
     dplyr::mutate(
       primary_site = dplyr::if_else(
         stringr::str_detect(tolower(efo_name), "adrenal gland|adrenal") &
-          stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplas|tumor|blastom|lipom"),
+          stringr::str_detect(tolower(efo_name), "carcinoma|pheochromocytoma|cancer|neoplas|tumor|blastom|lipom"),
         "Adrenal Gland",
         as.character(primary_site)
       )
@@ -2030,7 +2034,7 @@ onco_pheno_map <- function(
       dplyr::filter(
         !(!is.na(efo_name) & 
             stringr::str_detect(
-              tolower(efo_name),"oropharynx|laryngeal|hypopharyngeal|oral squamous") &
+              tolower(efo_name),"hidradenoma|papilloma|ocular |uveal |oropharynx|laryngeal|hypopharyngeal|oral squamous") &
             (!is.na(primary_site) & 
                stringr::str_detect(
                  primary_site, "Skin"
@@ -2044,7 +2048,92 @@ onco_pheno_map <- function(
                stringr::str_detect(
                  primary_site, "Bone|CNS/Brain|Soft Tissue"
                ))
-        )) 
+        )) %>%
+      dplyr::filter(
+        !(!is.na(efo_name) & 
+            stringr::str_detect(
+              tolower(efo_name),"squamous cell") &
+            (!is.na(primary_site) &
+               primary_site == "Skin" &
+               !(stringr::str_detect(tolower(efo_name), 
+                                      "keratin|skin ") | 
+                   tolower(efo_name) == "squamous cell carcinoma" |
+                 tolower(efo_name) == "squamous cell carcinoma in situ"
+                )
+            )
+        )) %>% 
+      dplyr::filter(
+        !(!is.na(efo_name) & 
+            stringr::str_detect(
+              tolower(efo_name),"glottis|tonsil|mesothelioma|tracheal|laryngeal|thymus|thymic|thymoma|pharynx|pharyngeal") &
+            (!is.na(primary_site) &
+               primary_site == "Lung"
+            )
+        )) %>%
+      dplyr::filter(
+        !(!is.na(efo_name) & 
+            stringr::str_detect(
+              tolower(efo_name),"prostate") &
+            stringr::str_detect(
+              tolower(efo_name),"acinar ") &
+            (!is.na(primary_site) &
+               (primary_site == "Head and Neck" | 
+                  primary_site == "Cervix")
+            )
+        )) %>%
+      dplyr::filter(
+        !(!is.na(efo_name) & 
+            stringr::str_detect(
+              tolower(efo_name)," sinus ") &
+            (!is.na(primary_site) &
+               (primary_site == "Soft Tissue" | 
+                  primary_site == "Lung" |
+                  primary_site == "Bone" |
+                  primary_site == "Lung")
+            )
+        )) %>%
+      dplyr::filter(
+        !(!is.na(efo_name) & 
+            stringr::str_detect(
+              tolower(efo_name),"pituitary gland|pituitary tumor") &
+            (!is.na(primary_site) &
+               (primary_site == "Head Neck")
+            )
+        )) %>%
+      dplyr::filter(
+        !(!is.na(efo_name) & 
+            stringr::str_detect(
+              tolower(efo_name),"^(malignant )?renal |collecting duct|hepatoblastoma|pleuropulmonary|kidney|seminoma|nephr") &
+            (!is.na(primary_site) &
+               (primary_site == "Bladder/Urinary Tract" |
+                  primary_site == "CNS/Brain")
+            )
+        )) %>%
+      dplyr::mutate(primary_site = dplyr::if_else(
+          !is.na(efo_name) & 
+            stringr::str_detect(
+              tolower(efo_name),"heart (cancer|neoplasm)|neoplasm of heart") &
+            primary_site == "Lung",
+          "Other/Unknown",
+          as.character(primary_site)
+        )) %>%
+      dplyr::mutate(primary_site = dplyr::if_else(
+        !is.na(efo_name) & 
+          stringr::str_detect(
+            tolower(efo_name)," syndrome$") &
+         !is.na(primary_site),
+        as.character(NA),
+        as.character(primary_site)
+      )) %>%
+      dplyr::mutate(ot_tissue = dplyr::if_else(
+        !is.na(efo_name) & 
+          stringr::str_detect(
+            tolower(efo_name),"heart (cancer|neoplasm)|neoplasm of heart") &
+          primary_site == "Other/Unknown" | primary_site == "Lung",
+        as.character(NA),
+        as.character(primary_site)
+      )) 
+    
     
     if(m != 'oncotree_basic'){
       onco_pheno_map[[m]] <- onco_pheno_map[[m]] %>%
