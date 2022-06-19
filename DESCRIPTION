@@ -1,7 +1,7 @@
 Package: oncoPhenoMap
 Type: Package
 Title: A cross-referenced phenotype ontology map for the oncology domain
-Date: 2022-05-31
+Date: 2022-06-18
 Authors@R: 
     c(person(given = "Sigve",
              family = "Nakken",
