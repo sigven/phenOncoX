@@ -1,13 +1,13 @@
 library(magrittr)
 source('data-raw/functions.R')
 
-disease_ontology_release <- 'v2022-06-07'
-efo_release <- 'v3.44.0'
+disease_ontology_release <- 'v2022-08-29'
+efo_release <- 'v3.46.0'
 oncotree_release <- '2021_11_02'
 
 ## Get UMLS / DiseaseOntology / EFO mappings
 umls_map <- map_umls(
-  update = F,
+  update = T,
   basedir = here::here())
 
 

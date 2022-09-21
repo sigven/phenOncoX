@@ -1,7 +1,7 @@
 Package: oncoPhenoMap
 Type: Package
 Title: A cross-referenced phenotype ontology map for the oncology domain
-Date: 2022-07-27
+Date: 2022-09-21
 Authors@R: 
     c(person(given = "Sigve",
              family = "Nakken",
@@ -11,7 +11,7 @@ Authors@R:
 Maintainer: Sigve Nakken <sigven@ifi.uio.no>
 URL: https://github.com/sigven/oncoPhenoMap
 BugReports: https://github.com/sigven/oncoPhenoMap/issues
-Version: 0.3.9
+Version: 0.4.0
 Description: A semi-manually curated resource that maps relevant phenotype terms for the oncology domain.
     Using OncoTree as the starting point, oncoPhenoMap gathers all key UMLS terms per main tumor type, 
     expands with all children in the UMLS tree, and maps these terms to cross-referenced terms in the 

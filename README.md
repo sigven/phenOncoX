@@ -16,11 +16,11 @@ The mapping established within **oncoPhenoMap** is semi-manually curated, using 
 
 For each entry in the final list of phenotype terms, we make cross-mappings with phenotype terms from [EFO](https://github.com/EBISPOT/efo), [DO](https://disease-ontology.org/), and the [ICD10 classification](https://www.who.int/standards/classifications/classification-of-diseases).
 
-Currently, the following ontology versions are used to create the mapping:
+As of v0.4.0, the following ontology versions are used to create the mapping:
 
 -   OncoTree (2021_11_02)
--   Experimental Factor Ontology v3.43.0 (2022-06-15)
--   Disease Ontology (v2022-06-07)
+-   Experimental Factor Ontology v3.46.0 (2022-09-15)
+-   Disease Ontology (v2022-08-29)
 
 **IMPORTANT NOTE**: The mapping established by **oncoPhenoMap** attempts to be comprehensive, but we acknowledge that the presence of missing or erroneous cross-references might still occur.
 
