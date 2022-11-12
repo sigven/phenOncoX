@@ -1,7 +1,7 @@
-Package: oncoPhenoMap
+Package: phenoOncoX
 Type: Package
-Title: A cross-referenced phenotype ontology map for the oncology domain
-Date: 2022-09-21
+Title: A phenotype ontology map for cancer
+Date: 2022-11-01
 Authors@R: 
     c(person(given = "Sigve",
              family = "Nakken",
@@ -9,17 +9,25 @@ Authors@R:
              email = "sigven@ifi.uio.no",
              comment = c(ORCID = "0000-0001-8468-2050")))
 Maintainer: Sigve Nakken <sigven@ifi.uio.no>
-URL: https://github.com/sigven/oncoPhenoMap
-BugReports: https://github.com/sigven/oncoPhenoMap/issues
+URL: https://github.com/sigven/phenoOncoX
+BugReports: https://github.com/sigven/phenoOncoX/issues
 Version: 0.4.0
-Description: A semi-manually curated resource that maps relevant phenotype terms for the oncology domain.
-    Using OncoTree as the starting point, oncoPhenoMap gathers all key UMLS terms per main tumor type, 
-    expands with all children in the UMLS tree, and maps these terms to cross-referenced terms in the 
-    Experimental Factor Ontology (EFO), Disease Ontology (DO), and ICD-10.
+Description: A semi-manually curated resource that maps relevant phenotype 
+    terms for the oncology domain. Using OncoTree as the starting point, 
+    phenoOncoX gathers all key UMLS terms per main tumor type, 
+    expands with all children in the UMLS tree, and maps these terms to 
+    cross-referenced terms in the Experimental Factor Ontology (EFO), 
+    Disease Ontology (DO), and ICD-10.
 Depends: 
     R (>= 4.0)
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.2
 Roxygen: list(markdown = TRUE)
+Imports: 
+    dplyr,
+    DT,
+    readr,
+    googledrive,
+    lgr

@@ -1,0 +1,125 @@
+---
+title: "Getting started"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{Getting started}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: '`r system.file("bibliography.bib", package = "phenoOncoX")`'
+nocite: |
+  @Louden2020-ym, @Schriml2012-kn, @Kundra2021-xu, 
+  @Malone2010-vu, @Huang2018-ah
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, echo = F}
+library(phenoOncoX)
+```
+
+<br><br>
+
+
+# Installation
+
+```{r install, echo = T, eval = F}
+
+if (!("remotes" %in% installed.packages()) {
+  install.packages("remotes")
+}
+remotes::install_github('sigven/phenoOncoX')
+```
+
+<br><br>
+
+# Get OncoTree terms
+
+This shows how to retrieve cancer phenotype terms in, as defined in 
+[OncoTree](http://oncotree.mskcc.org/#/home) (*max tree depth* = 2)
+
+```{r core, echo = T}
+
+## load the data
+download_dir <- "~/Desktop"
+#download_dir <- tempdir()
+oncotree <- get_tree(cache_dir = download_dir, max_tree_depth = 2)
+
+## Number of records
+nrow(oncotree$records)
+
+## Show metadata for underlying resources
+oncotree$metadata
+
+
+```
+
+<br><br>
+
+## Get all (OncoTree-expanded) cancer phenotype terms
+
+```{r expanded, echo = T, eval = T}
+
+## get all cancer phenotype terms
+
+oncoterms <- get_terms(cache_dir = download_dir)
+
+## Number of records
+nrow(oncoterms$records)
+
+
+```
+
+<br><br>
+
+## Get all (OncoTree-expanded) cancer phenotype terms relevant for prostate cancer 
+
+```{r terms_prostate, echo = T, eval = T, results = "hide"}
+
+## get all oncoterms for prostate cancer
+oncoterms_prostate <- get_terms(
+  cache_dir = download_dir, site = "Prostate")
+
+## Make as datatable
+prostate_terms_table <- DT::datatable(
+  dplyr::select(
+    oncoterms_prostate$records, 
+    primary_site, cui, cui_name,
+    dplyr::everything()),
+  escape = FALSE,
+  extensions = c("Buttons", "Responsive"), 
+  width = "100%",
+  options = list(
+    buttons = c("csv", "excel"), 
+    dom = "Bfrtip"))
+
+```
+
+<br>
+
+```{r prostate_terms_table, echo = F, eval = T}
+prostate_terms_table
+```
+
+<br><br>
+
+# Session Info
+
+\vspace{5pt}
+\footnotesize
+```{r sessioninfo, eval = TRUE}
+# set eval = FALSE if you don't want this info (useful for reproducibility) 
+# to appear
+sessionInfo()
+```
+\normalsize
+
+<br><br>
+
+# References

@@ -1,4 +1,4 @@
-tissue_regex	ot_tissue	group	extra_cancer_term_needed
+tissue_regex	primary_site	ot_main_type	extra_cancer_term_needed
 ( tongue| eyelid| lip| nasal | ear| mouth| gum|tonsillar| tonsil| oropharyn| nasophary| sinus| hypopharyng)	Head and Neck	Head and Neck Cancer, NOS	1
 (stomach|esophag)	Esophagus/Stomach	Esophageal/Stomach Cancer, NOS	1
 (gallbladder)	Biliary Tract	Biliary Tract Cancer, NOS	1

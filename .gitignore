@@ -1,4 +1,7 @@
+*.html
 .Rproj.user
-.Rhistory
-.RData
-.Ruserdata
+docs
+data-raw/gd_local
+data-raw/do
+data-raw/disgenet
+data-raw/efo

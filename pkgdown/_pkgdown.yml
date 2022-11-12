@@ -1,0 +1,27 @@
+url: https://sigven.github.io/phenoOncoX/
+title: phenoOncoX
+template:
+  bootstrap: 5
+toc:
+  depth: 3
+authors:
+  Sigve Nakken:
+    href: "https://github.com/sigven"
+navbar:
+  structure:
+    left: [home, get_started, reference, news]
+    right: [search, github]
+  components:
+    get_started:
+       text: Getting started
+       href: articles/phenoOncoX.html
+    
+home:
+  sidebar:
+    structure: [links, license, community, citation, authors, dev]
+    components:
+      citation:
+         title: Citation
+         text: "[Citing geneOncoX](authors.html#citation)"
+news:
+  one_page: true
