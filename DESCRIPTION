@@ -11,7 +11,7 @@ Authors@R:
 Maintainer: Sigve Nakken <sigven@ifi.uio.no>
 URL: https://github.com/sigven/phenoOncoX
 BugReports: https://github.com/sigven/phenoOncoX/issues
-Version: 0.5.0
+Version: 0.4.0
 Description: A semi-manually curated resource that maps relevant phenotype 
     terms for the oncology domain. Using OncoTree as the starting point, 
     phenoOncoX gathers all key UMLS terms per main tumor type, 

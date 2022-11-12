@@ -47,8 +47,7 @@ This shows how to retrieve cancer phenotype terms in, as defined in
 ```{r core, echo = T}
 
 ## load the data
-download_dir <- "~/Desktop"
-#download_dir <- tempdir()
+download_dir <- tempdir()
 oncotree <- get_tree(cache_dir = download_dir, max_tree_depth = 2)
 
 ## Number of records
