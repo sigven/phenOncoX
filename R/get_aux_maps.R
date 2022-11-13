@@ -45,9 +45,7 @@
 #'
 
 get_aux_maps <- function(cache_dir = NA, 
-                      force_download = FALSE,
-                      primary_site = NA,
-                      ignore_minor_type = FALSE) {
+                      force_download = FALSE) {
     dat <- get_pox_data(
         cache_dir = cache_dir,
         force_download = force_download,
