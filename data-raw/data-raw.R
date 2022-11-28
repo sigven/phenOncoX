@@ -1,8 +1,8 @@
 source('data-raw/pheno_oncox_utilities.R')
 
-disease_ontology_release <- 'v2022-10'
-efo_release <- 'v3.47.0'
-oncotree_release <- '2021_11_02'
+#disease_ontology_release <- 'v2022-10'
+#efo_release <- 'v3.47.0'
+#oncotree_release <- '2021_11_02'
 
 ## get metadata from metadata.xlsx
 metadata <- list()
@@ -77,7 +77,7 @@ db[['oncotree_core']] <- oncotree_core
 db[['oncotree_expanded']] <- oncotree_expanded
 db[['auxiliary_maps']] <- auxiliary_maps
 
-version_bumped <- "0.5.0"
+version_bumped <- "0.5.2"
 gd_records <- list()
 db_id_ref <- data.frame()
 
