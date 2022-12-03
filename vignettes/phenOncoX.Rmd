@@ -7,7 +7,7 @@ vignette: >
   %\VignetteIndexEntry{Getting started}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-bibliography: '`r system.file("bibliography.bib", package = "phenoOncoX")`'
+bibliography: '`r system.file("bibliography.bib", package = "phenOncoX")`'
 nocite: |
   @Louden2020-ym, @Schriml2012-kn, @Kundra2021-xu, 
   @Malone2010-vu, @Huang2018-ah
@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup, echo = F}
-library(phenoOncoX)
+library(phenOncoX)
 ```
 
 <br><br>
@@ -34,7 +34,7 @@ library(phenoOncoX)
 if (!("remotes" %in% installed.packages()) {
   install.packages("remotes")
 }
-remotes::install_github('sigven/phenoOncoX')
+remotes::install_github('sigven/phenOncoX')
 ```
 
 <br><br>
@@ -47,7 +47,8 @@ This shows how to retrieve cancer phenotype terms in, as defined in
 ```{r core, echo = T}
 
 ## load the data
-download_dir <- tempdir()
+#download_dir <- tempdir()
+download_dir <- "~/Desktop"
 oncotree <- get_tree(cache_dir = download_dir, max_tree_depth = 2)
 
 ## Number of records

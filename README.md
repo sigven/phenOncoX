@@ -1,7 +1,7 @@
 &nbsp;
 
-## phenoOncoX - crossmapped phenotype ontologies for cancer 
-<a href="https://sigven.github.io/phenoOncoX/">
+## phenOncoX - crossmapped phenotype ontologies for cancer 
+<a href="https://sigven.github.io/phenOncoX/">
 <img src="man/figures/logo.png" align="right" height="130" width="113"/></a>
 
 ### Overview
@@ -26,12 +26,12 @@ In order to integrate such knowledge resources, there is henceforth a need
 to cross-link or map the entries across disease ontologies to the extent it 
 is possible.
 
-**phenoOncoX** is an R data package that attempts to address this challenge. 
-In short, **phenoOncoX** provides a global cross-mapped set of phenotype 
+**phenOncoX** is an R data package that attempts to address this challenge. 
+In short, **phenOncoX** provides a global cross-mapped set of phenotype 
 ontology terms attributed to cancer phenotypes.
 
-The mapping established within **phenoOncoX** is semi-manually curated, using [OncoTree](http://oncotree.mskcc.org/#/home) as the starting point for a list of [UMLS](https://www.ncbi.nlm.nih.gov/medgen/) phenotype terms per cancer 
-subtype/primary site. Next, **phenoOncoX** appends a number of phenotypes 
+The mapping established within **phenOncoX** is semi-manually curated, using [OncoTree](http://oncotree.mskcc.org/#/home) as the starting point for a list of [UMLS](https://www.ncbi.nlm.nih.gov/medgen/) phenotype terms per cancer 
+subtype/primary site. Next, **phenOncoX** appends a number of phenotypes 
 attributed to heritable cancer conditions. Furthermore, each cancer subtype 
 entry in *OncoTree* is expanded with additional subtypes that are found in 
 the *UMLS* child-parent hierarchy of disease terms.
@@ -40,20 +40,20 @@ For each entry in the final list of phenotype terms, we make cross-mappings
 with phenotype terms from [EFO](https://github.com/EBISPOT/efo), 
 [DO](https://disease-ontology.org/), and the [ICD10 classification](https://www.who.int/standards/classifications/classification-of-diseases).
 
-As of November 2022, the following ontology versions are used to create the mapping:
+As of December 2022, the following ontology versions are used to create the mapping:
 
 -   OncoTree (2021_11_02)
--   Experimental Factor Ontology v3.47.0 (2022-10-17)
--   Disease Ontology (v2022-11-01)
+-   Experimental Factor Ontology v3.48.0 (2022-11-15)
+-   Disease Ontology (v2022-11-30)
 
-**IMPORTANT NOTE**: The mapping established by **phenoOncoX** attempts 
+**IMPORTANT NOTE**: The mapping established by **phenOncoX** attempts 
 to be comprehensive, but we acknowledge that the presence of missing or 
 erroneous cross-references might still occur.
 
 ### Getting started
 
-* [Installation instructions](https://sigven.github.io/phenoOncoX/articles/phenoOncoX.html#installation)
-* [Usage examples](https://sigven.github.io/phenoOncoX/articles/phenoOncoX.html#get-oncotree-terms)
+* [Installation instructions](https://sigven.github.io/phenOncoX/articles/phenOncoX.html#installation)
+* [Usage examples](https://sigven.github.io/phenOncoX/articles/phenOncoX.html#get-oncotree-terms)
 
 ### Contact
 

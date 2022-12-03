@@ -604,7 +604,8 @@ map_disease_ontology <- function(
   
   do_github_raw_url <-
     paste0("https://raw.githubusercontent.com/DiseaseOntology/",
-           "HumanDiseaseOntology/main/src/ontology/releases/")
+           "HumanDiseaseOntology/",
+           release,"/src/ontology/releases")
   
   release_dest <- stringr::str_replace_all(release,"-","")
   if (!file.exists(
@@ -642,7 +643,7 @@ map_disease_ontology <- function(
               paste0("doid.",release_dest,".obo")))) {
     download.file(
       url =
-        paste0(do_github_raw_url, "doid.obo"),
+        paste0(do_github_raw_url, "/doid.obo"),
       destfile =
         file.path(basedir, "data-raw", "do",
                   paste0("doid.", release_dest, ".obo")))

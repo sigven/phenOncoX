@@ -1,12 +1,8 @@
-source('data-raw/pheno_oncox_utilities.R')
-
-#disease_ontology_release <- 'v2022-10'
-#efo_release <- 'v3.47.0'
-#oncotree_release <- '2021_11_02'
+source('data-raw/phen_oncox_utilities.R')
 
 ## get metadata from metadata.xlsx
 metadata <- list()
-for (elem in c("pheno_oncox")) {
+for (elem in c("phen_oncox")) {
   metadata[[elem]] <- as.data.frame(readxl::read_excel(
     "data-raw/metadata.xlsx",
     sheet = elem, col_names = TRUE
@@ -34,16 +30,16 @@ icd10_map <- map_icd10(
 
 do_map <- map_disease_ontology(
   skip_non_cui_mapped = T,
-  release = metadata$pheno_oncox[
-    metadata$pheno_oncox$source == "Disease Ontology",]$version,
+  release = metadata$phen_oncox[
+    metadata$phen_oncox$source == "Disease Ontology",]$version,
   umls_map = umls_map,
   basedir = here::here())
 
 
 efo_map <- map_efo(
   umls_map = umls_map,
-  efo_release = metadata$pheno_oncox[
-    metadata$pheno_oncox$source == "Experimental Factor Ontology",]$version,
+  efo_release = metadata$phen_oncox[
+    metadata$phen_oncox$source == "Experimental Factor Ontology",]$version,
   update = T,
   basedir = here::here())
 
@@ -77,12 +73,15 @@ db[['oncotree_core']] <- oncotree_core
 db[['oncotree_expanded']] <- oncotree_expanded
 db[['auxiliary_maps']] <- auxiliary_maps
 
-version_bumped <- "0.5.2"
+version_bumped <- "0.5.3"
 gd_records <- list()
 db_id_ref <- data.frame()
 
 
-for (elem in c("oncotree_core", "auxiliary_maps", "oncotree_expanded")) {
+for (elem in 
+     c("oncotree_core", 
+       "auxiliary_maps", 
+       "oncotree_expanded")) {
   saveRDS(db[[elem]],
           file = paste0(
             "data-raw/gd_local/", elem, "_v",
@@ -93,7 +92,7 @@ for (elem in c("oncotree_core", "auxiliary_maps", "oncotree_expanded")) {
   (gd_records[[elem]] <- googledrive::drive_upload(
     paste0("data-raw/gd_local/", 
            elem, "_v", version_bumped, ".rds"),
-    paste0("phenoOncoX/", elem, "_v", version_bumped, ".rds")
+    paste0("phenOncoX/", elem, "_v", version_bumped, ".rds")
   ))
   
   google_rec_df <-

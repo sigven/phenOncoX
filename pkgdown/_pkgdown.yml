@@ -1,5 +1,5 @@
-url: https://sigven.github.io/phenoOncoX/
-title: phenoOncoX
+url: https://sigven.github.io/phenOncoX/
+title: phenOncoX
 template:
   bootstrap: 5
 toc:
@@ -14,7 +14,7 @@ navbar:
   components:
     get_started:
        text: Getting started
-       href: articles/phenoOncoX.html
+       href: articles/phenOncoX.html
     
 home:
   sidebar:
@@ -22,6 +22,6 @@ home:
     components:
       citation:
          title: Citation
-         text: "[Citing geneOncoX](authors.html#citation)"
+         text: "[Citing phenOncoX](authors.html#citation)"
 news:
   one_page: true
