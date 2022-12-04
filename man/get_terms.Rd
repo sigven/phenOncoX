@@ -80,7 +80,7 @@ resources used
 \examples{
 
 \dontrun{
-library(geneOncoX)
+library(phenOncoX)
 oncology_terms <- get_terms(cache_dir = tempdir())
 }
 

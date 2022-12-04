@@ -4,12 +4,7 @@
 \alias{get_aux_maps}
 \title{Get auxiliary phenotype ontology maps}
 \usage{
-get_aux_maps(
-  cache_dir = NA,
-  force_download = FALSE,
-  primary_site = NA,
-  ignore_minor_type = FALSE
-)
+get_aux_maps(cache_dir = NA, force_download = FALSE)
 }
 \arguments{
 \item{cache_dir}{Local directory for data download}
@@ -50,7 +45,7 @@ resources used
 \examples{
 
 \dontrun{
-library(geneOncoX)
+library(phenOncoX)
 oncology_terms <- get_aux_maps(cache_dir = tempdir())
 }
 

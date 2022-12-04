@@ -57,7 +57,7 @@
 #' @examples
 #' 
 #' \dontrun{
-#' library(geneOncoX)
+#' library(phenOncoX)
 #' oncology_terms <- get_tree(cache_dir = tempdir())
 #' }
 #' 

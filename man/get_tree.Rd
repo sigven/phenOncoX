@@ -7,7 +7,7 @@
 get_tree(
   cache_dir = NA,
   force_download = FALSE,
-  primary_site = NA,
+  site = NA,
   max_tree_depth = 6,
   ignore_minor_type = FALSE
 )
@@ -18,12 +18,6 @@ get_tree(
 \item{force_download}{Logical indicating if local cache should be overwritten
 (set to TRUE to re-download if file exists in cache)}
 
-\item{max_tree_depth}{consider only terms up to a given depth in
-the OncoTree (integer from 1-6, default: 6)}
-
-\item{ignore_minor_type}{logical indicating if minor tumor types
-should be excluded or not}
-
 \item{site}{limit OncoTree terms to those relevant for a given
 primary tumor type/site. Possible values:
 'Adrenal Gland', 'Ampulla of Vater', 'Biliary Tract', 'Bladder/Urinary Tract',
@@ -33,6 +27,12 @@ primary tumor type/site. Possible values:
 'Peripheral Nervous System', 'Peritoneum', 'Pleura', 'Prostate',
 'Skin', 'Soft Tissue', 'Testis', 'Thymus', 'Thyroid', 'Uterus',
 'Vulva/Vagina'}
+
+\item{max_tree_depth}{consider only terms up to a given depth in
+the OncoTree (integer from 1-6, default: 6)}
+
+\item{ignore_minor_type}{logical indicating if minor tumor types
+should be excluded or not}
 }
 \value{
 \strong{metadata} - A data frame with 1 row and 6 columns:
@@ -73,7 +73,7 @@ resources used
 \examples{
 
 \dontrun{
-library(geneOncoX)
+library(phenOncoX)
 oncology_terms <- get_tree(cache_dir = tempdir())
 }
 

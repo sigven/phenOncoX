@@ -1,4 +1,4 @@
-#' Function that retrieves phenoOncoX data from Google Drive/local cache
+#' Function that retrieves phenOncoX data from Google Drive/local cache
 #'
 #' @param cache_dir Local directory for data download
 #' @param force_download Logical indicating if local cache 

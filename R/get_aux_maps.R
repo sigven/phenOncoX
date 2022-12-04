@@ -37,7 +37,7 @@
 #' @examples
 #' 
 #' \dontrun{
-#' library(geneOncoX)
+#' library(phenOncoX)
 #' oncology_terms <- get_aux_maps(cache_dir = tempdir())
 #' }
 #' 
