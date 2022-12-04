@@ -20,9 +20,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup, echo = F}
-library(phenOncoX)
-```
 
 <br><br>
 
@@ -37,6 +34,7 @@ if (!("remotes" %in% installed.packages()) {
 remotes::install_github('sigven/phenOncoX')
 ```
 
+
 <br><br>
 
 # Get OncoTree terms
@@ -47,9 +45,10 @@ This shows how to retrieve cancer phenotype terms in, as defined in
 ```{r core, echo = T}
 
 ## load the data
-#download_dir <- tempdir()
-download_dir <- "~/Desktop"
-oncotree <- get_tree(cache_dir = download_dir, max_tree_depth = 2)
+download_dir <- tempdir()
+
+oncotree <- phenOncoX::get_tree(
+  cache_dir = download_dir, max_tree_depth = 2)
 
 ## Number of records
 nrow(oncotree$records)
@@ -68,7 +67,8 @@ oncotree$metadata
 
 ## get all cancer phenotype terms
 
-oncoterms <- get_terms(cache_dir = download_dir)
+oncoterms <- phenOncoX::get_terms(
+  cache_dir = download_dir)
 
 ## Number of records
 nrow(oncoterms$records)
@@ -83,8 +83,9 @@ nrow(oncoterms$records)
 ```{r terms_prostate, echo = T, eval = T, results = "hide"}
 
 ## get all oncoterms for prostate cancer
-oncoterms_prostate <- get_terms(
-  cache_dir = download_dir, site = "Prostate")
+oncoterms_prostate <- phenOncoX::get_terms(
+  cache_dir = download_dir, 
+  site = "Prostate")
 
 ## Make as datatable
 prostate_terms_table <- DT::datatable(
