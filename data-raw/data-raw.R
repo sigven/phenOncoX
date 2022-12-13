@@ -53,11 +53,11 @@ onco_map <- onco_pheno_map(
 
 oncotree_expanded <- list()
 oncotree_expanded$records <- onco_map$oncotree_expanded
-oncotree_expanded$metadata <- metadata$pheno_oncox
+oncotree_expanded$metadata <- metadata$phen_oncox
 
 oncotree_core <- list()
 oncotree_core$records <- onco_map$oncotree
-oncotree_core$metadata <- metadata$pheno_oncox[1,]
+oncotree_core$metadata <- metadata$phen_oncox[1,]
 
 auxiliary_maps <- list()
 auxiliary_maps$records <- list()
@@ -66,14 +66,14 @@ auxiliary_maps$records[['umls']] <- umls_map
 auxiliary_maps$records[['do']] <- do_map
 auxiliary_maps$records[['efo']] <- efo_map
 auxiliary_maps$records[['icd10']] <- icd10_map
-auxiliary_maps$metadata <- metadata$pheno_oncox[1:4,]
+auxiliary_maps$metadata <- metadata$phen_oncox[1:4,]
 
 db <- list()
 db[['oncotree_core']] <- oncotree_core
 db[['oncotree_expanded']] <- oncotree_expanded
 db[['auxiliary_maps']] <- auxiliary_maps
 
-version_bumped <- "0.5.3"
+version_bumped <- "0.5.4"
 gd_records <- list()
 db_id_ref <- data.frame()
 

@@ -1,7 +1,8 @@
 Package: phenOncoX
 Type: Package
 Title: A phenotype ontology map for cancer
-Date: 2022-12-03
+Date: 2022-12-13
+Version: 0.5.3
 Authors@R: 
     c(person(given = "Sigve",
              family = "Nakken",
@@ -11,7 +12,6 @@ Authors@R:
 Maintainer: Sigve Nakken <sigven@ifi.uio.no>
 URL: https://github.com/sigven/phenOncoX
 BugReports: https://github.com/sigven/phenOncoX/issues
-Version: 0.5.3
 Description: A semi-manually curated resource that maps relevant phenotype 
     terms for the oncology domain. Using OncoTree as the starting point, 
     phenOncoX gathers all key UMLS terms per main tumor type, 
