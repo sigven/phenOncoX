@@ -3,7 +3,7 @@ pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
   phenOncoX: phenOncoX.html
-last_built: 2022-12-04T09:03Z
+last_built: 2022-12-13T09:58Z
 urls:
   reference: https://sigven.github.io/phenOncoX/reference
   article: https://sigven.github.io/phenOncoX/articles
