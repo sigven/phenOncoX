@@ -43,7 +43,7 @@
     
     <a class="navbar-brand me-2" href="index.html">phenOncoX</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -95,11 +95,11 @@
 <p><strong>phenOncoX</strong> is an R data package that attempts to address this challenge. In short, <strong>phenOncoX</strong> provides a global cross-mapped set of phenotype ontology terms attributed to cancer phenotypes.</p>
 <p>The mapping established within <strong>phenOncoX</strong> is semi-manually curated, using <a href="http://oncotree.mskcc.org/#/home" class="external-link">OncoTree</a> as the starting point for a list of <a href="https://www.ncbi.nlm.nih.gov/medgen/" class="external-link">UMLS</a> phenotype terms per cancer subtype/primary site. Next, <strong>phenOncoX</strong> appends a number of phenotypes attributed to heritable cancer conditions. Furthermore, each cancer subtype entry in <em>OncoTree</em> is expanded with additional subtypes that are found in the <em>UMLS</em> child-parent hierarchy of disease terms.</p>
 <p>For each entry in the final list of phenotype terms, we make cross-mappings with phenotype terms from <a href="https://github.com/EBISPOT/efo" class="external-link">EFO</a>, <a href="https://disease-ontology.org/" class="external-link">DO</a>, and the <a href="https://www.who.int/standards/classifications/classification-of-diseases" class="external-link">ICD10 classification</a>.</p>
-<p>As of December 2022, the following ontology versions are used to create the mapping:</p>
+<p>As of January 2023, the following ontology versions are used to create the mapping:</p>
 <ul>
 <li>OncoTree (2021_11_02)</li>
-<li>Experimental Factor Ontology v3.49.0 (2022-12-15)</li>
-<li>Disease Ontology (v2022-12-15)</li>
+<li>Experimental Factor Ontology v3.50.0 (2023-01-15)</li>
+<li>Disease Ontology (v2023-01-31)</li>
 </ul>
 <p>The package offers a few pre-processed datasets, along with metadata, that the user can retrieve and use for their own projects or set-ups. The package utilizes the <a href="https://googledrive.tidyverse.org/" class="external-link">googledrive</a> R package to download the pre-processed and documented datasets to a local cache directory provided by the user.</p>
 <p><strong>IMPORTANT NOTE</strong>: The mapping established by <strong>phenOncoX</strong> attempts to be comprehensive, but we acknowledge that the presence of missing or erroneous cross-references might still occur.</p>
