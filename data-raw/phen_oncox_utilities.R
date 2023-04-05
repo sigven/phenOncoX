@@ -187,22 +187,13 @@ map_efo <- function(umls_map,
                                      as.character(NA),cui_close)) |>
       dplyr::mutate(nci_t = dplyr::if_else(nci_t == "",
                                            as.character(NA),nci_t)) |>
-      # dplyr::mutate(icd10 = dplyr::if_else(icd10 == "",
-      #                                      as.character(NA),icd10)) |>
-      # dplyr::mutate(snomed = dplyr::if_else(snomed == "",
-      #                                      as.character(NA),snomed)) |>
       dplyr::mutate(msh = dplyr::if_else(msh == "",
                                          as.character(NA),msh)) |>
       dplyr::mutate(cui = dplyr::if_else(cui == "",
                                          as.character(NA),cui)) |>
-      #dplyr::mutate(cui_exact = dplyr::if_else(cui_exact == "",
-      #                                   as.character(NA),cui_exact)) |>
       tidyr::separate_rows(cui, sep = ",") |>
-      #tidyr::separate_rows(cui_exact,sep = ",") |>
       tidyr::separate_rows(cui_close,sep = ",") |>
-      #tidyr::separate_rows(snomed, sep = ",") |>
       tidyr::separate_rows(nci_t,sep = ",") |>
-      #tidyr::separate_rows(icd10,sep = ",") |>
       tidyr::separate_rows(msh,sep = ",") |>
       dplyr::mutate(
         efo_name =
@@ -215,14 +206,10 @@ map_efo <- function(umls_map,
             efo_name,'"http://www.ebi.ac.uk/ontology/webulous#OPPL_pattern"\\}',
             '')) |>
       dplyr::distinct() 
-      # dplyr::mutate(efo_name =
-      #                 stringi::stri_enc_toascii(efo_name))
   )
   
   efo2name <- efo_map |>
     dplyr::select(efo_id, efo_name) |>
-    # dplyr::mutate(efo_name =
-    #                 stringi::stri_enc_toascii(efo_name)) |>
     dplyr::distinct() |>
     dplyr::mutate(
       primary_site = dplyr::if_else(
@@ -522,40 +509,29 @@ map_efo <- function(umls_map,
     dplyr::select(efo_id, cui) |>
     dplyr::left_join(
       dplyr::filter(umls_map$concept, main_term == T),
-      by = "cui", multiple = "all") |>
+      by = "cui", multiple = "all", relationship = "many-to-many") |>
     dplyr::mutate(xref_source = "UMLS") |>
     dplyr::select(efo_id,cui,cui_name, xref_source) |>
-    # dplyr::mutate(cui_name =
-    #                 stringi::stri_enc_toascii(cui_name)) |>
     dplyr::distinct()
-  
-  # cui_map_close <- efo_map |>
-  #   dplyr::filter(!is.na(cui_close)) |>
-  #   dplyr::select(efo_id, cui_close) |>
-  #   dplyr::left_join(dplyr::filter(umls_map$concept, main_term == T),
-  #                    by = c("cui_close" = "cui")) |>
-  #   dplyr::mutate(xref_source = "UMLS_CLOSE") |>
-  #   dplyr::select(efo_id,cui_close,cui_name, xref_source) |>
-  #   dplyr::rename(cui = cui_close) |>
-  #   dplyr::distinct()
   
   nci_map <- efo_map |>
     dplyr::filter(!is.na(nci_t)) |>
     dplyr::select(efo_id, nci_t) |>
     dplyr::left_join(
       umls_map$nciXref, 
-      by = "nci_t", multiple = "all") |>
+      by = "nci_t", 
+      multiple = "all",
+      relationship = "many-to-many") |>
     dplyr::left_join(
       dplyr::filter(
         umls_map$concept,
         main_term == T), 
-      by = "cui", multiple = "all") |>
+      by = "cui", multiple = "all",
+      relationship = "many-to-many") |>
     dplyr::filter(!is.na(cui)) |>
     dplyr::mutate(xref_source = "NCI") |>
     dplyr::select(efo_id, cui, 
                   cui_name, xref_source) |>
-    # dplyr::mutate(cui_name =
-    #                 stringi::stri_enc_toascii(cui_name)) |>
     dplyr::distinct()
   
   msh_map <- efo_map |>
@@ -563,11 +539,13 @@ map_efo <- function(umls_map,
     dplyr::select(efo_id,msh) |>
     dplyr::left_join(
       umls_map$mshXref, 
-      by = "msh", multiple = "all") |>
+      by = "msh", multiple = "all",
+      relationship = "many-to-many") |>
     dplyr::left_join(
       dplyr::filter(
         umls_map$concept, main_term == T),
-      by = "cui", multiple = "all") |>
+      by = "cui", multiple = "all",
+      relationship = "many-to-many") |>
     dplyr::filter(!is.na(cui)) |>
     dplyr::mutate(xref_source = "MESH") |>
     dplyr::select(efo_id, cui, 
@@ -582,11 +560,13 @@ map_efo <- function(umls_map,
     tidyr::separate_rows(snomed) |>
     dplyr::left_join(
       umls_map$snomedXref, 
-      by = "snomed", multiple = "all") |>
+      by = "snomed", multiple = "all",
+      relationship = "many-to-many") |>
     dplyr::left_join(
       dplyr::filter(
         umls_map$concept, main_term == T),
-      by = "cui", multiple = "all") |>
+      by = "cui", multiple = "all",
+      relationship = "many-to-many") |>
     dplyr::filter(!is.na(cui)) |>
     dplyr::mutate(xref_source = "SNOMED") |>
     # dplyr::mutate(cui_name =
@@ -604,7 +584,8 @@ map_efo <- function(umls_map,
     dplyr::distinct() |>
     dplyr::left_join(
       efo2name, by = "efo_id",
-      multiple = "all") |>
+      multiple = "all",
+      relationship = "many-to-many") |>
     dplyr::filter(
       is.na(cui) | 
         (!is.na(cui) & !is.na(cui_name)))
@@ -823,7 +804,7 @@ map_disease_ontology <- function(
     dplyr::left_join(
       umls_map_lower, 
       by = c("do_name" = "cui_name_lc"),
-      multiple = "all" ) |>
+      multiple = "all", relationship = "many-to-many") |>
     dplyr::filter(!is.na(cui)) |>
     dplyr::select(do_id, cui) |>
     dplyr::distinct()
@@ -840,7 +821,7 @@ map_disease_ontology <- function(
       dplyr::inner_join(
         do_map_cui_name_matched, 
         by = c("do_id"), 
-        multiple = "all")
+        multiple = "all", relationship = "many-to-many")
     
     do_map <- dplyr::bind_rows(do_map1, do_map2)
   }
@@ -1327,14 +1308,16 @@ onco_pheno_map <- function(
     dplyr::select(-cui) |>
     dplyr::inner_join(
       onco_tree_custom_cui_mappings, 
-      by = "code", multiple = "all")
+      by = "code", multiple = "all",
+      relationship = "many-to-many")
   
   onco_tree_cui_matched <- onco_tree_cui_matched |>
     dplyr::anti_join(onco_tree_cui_matched_custom, 
                      by = "code") |>
     dplyr::bind_rows(onco_tree_cui_matched_custom) |>
     dplyr::left_join(cui_name_map, 
-                     by = c("cui"), multiple = "all")
+                     by = c("cui"), multiple = "all",
+                     relationship = "many-to-many")
   
   onco_tree_name_matched <- onco_tree |>
     dplyr::anti_join(
@@ -1353,7 +1336,7 @@ onco_pheno_map <- function(
     dplyr::inner_join(
       cui_name_map_lower, 
       by = c("name_lc" = "cui_name_lc"), 
-      multiple = "all") |>
+      multiple = "all", relationship = "many-to-many") |>
     dplyr::select(-c(name_lc))
   
   
@@ -1419,7 +1402,8 @@ onco_pheno_map <- function(
     dplyr::filter(!(code == "TMN" & cui == "CN294567")) |>
     dplyr::distinct() |>
     dplyr::left_join(
-      cui_name_map, by = "cui", multiple = "all")
+      cui_name_map, by = "cui", multiple = "all",
+      relationship = "many-to-many")
   
   all_oncotree_entries <- onco_tree_cui_matched |>
     dplyr::bind_rows(
@@ -1496,7 +1480,8 @@ onco_pheno_map <- function(
     dplyr::filter(level == 1) |>
     dplyr::select(-cui_name) |>
     dplyr::left_join(
-      cui_name_map, by = c("cui"), multiple = "all")
+      cui_name_map, by = c("cui"), multiple = "all",
+      relationship = "many-to-many")
   
   all_oncotree_entries_final <- all_oncotree_entries |>
     dplyr::filter(level > 1) |>
@@ -1505,7 +1490,8 @@ onco_pheno_map <- function(
     dplyr::rename(ot_level = level, ot_code = code) |>
     dplyr::left_join(
       main_types_minor, 
-      by = c("main_type"), multiple = "all") |>
+      by = c("main_type"), multiple = "all",
+      relationship = "many-to-many") |>
     dplyr::mutate(minor_type = dplyr::if_else(
       is.na(minor_type),
       FALSE,
@@ -2350,7 +2336,8 @@ onco_pheno_map <- function(
                primary_site = "Head and Neck",
                "source" = "oncotree_basic_hereditary_extra_expanded", 
                minor_type = F)) |>
-    dplyr::left_join(cui_name_map, by = "cui")
+    dplyr::left_join(cui_name_map, by = "cui", multiple = "all",
+                     relationship = "many-to-many")
     
   oncotree_plus_hereditary_expanded_final <- 
     oncotree_plus_hereditary_expanded_final |>
@@ -2400,11 +2387,14 @@ onco_pheno_map <- function(
       dplyr::left_join(
         dplyr::select(efo_map$efo2xref, cui, 
                       efo_id,  efo_name),
-        by = "cui", multiple = "all") |>
+        by = "cui", multiple = "all", 
+        relationship = "many-to-many") |>
       dplyr::left_join(
-        do_map, by = "cui", multiple = "all") |>
+        do_map, by = "cui", multiple = "all", 
+        relationship = "many-to-many") |>
       dplyr::left_join(
-        icd10_map, by = "cui", multiple = "all") |>
+        icd10_map, by = "cui", multiple = "all", 
+        relationship = "many-to-many") |>
       dplyr::filter(!(cui == "C0006826" & efo_id == "EFO:0000311")) |>
       dplyr::filter(!(cui == "C0023467" & efo_id == "MONDO:0015667")) |>
       dplyr::filter(!(cui == "C0017075" & efo_id == "MONDO:0016730")) |>
@@ -2427,10 +2417,6 @@ onco_pheno_map <- function(
                                   "metasta"),
             "metastatic colorectal cancer",
             as.character(efo_name)))
-      # dplyr::mutate(disease_ontology_release = do_release,
-      #               efo_release = efo_release,
-      #               oncotree_release = oncotree_release) 
-    
     
     ## MAP NON-MAPPED EFO IDENTIFIERS BY NAME
     efo_map_lc <- efo_map$efo2name |>
@@ -2443,8 +2429,8 @@ onco_pheno_map <- function(
       dplyr::left_join(
         dplyr::filter(efo_map_lc, !is.na(primary_site)),
         by = c("cui_name_lc" = "efo_name_lc", 
-               "primary_site" = "primary_site"), multiple = "all"
-      ) |>
+               "primary_site" = "primary_site"), 
+        multiple = "all", relationship = "many-to-many") |>
       dplyr::select(-cui_name_lc)
     
     tmp2 <- onco_pheno_map[[m]] |>
@@ -2453,13 +2439,14 @@ onco_pheno_map <- function(
       dplyr::mutate(cui_name_lc = tolower(cui_name)) |>
       dplyr::left_join(
         dplyr::filter(efo_map_lc, is.na(primary_site)),
-        by = c("cui_name_lc" = "efo_name_lc"), multiple = "all"
-      ) |>
+        by = c("cui_name_lc" = "efo_name_lc"), 
+        multiple = "all", relationship = "many-to-many") |>
       dplyr::select(-cui_name_lc)
     
     tmp3 <- onco_pheno_map[[m]] |>
-      dplyr::filter((!is.na(primary_site) & !is.na(efo_id)) |
-                      (is.na(primary_site) & !is.na(efo_id)))
+      dplyr::filter(
+        (!is.na(primary_site) & !is.na(efo_id)) |
+          (is.na(primary_site) & !is.na(efo_id)))
     
     onco_pheno_map[[m]] <- 
       dplyr::bind_rows(tmp1,
