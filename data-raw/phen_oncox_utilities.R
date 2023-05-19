@@ -799,33 +799,6 @@ map_disease_ontology <- function(
     i <- i + 1
   }
   
-  do_map_cui_name_matched <- do_map |>
-    dplyr::select(do_id, do_name) |>
-    dplyr::left_join(
-      umls_map_lower, 
-      by = c("do_name" = "cui_name_lc"),
-      multiple = "all", relationship = "many-to-many") |>
-    dplyr::filter(!is.na(cui)) |>
-    dplyr::select(do_id, cui) |>
-    dplyr::distinct()
-  
-  #do_map <- dplyr::left_join(do_map, do_map_cui_name_matched)
-  
-  if (skip_non_cui_mapped == T) {
-    do_map1 <- do_map |> 
-      dplyr::filter(!is.na(cui)) |> 
-      dplyr::distinct()
-    do_map2 <- do_map |> 
-      dplyr::filter(is.na(cui)) |>
-      dplyr::select(-c(cui)) |>
-      dplyr::inner_join(
-        do_map_cui_name_matched, 
-        by = c("do_id"), 
-        multiple = "all", relationship = "many-to-many")
-    
-    do_map <- dplyr::bind_rows(do_map1, do_map2)
-  }
-  
   ## manual correction of erroneous or missing UMLS cross-references
   do_map <- do_map |>
     # dplyr::mutate(do_name =
@@ -887,6 +860,24 @@ map_disease_ontology <- function(
     ## HER2-receptor negative breast cancer
     dplyr::mutate(cui = dplyr::if_else(do_id == "DOID:0060080",
                                        "C5238910", as.character(cui))) |>
+    ## Diffuse Midline Glioma, H3 K27M-mutant
+    dplyr::mutate(cui = dplyr::if_else(do_id == "DOID:0080684",
+                                       "C4289688", as.character(cui))) |>
+    ## Diffuse large B-cell lymphoma activated B-cell type
+    dplyr::mutate(cui = dplyr::if_else(do_id == "DOID:0080996",
+                                       "C1333296", as.character(cui))) |>
+    ## Oligodendroglioma
+    dplyr::mutate(cui = dplyr::if_else(do_id == "DOID:3181",
+                                       "C0028945", as.character(cui))) |>
+    ## B-cell Acute Lymphoblastic Leukemia
+    dplyr::mutate(cui = dplyr::if_else(do_id == "DOID:0080638",
+                                       "C1292769", as.character(cui))) |>
+    ## B-cell Adult Acute Lymphocytic Leukemia
+    dplyr::mutate(cui = dplyr::if_else(do_id == "DOID:0060592",
+                                       "C0279593", as.character(cui))) |>
+    ## Diffuse Glioma, H3 G34 Mutant
+    dplyr::mutate(cui = dplyr::if_else(do_id == "DOID:0080880",
+                                       "C5669880", as.character(cui))) |>
     
     dplyr::bind_rows(
       data.frame(do_id = "DOID:1788",
@@ -987,6 +978,34 @@ map_disease_ontology <- function(
                  do_name = "merkel cell carcinoma",
                  cui = "C0007129", do_cancer_slim = T,
                  stringsAsFactors = F))
+  
+  
+  do_map_cui_name_matched <- do_map |>
+    dplyr::select(do_id, do_name) |>
+    dplyr::left_join(
+      umls_map_lower, 
+      by = c("do_name" = "cui_name_lc"),
+      multiple = "all", relationship = "many-to-many") |>
+    dplyr::filter(!is.na(cui)) |>
+    dplyr::select(do_id, cui) |>
+    dplyr::distinct()
+  
+  #do_map <- dplyr::left_join(do_map, do_map_cui_name_matched)
+  
+  if (skip_non_cui_mapped == T) {
+    do_map1 <- do_map |> 
+      dplyr::filter(!is.na(cui)) |> 
+      dplyr::distinct()
+    do_map2 <- do_map |> 
+      dplyr::filter(is.na(cui)) |>
+      dplyr::select(-c(cui)) |>
+      dplyr::inner_join(
+        do_map_cui_name_matched, 
+        by = c("do_id"), 
+        multiple = "all", relationship = "many-to-many")
+    
+    do_map <- dplyr::bind_rows(do_map1, do_map2)
+  }
   
   return(do_map)
 }
