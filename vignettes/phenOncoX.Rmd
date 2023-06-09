@@ -78,6 +78,24 @@ nrow(oncoterms$records)
 
 <br><br>
 
+## Number of (OncoTree-expanded) cancer phenotype terms per primary tumor type/tissue
+
+```{r num_terms_per_tissue, echo = T, eval = T}
+
+## get all cancer phenotype terms
+
+oncoterms <- phenOncoX::get_terms(
+  cache_dir = download_dir)
+
+## Number of records
+plyr::count(oncoterms$records$primary_site) |> 
+  dplyr::filter(!is.na(x)) |>
+  dplyr::arrange(dplyr::desc(freq))
+
+```
+
+
+
 ## Get all (OncoTree-expanded) cancer phenotype terms relevant for prostate cancer 
 
 ```{r terms_prostate, echo = T, eval = T, results = "hide"}

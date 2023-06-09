@@ -43,8 +43,8 @@ with phenotype terms from [EFO](https://github.com/EBISPOT/efo),
 As of April 2023, the following ontology versions are used to create the mapping:
 
 -   OncoTree (2021_11_02)
--   Experimental Factor Ontology v3.52.0 (2023-03-15)
--   Disease Ontology (v2023-04-01)
+-   Experimental Factor Ontology v3.54.0 (2023-05-15)
+-   Disease Ontology (v2023-05-31)
 
 The package offers a few pre-processed datasets, along with metadata, that 
 the user can retrieve and use for their own projects or set-ups. The package 

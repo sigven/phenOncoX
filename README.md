@@ -44,7 +44,7 @@ As of May 2023, the following ontology versions are used to create the mapping:
 
 -   OncoTree (2021_11_02)
 -   Experimental Factor Ontology v3.54.0 (2023-05-15)
--   Disease Ontology (v2023-04-01)
+-   Disease Ontology (v2023-05-31)
 
 **IMPORTANT NOTE**: The mapping established by **phenOncoX** attempts 
 to be comprehensive, but we acknowledge that the presence of missing or 
