@@ -88,9 +88,12 @@ oncoterms <- phenOncoX::get_terms(
   cache_dir = download_dir)
 
 ## Number of records
-plyr::count(oncoterms$records$primary_site) |> 
-  dplyr::filter(!is.na(x)) |>
-  dplyr::arrange(dplyr::desc(freq))
+as.data.frame(oncoterms$records |>
+  dplyr::filter(!is.na(primary_site)) |>
+  dplyr::group_by(primary_site) |> 
+  dplyr::summarise(num_terms = dplyr::n(),
+                   .groups = "drop") |>
+  dplyr::arrange(dplyr::desc(num_terms)))
 
 ```
 
