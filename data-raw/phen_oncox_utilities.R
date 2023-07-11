@@ -1,4 +1,4 @@
-library(magrittr)
+#library(magrittr)
 library(jsonlite)
 library(dplyr)
 library(stringr)
@@ -27,7 +27,7 @@ map_efo <- function(umls_map,
                     basedir = NULL) {
   
   if (!dir.exists(basedir)) {
-    rlogging::message("Base directory does not exist")
+    lgr::lgr$info("Base directory does not exist")
   } else{
     if (!file.exists(
       file.path(basedir,"data-raw", "efo", paste0(
@@ -1015,10 +1015,10 @@ map_umls <- function(
   basedir = NULL) {
   
   if (is.null(basedir)) {
-    rlogging::message("Please specifiy valid base directory")
+    lgr::lgr$info("Please specifiy valid base directory")
   }
   if (!dir.exists(basedir)) {
-    rlogging::message("Base directory does not exist")
+    lgr::lgr$info("Base directory does not exist")
   }
   
   for (fn in c('MGCONSO','NAMES','MGREL_1','MGREL_2')) {

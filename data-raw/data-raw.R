@@ -4,14 +4,14 @@ source('data-raw/phen_oncox_utilities.R')
 metadata <- list()
 for (elem in c("phen_oncox")) {
   metadata[[elem]] <- as.data.frame(readxl::read_excel(
-    "data-raw/metadata.xlsx",
+    "data-raw/metadata_phen_oncox.xlsx",
     sheet = elem, col_names = TRUE
   ) |>
-    dplyr::mutate(version = dplyr::if_else(
-      is.na(version) &
-        abbreviation == "umls",
+    dplyr::mutate(source_version = dplyr::if_else(
+      is.na(source_version) &
+        source_abbreviation == "medgen",
       as.character(Sys.Date()),
-      as.character(version)
+      as.character(source_version)
     )))
 }
 
@@ -31,7 +31,7 @@ icd10_map <- map_icd10(
 do_map <- map_disease_ontology(
   skip_non_cui_mapped = T,
   release = metadata$phen_oncox[
-    metadata$phen_oncox$source == "Disease Ontology",]$version,
+    metadata$phen_oncox$source == "Disease Ontology",]$source_version,
   umls_map = umls_map,
   basedir = here::here())
 
@@ -39,8 +39,8 @@ do_map <- map_disease_ontology(
 efo_map <- map_efo(
   umls_map = umls_map,
   efo_release = metadata$phen_oncox[
-    metadata$phen_oncox$source == "Experimental Factor Ontology",]$version,
-  update = F,
+    metadata$phen_oncox$source == "Experimental Factor Ontology",]$source_version,
+  update = T,
   basedir = here::here())
 
 ## Use OncoTree as starting point for phenotype cross-map
@@ -73,7 +73,7 @@ db[['oncotree_core']] <- oncotree_core
 db[['oncotree_expanded']] <- oncotree_expanded
 db[['auxiliary_maps']] <- auxiliary_maps
 
-version_bumped <- "0.6.1"
+version_bumped <- "0.6.2"
 gd_records <- list()
 db_id_ref <- data.frame()
 
