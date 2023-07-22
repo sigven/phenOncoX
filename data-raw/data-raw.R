@@ -21,7 +21,7 @@ lgr::lgr$appenders$console$set_layout(
 )
 ## Get UMLS / DiseaseOntology / EFO mappings
 umls_map <- map_umls(
-  update = F,
+  update = T,
   basedir = here::here())
 
 icd10_map <- map_icd10(
@@ -73,7 +73,7 @@ db[['oncotree_core']] <- oncotree_core
 db[['oncotree_expanded']] <- oncotree_expanded
 db[['auxiliary_maps']] <- auxiliary_maps
 
-version_bumped <- "0.6.2"
+version_bumped <- "0.6.3"
 gd_records <- list()
 db_id_ref <- data.frame()
 
@@ -118,8 +118,3 @@ for (elem in
 }
 
 usethis::use_data(db_id_ref, internal = TRUE, overwrite = TRUE)
-
-# usethis::use_data(oncotree_basic, overwrite = T)
-# usethis::use_data(oncotree_expanded_full, overwrite = T)
-# usethis::use_data(oncotree_expanded_slim, overwrite = T)
-# usethis::use_data(auxiliary_maps, overwrite = T)
