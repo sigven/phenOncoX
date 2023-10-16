@@ -281,6 +281,7 @@ map_efo <- function(umls_map,
     ) |>
     dplyr::mutate(
       primary_site = dplyr::if_else(
+        stringr::str_detect(tolower(efo_name), "^myelo") |
         stringr::str_detect(tolower(efo_name), "leukemia|myeloma") |
           (stringr::str_detect(tolower(efo_name), "t-cell|b-cell") &
              stringr::str_detect(tolower(efo_name), "cancer|tumor|neoplasm")) |
@@ -487,6 +488,7 @@ map_efo <- function(umls_map,
     ) |>
     dplyr::mutate(
       primary_site = dplyr::if_else(
+        #stringr::str_detect(tolower(cui_name), "waldenstr") |
         stringr::str_detect(tolower(efo_name), "lymphom") |
           (stringr::str_detect(tolower(efo_name), "cancer|neoplasm") &
              stringr::str_detect(tolower(efo_name), "lympho|hematopoietic"))
@@ -2138,6 +2140,13 @@ onco_pheno_map <- function(
     dplyr::mutate(
       primary_site =
         dplyr::if_else(stringr::str_detect(tolower(cui_name),
+                                           "waldenstr") &
+                         is.na(primary_site),
+                       "Lymphoid",
+                       as.character(primary_site))) |>
+    dplyr::mutate(
+      primary_site =
+        dplyr::if_else(stringr::str_detect(tolower(cui_name),
                                            "barrett") &
                          primary_site == "Head and Neck" &
                          !is.na(primary_site),
@@ -2510,6 +2519,15 @@ onco_pheno_map <- function(
           (!is.na(primary_site) & 
              (primary_site == "Other/Unknown" | primary_site == "Lung")),
         as.character(NA),
+        as.character(primary_site)
+      )) |>
+      dplyr::mutate(primary_site = dplyr::if_else(
+        is.na(primary_site) &
+          ot_main_type != "Hereditary_Cancer_Susceptibility_NOS" & 
+          stringr::str_detect(
+            tolower(cui_name), "myelodysplastic syndrome"
+          ),
+        "Myeloid",
         as.character(primary_site)
       )) |>
       dplyr::select(

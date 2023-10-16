@@ -43,7 +43,7 @@ with phenotype terms from [EFO](https://github.com/EBISPOT/efo),
 As of late September 2023, the following ontology versions are used to create the mapping:
 
 -   OncoTree (2021_11_02)
--   Experimental Factor Ontology v3.58.0 (2023-09-15)
+-   Experimental Factor Ontology v3.59.0 (2023-10-16)
 -   Disease Ontology (v2023-09-29)
 
 **IMPORTANT NOTE**: The mapping established by **phenOncoX** attempts 
