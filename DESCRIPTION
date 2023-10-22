@@ -1,7 +1,7 @@
 Package: phenOncoX
 Type: Package
 Title: A phenotype ontology map for cancer
-Date: 2023-10-16
+Date: 2023-10-22
 Version: 0.6.6
 Authors@R: 
     c(person(given = "Sigve",

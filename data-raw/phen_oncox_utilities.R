@@ -2530,6 +2530,15 @@ onco_pheno_map <- function(
         "Myeloid",
         as.character(primary_site)
       )) |>
+      dplyr::filter(!(
+        stringr::str_detect(tolower(cui_name), "heart") &
+          (!is.na(ot_main_type) & ot_main_type == "Lung_Cancer_NOS"))
+      ) |>
+      dplyr::filter(
+        !(stringr::str_detect(tolower(cui_name), "cardiac"))) |>
+      dplyr::filter(
+        !(stringr::str_detect(tolower(cui_name), "non-hereditary"))
+      ) |>
       dplyr::select(
         primary_site,
         ot_main_type,
