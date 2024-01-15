@@ -2016,8 +2016,14 @@ onco_pheno_map <- function(
       cui_name,"^Leio|Angioleiomyoma| Leio| leio") & 
         stringr::str_detect(primary_site,"Esophagus"))) |>
     dplyr::filter(!(stringr::str_detect(
+      tolower(cui_name),"prostate|prostatic") & 
+        stringr::str_detect(primary_site,"Head"))) |>
+    dplyr::filter(!(stringr::str_detect(
       cui_name,"(O|o)varian|(T|t)esticular|seminoma") & 
         stringr::str_detect(primary_site,"CNS/Brain"))) |>
+    dplyr::filter(!(stringr::str_detect(
+      tolower(cui_name),"breast|extrahepatic|ampulla of|bile duct") & 
+        stringr::str_detect(primary_site,"Colon/Rectum"))) |>
     dplyr::filter(!(stringr::str_detect(
       cui_name,"Wilms") & 
         stringr::str_detect(primary_site,"CNS|Bladder"))) |>
@@ -2025,7 +2031,7 @@ onco_pheno_map <- function(
       cui_name,"(K|k)idney") & 
         stringr::str_detect(primary_site,"Bladder"))) |>
     dplyr::filter(!(stringr::str_detect(
-      cui_name,"^Lung| lung ") & 
+      cui_name,"^Lung| lung |^Vulva|^Vaginal|^Verruc") & 
         stringr::str_detect(primary_site,"Skin"))) |>
     dplyr::filter(!(stringr::str_detect(
       tolower(cui_name), "lympho|lympha") & 

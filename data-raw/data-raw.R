@@ -40,7 +40,7 @@ efo_map <- map_efo(
   umls_map = umls_map,
   efo_release = metadata$phen_oncox[
     metadata$phen_oncox$source == "Experimental Factor Ontology",]$source_version,
-  update = F,
+  update = T,
   basedir = here::here())
 
 ## Use OncoTree as starting point for phenotype cross-map
