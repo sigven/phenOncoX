@@ -21,7 +21,7 @@ lgr::lgr$appenders$console$set_layout(
 )
 ## Get UMLS / DiseaseOntology / EFO mappings
 umls_map <- map_umls(
-  update = T,
+  update = F,
   basedir = here::here())
 
 icd10_map <- map_icd10(

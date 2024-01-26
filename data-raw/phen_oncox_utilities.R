@@ -2203,18 +2203,45 @@ onco_pheno_map <- function(
       as.character(ot_main_type)
     )) |>
     dplyr::mutate(primary_site = dplyr::if_else(
-      stringr::str_detect(tolower(cui_name),"hereditary|susceptibility|familial"),
+      stringr::str_detect(
+        tolower(cui_name),"hereditary|susceptibility|familial"),
       as.character(NA),
       as.character(primary_site)
+    )) |>
+    dplyr::filter(!stringr::str_detect(
+      tolower(cui_name),
+      "(((high|intermediate|low|increased) risk)|presence of|anatomic location)")) |>
+    dplyr::mutate(primary_site = dplyr::if_else(
+      stringr::str_detect(tolower(cui_name),"lymphoma") &
+        !is.na(primary_site) &
+        primary_site != "Lymphoid",
+      "Lymphoid",
+      as.character(primary_site)
+    )) |>
+   
+    dplyr::mutate(ot_main_type = dplyr::if_else(
+      stringr::str_detect(tolower(cui_name),"lymphoma") &
+        !is.na(primary_site) &
+        primary_site != "Lymphoid",
+      "Lymphatic_Cancer_NOS",
+      as.character(ot_main_type)
     )) |>
     dplyr::mutate(primary_site = dplyr::if_else(
-      stringr::str_detect(tolower(cui_name),"hereditary|susceptibility|familial"),
-      as.character(NA),
+      stringr::str_detect(tolower(cui_name),"leukemia") &
+        !is.na(primary_site) &
+        primary_site != "Myeloid",
+      "Myeloid",
       as.character(primary_site)
     )) |>
-    dplyr::distinct()
-  
-  
+    dplyr::mutate(ot_main_type = dplyr::if_else(
+      stringr::str_detect(tolower(cui_name),"leukemia") &
+        !is.na(primary_site) &
+        primary_site != "Myeloid",
+      "Blood_Cancer_NOS",
+      as.character(ot_main_type)
+    )) |>
+    dplyr::distinct() 
+    
   missing_hereditary <- dplyr::bind_rows(
     data.frame("cui" = "C0027672", 
                "ot_main_type" = "Hereditary_Cancer_Syndrome_NOS",
