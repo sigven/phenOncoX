@@ -171,11 +171,14 @@ map_efo <- function(umls_map,
     }
     if (stringr::str_detect(
       line,
-      "property_value: exactMatch NCIT:")) {
+      "^xref: NCIt:")) {
       nci_t <- stringr::str_replace_all(
         line,
-        "property_value: exactMatch NCIT:","")
+        "xref: NCIt:","")
       nci_all <- c(nci_all, nci_t)
+    }
+    if(i %% 10000 == 0){
+      cat(paste0("Processing line: ", i), sep="",'\n')
     }
     i <- i + 1
   }
