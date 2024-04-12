@@ -5,12 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="A semi-manually curated resource that maps relevant phenotype 
-    terms for the oncology domain. Using OncoTree as the starting point, 
-    phenOncoX gathers all key UMLS terms per main tumor type, 
-    expands with all children in the UMLS tree, and maps these terms to 
-    cross-referenced terms in the Experimental Factor Ontology (EFO), 
-    Disease Ontology (DO), and ICD-10.">
+<meta name="description" content="A semi-manually curated resource that maps relevant phenotype terms for the oncology domain. Using OncoTree as the starting point, phenOncoX gathers all key UMLS terms per main tumor type, expands with all children in the UMLS tree, and maps these terms to cross-referenced terms in the Experimental Factor Ontology (EFO), Disease Ontology (DO), and ICD-10.">
 <title>A phenotype ontology map for cancer • phenOncoX</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
@@ -23,12 +18,7 @@
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="A phenotype ontology map for cancer">
-<meta property="og:description" content="A semi-manually curated resource that maps relevant phenotype 
-    terms for the oncology domain. Using OncoTree as the starting point, 
-    phenOncoX gathers all key UMLS terms per main tumor type, 
-    expands with all children in the UMLS tree, and maps these terms to 
-    cross-referenced terms in the Experimental Factor Ontology (EFO), 
-    Disease Ontology (DO), and ICD-10.">
+<meta property="og:description" content="A semi-manually curated resource that maps relevant phenotype terms for the oncology domain. Using OncoTree as the starting point, phenOncoX gathers all key UMLS terms per main tumor type, expands with all children in the UMLS tree, and maps these terms to cross-referenced terms in the Experimental Factor Ontology (EFO), Disease Ontology (DO), and ICD-10.">
 <meta property="og:image" content="https://sigven.github.io/phenOncoX/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -39,11 +29,11 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
+    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light" data-bs-theme="light"><div class="container">
     
     <a class="navbar-brand me-2" href="index.html">phenOncoX</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -95,11 +85,11 @@
 <p><strong>phenOncoX</strong> is an R data package that attempts to address this challenge. In short, <strong>phenOncoX</strong> provides a global cross-mapped set of phenotype ontology terms attributed to cancer phenotypes.</p>
 <p>The mapping established within <strong>phenOncoX</strong> is semi-manually curated, using <a href="http://oncotree.mskcc.org/#/home" class="external-link">OncoTree</a> as the starting point for a list of <a href="https://www.ncbi.nlm.nih.gov/medgen/" class="external-link">UMLS</a> phenotype terms per cancer subtype/primary site. Next, <strong>phenOncoX</strong> appends a number of phenotypes attributed to heritable cancer conditions. Furthermore, each cancer subtype entry in <em>OncoTree</em> is expanded with additional subtypes that are found in the <em>UMLS</em> child-parent hierarchy of disease terms.</p>
 <p>For each entry in the final list of phenotype terms, we make cross-mappings with phenotype terms from <a href="https://github.com/EBISPOT/efo" class="external-link">EFO</a>, <a href="https://disease-ontology.org/" class="external-link">DO</a>, and the <a href="https://www.who.int/standards/classifications/classification-of-diseases" class="external-link">ICD10 classification</a>.</p>
-<p>As of early March 2024, the following ontology versions are used to create the mapping:</p>
+<p>As of early April 2024, the following ontology versions are used to create the mapping:</p>
 <ul>
 <li>OncoTree (2021_11_02)</li>
-<li>Experimental Factor Ontology v3.63.0 (2024-02-15)</li>
-<li>Disease Ontology (v2024-02-28)</li>
+<li>Experimental Factor Ontology v3.64.0 (2024-03-15)</li>
+<li>Disease Ontology (v2024-03-28)</li>
 </ul>
 <p>The package offers a few pre-processed datasets, along with metadata, that the user can retrieve and use for their own projects or set-ups. The package utilizes the <a href="https://googledrive.tidyverse.org/" class="external-link">googledrive</a> R package to download the pre-processed and documented datasets to a local cache directory provided by the user.</p>
 <p><strong>IMPORTANT NOTE</strong>: The mapping established by <strong>phenOncoX</strong> attempts to be comprehensive, but we acknowledge that the presence of missing or erroneous cross-references might still occur.</p>
@@ -175,7 +165,7 @@
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8.</p>
 </div>
 
     </footer>
