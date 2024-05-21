@@ -1026,7 +1026,7 @@ map_umls <- function(
     lgr::lgr$info("Base directory does not exist")
   }
   
-  for (fn in c('MGCONSO','NAMES','MGREL_1','MGREL_2')) {
+  for (fn in c('MGCONSO','NAMES','MGREL')) {
     if (!file.exists(
       file.path(basedir, "data-raw", "umls", paste0(fn,".csv.gz"))) | update == T) {
       download.file(
@@ -1056,21 +1056,18 @@ map_umls <- function(
       na.strings = c(""), stringsAsFactors = F) |>
     janitor::clean_names()
   
-  umls_rel_1 <- read.csv(
+  umls_rel <- read.csv(
     gzfile(file.path(
-      basedir, "data-raw","umls","MGREL_1.csv.gz")
+      basedir, "data-raw","umls","MGREL.csv.gz")
     ),
     stringsAsFactors = F)
-  umls_rel_2 <- read.csv(
-    gzfile(file.path(
-      basedir, "data-raw" ,"umls", "MGREL_2.csv.gz")
-    ),
-    stringsAsFactors = F)
-  umls_rel <- rbind(umls_rel_1, umls_rel_2) |>
+  
+  umls_rel <- umls_rel |>
     dplyr::filter(REL == "CHD" & SUPPRESS == "N") |>
     dplyr::select(CUI1,CUI2) |>
     dplyr::distinct()
-  umls_rel <- dplyr::rename(umls_rel, cui = CUI1, cui_child = CUI2)
+  umls_rel <- dplyr::rename(
+    umls_rel, cui = CUI1, cui_child = CUI2)
   
   umls <- read.csv(
     gzfile(
