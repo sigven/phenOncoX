@@ -1183,7 +1183,7 @@ onco_pheno_map <- function(
     dplyr::distinct()
   
   ot_tumor_types_tree <-
-    jsonlite::fromJSON("http://oncotree.mskcc.org/api/tumorTypes/tree")
+    jsonlite::fromJSON("http://oncotree.info/api/tumorTypes/tree")
   
   
   oncotree_entries <- data.frame()
@@ -1902,7 +1902,7 @@ onco_pheno_map <- function(
     "affecting|complicating|configuration|involving|involves|confined|",
     "number of|percent of|cancer diagnosis|therapy|assessed|surgery|",
     "surgical|( in (remission|relapse))|cancer-(related|associated)| the rat |",
-    "benign |uncertain behavior|surgery|mouse|invades|",
+    "uncertain behavior|surgery|mouse|invades|",
     "finding|^t[0-9]|^p(t|m|(x|[0-9]{1,}))")
   
   cancer_terms <- cui_name_map_lower |>
