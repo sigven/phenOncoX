@@ -77,7 +77,8 @@ map_efo <- function(umls_map,
     line <- lines[i]
     #cat(line,'\n')
     ## only include major ontologies (phenotype-related)
-    if (stringr::str_detect(line, "^id: (EFO|HP|DOID|MONDO|GO|Orphanet):[0-9]{1,}$")) {
+    if (stringr::str_detect(
+      line, "^id: (EFO|HP|DOID|MONDO|GO|Orphanet):[0-9]{1,}$")) {
       if (!is.na(efo_id) &
          !is.na(name) &
          !stringr::str_detect(name, "measurement|^CS") &
@@ -1026,11 +1027,11 @@ map_umls <- function(
     lgr::lgr$info("Base directory does not exist")
   }
   
-  for (fn in c('MGCONSO','NAMES','MGREL')) {
+  for (fn in c('MGCONSO','NAMES','MGREL_1','MGREL_2')) {
     if (!file.exists(
       file.path(basedir, "data-raw", "umls", paste0(fn,".csv.gz"))) | update == T) {
       download.file(
-        paste0("ftp://ftp.ncbi.nlm.nih.gov/pub/medgen/csv/",fn,".csv.gz"),
+        paste0("https://ftp.ncbi.nlm.nih.gov/pub/medgen/csv/",fn,".csv.gz"),
         method = "curl",
         destfile = file.path(
           basedir, "data-raw", "umls", paste0(fn,".csv.gz"))
@@ -1056,13 +1057,20 @@ map_umls <- function(
       na.strings = c(""), stringsAsFactors = F) |>
     janitor::clean_names()
   
-  umls_rel <- read.csv(
+  umls_rel_1 <- read.csv(
     gzfile(file.path(
-      basedir, "data-raw","umls","MGREL.csv.gz")
+      basedir, "data-raw","umls","MGREL_1.csv.gz")
     ),
     stringsAsFactors = F)
   
-  umls_rel <- umls_rel |>
+  umls_rel_2 <- read.csv(
+    gzfile(file.path(
+      basedir, "data-raw","umls","MGREL_2.csv.gz")
+    ),
+    stringsAsFactors = F)
+  
+  umls_rel <- dplyr::bind_rows(
+    umls_rel_1, umls_rel_2) |>
     dplyr::filter(REL == "CHD" & SUPPRESS == "N") |>
     dplyr::select(CUI1,CUI2) |>
     dplyr::distinct()
