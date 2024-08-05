@@ -1,42 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://sigven.github.io/phenOncoX/404.html</loc>
-  </url>
-  <url>
-    <loc>https://sigven.github.io/phenOncoX/CODE_OF_CONDUCT.html</loc>
-  </url>
-  <url>
-    <loc>https://sigven.github.io/phenOncoX/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://sigven.github.io/phenOncoX/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://sigven.github.io/phenOncoX/articles/phenOncoX.html</loc>
-  </url>
-  <url>
-    <loc>https://sigven.github.io/phenOncoX/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://sigven.github.io/phenOncoX/index.html</loc>
-  </url>
-  <url>
-    <loc>https://sigven.github.io/phenOncoX/reference/get_aux_maps.html</loc>
-  </url>
-  <url>
-    <loc>https://sigven.github.io/phenOncoX/reference/get_pox_data.html</loc>
-  </url>
-  <url>
-    <loc>https://sigven.github.io/phenOncoX/reference/get_terms.html</loc>
-  </url>
-  <url>
-    <loc>https://sigven.github.io/phenOncoX/reference/get_tree.html</loc>
-  </url>
-  <url>
-    <loc>https://sigven.github.io/phenOncoX/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://sigven.github.io/phenOncoX/reference/tidyeval.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://sigven.github.io/phenOncoX/404.html</loc></url>
+<url><loc>https://sigven.github.io/phenOncoX/CODE_OF_CONDUCT.html</loc></url>
+<url><loc>https://sigven.github.io/phenOncoX/LICENSE-text.html</loc></url>
+<url><loc>https://sigven.github.io/phenOncoX/articles/index.html</loc></url>
+<url><loc>https://sigven.github.io/phenOncoX/articles/phenOncoX.html</loc></url>
+<url><loc>https://sigven.github.io/phenOncoX/authors.html</loc></url>
+<url><loc>https://sigven.github.io/phenOncoX/index.html</loc></url>
+<url><loc>https://sigven.github.io/phenOncoX/reference/get_aux_maps.html</loc></url>
+<url><loc>https://sigven.github.io/phenOncoX/reference/get_pox_data.html</loc></url>
+<url><loc>https://sigven.github.io/phenOncoX/reference/get_terms.html</loc></url>
+<url><loc>https://sigven.github.io/phenOncoX/reference/get_tree.html</loc></url>
+<url><loc>https://sigven.github.io/phenOncoX/reference/index.html</loc></url>
+<url><loc>https://sigven.github.io/phenOncoX/reference/tidyeval.html</loc></url>
 </urlset>
+
