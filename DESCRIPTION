@@ -9,7 +9,7 @@ Authors@R:
              email = "sigven@ifi.uio.no",
              comment = c(ORCID = "0000-0001-8468-2050")))
 Maintainer: Sigve Nakken <sigven@ifi.uio.no>
-URL: https://github.com/sigven/phenOncoX
+URL: https://sigven.github.io/phenOncoX
 BugReports: https://github.com/sigven/phenOncoX/issues
 Description: A semi-manually curated resource that maps relevant phenotype 
     terms for the oncology domain. Using OncoTree as the starting point, 

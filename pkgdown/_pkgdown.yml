@@ -2,12 +2,30 @@ url: https://sigven.github.io/phenOncoX/
 title: phenOncoX
 template:
   bootstrap: 5
+  bslib:
+    info: "#00483A"
+    dropdown-link-hover-bg: "#00483A"
+    dropdown-link-hover-color: "white"
+    dropdown-link-active-color: "white"
+    navbar-light-color: "white"
+    navbar-light-brand-color: "white"
+    navbar-link-hover-color: "white !important"
+    nav-link-hover-color: "white !important"
+    navbar-light-brand-hover-color: "white !important"
+    navbar-link-color: "white"
+    
 toc:
   depth: 3
 authors:
   Sigve Nakken:
     href: "https://github.com/sigven"
 navbar:
+  link-color: "white"
+  light-color: "white"
+  light-brand-color: "white"
+  light-hover-color: "white !important"
+  type: light
+  bg: info
   structure:
     left: [home, get_started, reference, news]
     right: [search, github]

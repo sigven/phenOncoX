@@ -807,6 +807,11 @@ map_disease_ontology <- function(
   
   ## manual correction of erroneous or missing UMLS cross-references
   do_map <- do_map |>
+    dplyr::filter(!(
+      !is.na(cui) & 
+        cui == "C0206687" &
+        do_id == "DOID:2871"
+    )) |>
     # dplyr::mutate(do_name =
     #                 stringi::stri_enc_toascii(do_name)) |>
     ## sarcoma (non-existent UMLS_CUI = C0153519)
@@ -1323,6 +1328,11 @@ onco_pheno_map <- function(
     dplyr::mutate(cui = dplyr::if_else(
       !is.na(nci_t) & nci_t == "C9305",
       "C1334557",
+      as.character(cui)
+    )) |>
+    dplyr::mutate(cui = dplyr::if_else(
+      !is.na(cui) & cui == "C0206687",
+      "C1332913",
       as.character(cui)
     ))
   
@@ -2248,6 +2258,22 @@ onco_pheno_map <- function(
       "Blood_Cancer_NOS",
       as.character(ot_main_type)
     )) |>
+    dplyr::mutate(primary_site = dplyr::if_else(
+      stringr::str_detect(tolower(cui_name),"ewing sarcoma") &
+        stringr::str_detect(tolower(cui_name),"bone") &
+        !is.na(primary_site) &
+        primary_site != "Bone",
+      "Bone",
+      as.character(primary_site)
+    )) |>
+    dplyr::mutate(ot_main_type = dplyr::if_else(
+      stringr::str_detect(tolower(cui_name),"ewing sarcoma") &
+        stringr::str_detect(tolower(cui_name),"bone") &
+        !is.na(primary_site) &
+        primary_site != "Bone",
+      "Bone_Cancer_NOS",
+      as.character(ot_main_type)
+    )) |>
     dplyr::distinct() 
     
   missing_hereditary <- dplyr::bind_rows(
@@ -2432,6 +2458,17 @@ onco_pheno_map <- function(
                ))
         )) |>
       dplyr::filter(
+        !(!is.na(cui_name) & 
+            stringr::str_detect(
+              tolower(cui_name),"ewing sarcoma") &
+            stringr::str_detect(
+              tolower(cui_name),"bone") &
+            (!is.na(primary_site) & 
+               stringr::str_detect(
+                 primary_site, "Soft Tissue|Peripheral Nervous System"
+               ))
+        )) |>
+      dplyr::filter(
         !(!is.na(efo_name) & 
             stringr::str_detect(
               tolower(efo_name),"hidradenoma|papilloma|ocular |uveal |oropharynx|laryngeal|hypopharyngeal|oral squamous") &
@@ -2575,6 +2612,21 @@ onco_pheno_map <- function(
         stringr::str_detect(tolower(cui_name), "heart") &
           (!is.na(ot_main_type) & ot_main_type == "Lung_Cancer_NOS"))
       ) |>
+      dplyr::filter(!(
+        stringr::str_detect(tolower(cui_name), "desmoid") &
+          (!is.na(ot_main_type) & ot_main_type == "Bone_Cancer_NOS"))
+      ) |>
+      dplyr::filter(!(
+        stringr::str_detect(tolower(cui_name), 
+                            "malignant peripheral nerve sheath") &
+          (!is.na(primary_site) & 
+             !(primary_site == "Soft Tissue" | 
+                 primary_site == "Peripheral Nervous System"))
+      )) |>
+      dplyr::filter(!(
+        cui == "C0019562" & 
+          !is.na(primary_site) & primary_site == "Soft Tissue"
+      )) |>
       dplyr::filter(
         !(stringr::str_detect(tolower(cui_name), "cardiac"))) |>
       dplyr::filter(
