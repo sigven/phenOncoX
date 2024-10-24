@@ -30,7 +30,9 @@ is possible.
 In short, **phenOncoX** provides a global cross-mapped set of phenotype 
 ontology terms attributed to cancer phenotypes.
 
-The mapping established within **phenOncoX** is semi-manually curated, using [OncoTree](http://oncotree.mskcc.org/#/home) as the starting point for a list of [UMLS](https://www.ncbi.nlm.nih.gov/medgen/) phenotype terms per cancer 
+The mapping established within **phenOncoX** is semi-manually curated, 
+using [OncoTree](http://oncotree.mskcc.org/#/home) as the starting point 
+for a list of [UMLS](https://www.ncbi.nlm.nih.gov/medgen/) phenotype terms per cancer 
 subtype/primary site. Next, **phenOncoX** appends a number of phenotypes 
 attributed to heritable cancer conditions. Furthermore, each cancer subtype 
 entry in *OncoTree* is expanded with additional subtypes that are found in 
@@ -38,13 +40,14 @@ the *UMLS* child-parent hierarchy of disease terms.
 
 For each entry in the final list of phenotype terms, we make cross-mappings 
 with phenotype terms from [EFO](https://github.com/EBISPOT/efo), 
-[DO](https://disease-ontology.org/), and the [ICD10 classification](https://www.who.int/standards/classifications/classification-of-diseases).
+[DO](https://disease-ontology.org/), and 
+the [ICD10 classification](https://www.who.int/standards/classifications/classification-of-diseases).
 
-As of early September 2024, the following ontology versions are used to create the mapping:
+As of late October 2024, the following ontology versions are used to create the mapping:
 
 -   OncoTree (2021_11_02)
--   Experimental Factor Ontology v3.69.0 (2024-08-15)
--   Disease Ontology (v2024-08-28)
+-   Experimental Factor Ontology v3.71.0 (2024-10-15)
+-   Disease Ontology (v2024-09-27)
 
 **IMPORTANT NOTE**: The mapping established by **phenOncoX** attempts 
 to be comprehensive, but we acknowledge that the presence of missing or 

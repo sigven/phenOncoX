@@ -2497,7 +2497,11 @@ onco_pheno_map <- function(
                 "lymphoma|appendiceal|intestinal|sigmoid|cecum|",
                 "fibrolamellar|alpha-heavy|klatskin|hepatic|gardner|cecal|",
                 "biliary|hepatocellular|bile duct|duodenal|",
-                "cholangio|lymphatic|",
+                "cholangio|lymphatic|((of|in)( the)? lip|lip and oral|",
+                "lip basal cell|lip cancer|lip carcinoma|liposarcoma|lipoma|tongue)|",
+                "(odonto|oral |parotid|salivary gland|mouth|",
+                "gingiva|ameloblast|palate|jaw| gum|buccal|",
+                "sublingual|submandibular|tongue|tonsil|pharynx|thorac)|",
                 "gallbladder|cholangiocarcinoma|hepato|hepatoblastom|peritoneal|",
                 "ampulla of vater|intestine|mesotheliom|polyposis|appendix)")) &
             (!is.na(primary_site) &
@@ -2658,6 +2662,23 @@ onco_pheno_map <- function(
         ot_code_path,
         cui_name
       )
+    
+    hn_cancers <- onco_pheno_map[[m]] |>
+      dplyr::filter(!is.na(primary_site) & 
+                      primary_site == "Head and Neck")
+    mis_maps_hn <- onco_pheno_map[[m]] |>
+      dplyr::filter(!is.na(primary_site) & 
+                      ((ot_main_type == "Skin_Cancer_NOS" &
+                      primary_site == "Skin") |
+                      (ot_main_type == "Esophageal_Stomach_Cancer_NOS" &
+                         primary_site == "Esophagus/Stomach"))) |>
+      dplyr::semi_join(hn_cancers, by = "cui") |>
+      dplyr::select(primary_site, cui, cui_name)
+    
+    onco_pheno_map[[m]] <- onco_pheno_map[[m]] |>
+      dplyr::anti_join(
+        mis_maps_hn, by = c("cui","primary_site","cui_name"))
+
   }
   
   onco_pheno_map$oncotree <- oncotree_curated
