@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">phenOncoX</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.9</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -93,12 +93,12 @@ depth</em> = 2)</p>
 <span></span>
 <span><span class="va">oncotree</span> <span class="op">&lt;-</span> <span class="fu">phenOncoX</span><span class="fu">::</span><span class="fu"><a href="../reference/get_tree.html">get_tree</a></span><span class="op">(</span></span>
 <span>  cache_dir <span class="op">=</span> <span class="va">download_dir</span>, max_tree_depth <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="co">#&gt; INFO  [2024-09-05 10:16:45] Downloading remote dataset from Google Drive to cache_dir</span></span>
-<span><span class="co">#&gt; INFO  [2024-09-05 10:16:46] Reading from cache_dir = '/tmp/RtmpdWZcri', argument force_download = FALSE</span></span>
-<span><span class="co">#&gt; INFO  [2024-09-05 10:16:46] Object 'oncotree_core' sucessfully loaded</span></span>
-<span><span class="co">#&gt; INFO  [2024-09-05 10:16:46] md5 checksum is valid: 477b56fa8d39a647b190619ff3698021</span></span>
-<span><span class="co">#&gt; INFO  [2024-09-05 10:16:46] Retrieved 797 records</span></span>
-<span><span class="co">#&gt; INFO  [2024-09-05 10:16:46] Limiting OncoTree terms to those with a maximum tree depth of = '2'</span></span>
+<span><span class="co">#&gt; INFO  [2024-10-24 09:25:40] Downloading remote dataset from Google Drive to cache_dir</span></span>
+<span><span class="co">#&gt; INFO  [2024-10-24 09:25:42] Reading from cache_dir = '/tmp/Rtmpjnijth', argument force_download = FALSE</span></span>
+<span><span class="co">#&gt; INFO  [2024-10-24 09:25:42] Object 'oncotree_core' sucessfully loaded</span></span>
+<span><span class="co">#&gt; INFO  [2024-10-24 09:25:42] md5 checksum is valid: 0e1c05a3650ffb03d88f404843bcbb6a</span></span>
+<span><span class="co">#&gt; INFO  [2024-10-24 09:25:42] Retrieved 797 records</span></span>
+<span><span class="co">#&gt; INFO  [2024-10-24 09:25:42] Limiting OncoTree terms to those with a maximum tree depth of = '2'</span></span>
 <span></span>
 <span><span class="co">## Number of records</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">oncotree</span><span class="op">$</span><span class="va">records</span><span class="op">)</span></span>
@@ -126,15 +126,15 @@ depth</em> = 2)</p>
 <span></span>
 <span><span class="va">oncoterms</span> <span class="op">&lt;-</span> <span class="fu">phenOncoX</span><span class="fu">::</span><span class="fu"><a href="../reference/get_terms.html">get_terms</a></span><span class="op">(</span></span>
 <span>  cache_dir <span class="op">=</span> <span class="va">download_dir</span><span class="op">)</span></span>
-<span><span class="co">#&gt; INFO  [2024-09-05 10:16:46] Downloading remote dataset from Google Drive to cache_dir</span></span>
-<span><span class="co">#&gt; INFO  [2024-09-05 10:16:49] Reading from cache_dir = '/tmp/RtmpdWZcri', argument force_download = FALSE</span></span>
-<span><span class="co">#&gt; INFO  [2024-09-05 10:16:49] Object 'oncotree_expanded' sucessfully loaded</span></span>
-<span><span class="co">#&gt; INFO  [2024-09-05 10:16:49] md5 checksum is valid: b2fb104bb66fd4b984f287aa7991928a</span></span>
-<span><span class="co">#&gt; INFO  [2024-09-05 10:16:49] Retrieved 26095 records</span></span>
+<span><span class="co">#&gt; INFO  [2024-10-24 09:25:42] Downloading remote dataset from Google Drive to cache_dir</span></span>
+<span><span class="co">#&gt; INFO  [2024-10-24 09:25:45] Reading from cache_dir = '/tmp/Rtmpjnijth', argument force_download = FALSE</span></span>
+<span><span class="co">#&gt; INFO  [2024-10-24 09:25:45] Object 'oncotree_expanded' sucessfully loaded</span></span>
+<span><span class="co">#&gt; INFO  [2024-10-24 09:25:45] md5 checksum is valid: e1b920aed5d2daf4f13481f91d072481</span></span>
+<span><span class="co">#&gt; INFO  [2024-10-24 09:25:45] Retrieved 25377 records</span></span>
 <span></span>
 <span><span class="co">## Number of records</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">oncoterms</span><span class="op">$</span><span class="va">records</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 26095</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 25377</span></span></code></pre></div>
 <p><br><br></p>
 </div>
 <div class="section level3">
@@ -147,9 +147,9 @@ tumor type/tissue<a class="anchor" aria-label="anchor" href="#number-of-oncotree
 <span></span>
 <span><span class="va">oncoterms</span> <span class="op">&lt;-</span> <span class="fu">phenOncoX</span><span class="fu">::</span><span class="fu"><a href="../reference/get_terms.html">get_terms</a></span><span class="op">(</span></span>
 <span>  cache_dir <span class="op">=</span> <span class="va">download_dir</span><span class="op">)</span></span>
-<span><span class="co">#&gt; INFO  [2024-09-05 10:16:49] Reading from cache_dir = '/tmp/RtmpdWZcri', argument force_download = FALSE</span></span>
-<span><span class="co">#&gt; INFO  [2024-09-05 10:16:49] Object 'oncotree_expanded' sucessfully loaded</span></span>
-<span><span class="co">#&gt; INFO  [2024-09-05 10:16:49] Retrieved n = 26095 records</span></span>
+<span><span class="co">#&gt; INFO  [2024-10-24 09:25:45] Reading from cache_dir = '/tmp/Rtmpjnijth', argument force_download = FALSE</span></span>
+<span><span class="co">#&gt; INFO  [2024-10-24 09:25:45] Object 'oncotree_expanded' sucessfully loaded</span></span>
+<span><span class="co">#&gt; INFO  [2024-10-24 09:25:45] Retrieved n = 25377 records</span></span>
 <span></span>
 <span><span class="co">## Number of records</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">oncoterms</span><span class="op">$</span><span class="va">records</span> <span class="op">|&gt;</span></span>
@@ -159,26 +159,26 @@ tumor type/tissue<a class="anchor" aria-label="anchor" href="#number-of-oncotree
 <span>                   .groups <span class="op">=</span> <span class="st">"drop"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">num_terms</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 primary_site num_terms</span></span>
-<span><span class="co">#&gt; 1                   Lymphoid      4040</span></span>
-<span><span class="co">#&gt; 2                Soft Tissue      2826</span></span>
-<span><span class="co">#&gt; 3                  CNS/Brain      2293</span></span>
+<span><span class="co">#&gt; 1                   Lymphoid      4037</span></span>
+<span><span class="co">#&gt; 2                Soft Tissue      2828</span></span>
+<span><span class="co">#&gt; 3                  CNS/Brain      2294</span></span>
 <span><span class="co">#&gt; 4              Head and Neck      2273</span></span>
-<span><span class="co">#&gt; 5                       Skin      2074</span></span>
-<span><span class="co">#&gt; 6                    Myeloid      1776</span></span>
-<span><span class="co">#&gt; 7          Esophagus/Stomach      1170</span></span>
-<span><span class="co">#&gt; 8                       Lung      1086</span></span>
-<span><span class="co">#&gt; 9               Colon/Rectum       966</span></span>
-<span><span class="co">#&gt; 10      Ovary/Fallopian Tube       851</span></span>
-<span><span class="co">#&gt; 11                    Breast       781</span></span>
-<span><span class="co">#&gt; 12                      Bone       557</span></span>
-<span><span class="co">#&gt; 13     Bladder/Urinary Tract       484</span></span>
+<span><span class="co">#&gt; 5                       Skin      1817</span></span>
+<span><span class="co">#&gt; 6                    Myeloid      1777</span></span>
+<span><span class="co">#&gt; 7                       Lung      1086</span></span>
+<span><span class="co">#&gt; 8               Colon/Rectum       966</span></span>
+<span><span class="co">#&gt; 9       Ovary/Fallopian Tube       851</span></span>
+<span><span class="co">#&gt; 10                    Breast       781</span></span>
+<span><span class="co">#&gt; 11         Esophagus/Stomach       719</span></span>
+<span><span class="co">#&gt; 12                      Bone       551</span></span>
+<span><span class="co">#&gt; 13     Bladder/Urinary Tract       482</span></span>
 <span><span class="co">#&gt; 14                    Uterus       451</span></span>
 <span><span class="co">#&gt; 15             Biliary Tract       416</span></span>
 <span><span class="co">#&gt; 16                     Liver       415</span></span>
-<span><span class="co">#&gt; 17                    Kidney       397</span></span>
+<span><span class="co">#&gt; 17                    Kidney       396</span></span>
 <span><span class="co">#&gt; 18                  Pancreas       343</span></span>
 <span><span class="co">#&gt; 19 Peripheral Nervous System       292</span></span>
-<span><span class="co">#&gt; 20                    Cervix       288</span></span>
+<span><span class="co">#&gt; 20                    Cervix       287</span></span>
 <span><span class="co">#&gt; 21                       Eye       274</span></span>
 <span><span class="co">#&gt; 22              Vulva/Vagina       265</span></span>
 <span><span class="co">#&gt; 23                   Thyroid       250</span></span>
@@ -229,7 +229,7 @@ prostate cancer<a class="anchor" aria-label="anchor" href="#get-all-oncotree-exp
 <span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.4.1 (2024-06-14)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu</span></span>
-<span><span class="co">#&gt; Running under: Ubuntu 22.04.4 LTS</span></span>
+<span><span class="co">#&gt; Running under: Ubuntu 22.04.5 LTS</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
 <span><span class="co">#&gt; BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 </span></span>
@@ -248,16 +248,16 @@ prostate cancer<a class="anchor" aria-label="anchor" href="#get-all-oncotree-exp
 <span><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span><span class="co">#&gt;  [1] jsonlite_1.8.8    dplyr_1.1.4       compiler_4.4.1    crayon_1.5.3     </span></span>
-<span><span class="co">#&gt;  [5] tidyselect_1.2.1  phenOncoX_0.7.9   jquerylib_0.1.4   systemfonts_1.1.0</span></span>
+<span><span class="co">#&gt;  [1] jsonlite_1.8.9    dplyr_1.1.4       compiler_4.4.1    crayon_1.5.3     </span></span>
+<span><span class="co">#&gt;  [5] tidyselect_1.2.1  phenOncoX_0.8.0   jquerylib_0.1.4   systemfonts_1.1.0</span></span>
 <span><span class="co">#&gt;  [9] textshaping_0.4.0 yaml_2.3.10       fastmap_1.2.0     R6_2.5.1         </span></span>
-<span><span class="co">#&gt; [13] generics_0.1.3    curl_5.2.2        knitr_1.48        htmlwidgets_1.6.4</span></span>
+<span><span class="co">#&gt; [13] generics_0.1.3    curl_5.2.3        knitr_1.48        htmlwidgets_1.6.4</span></span>
 <span><span class="co">#&gt; [17] tibble_3.2.1      desc_1.4.3        bslib_0.8.0       pillar_1.9.0     </span></span>
 <span><span class="co">#&gt; [21] rlang_1.1.4       DT_0.33           utf8_1.2.4        cachem_1.1.0     </span></span>
-<span><span class="co">#&gt; [25] lgr_0.4.4         xfun_0.47         fs_1.6.4          sass_0.4.9       </span></span>
-<span><span class="co">#&gt; [29] cli_3.6.3         withr_3.0.1       pkgdown_2.1.0     magrittr_2.0.3   </span></span>
+<span><span class="co">#&gt; [25] lgr_0.4.4         xfun_0.48         fs_1.6.4          sass_0.4.9       </span></span>
+<span><span class="co">#&gt; [29] cli_3.6.3         withr_3.0.1       pkgdown_2.1.1     magrittr_2.0.3   </span></span>
 <span><span class="co">#&gt; [33] crosstalk_1.2.1   digest_0.6.37     lifecycle_1.0.4   vctrs_0.6.5      </span></span>
-<span><span class="co">#&gt; [37] evaluate_0.24.0   gargle_1.5.2      glue_1.7.0        ragg_1.3.2       </span></span>
+<span><span class="co">#&gt; [37] evaluate_1.0.1    gargle_1.5.2      glue_1.8.0        ragg_1.3.3       </span></span>
 <span><span class="co">#&gt; [41] googledrive_2.1.1 fansi_1.0.6       httr_1.4.7        rmarkdown_2.28   </span></span>
 <span><span class="co">#&gt; [45] purrr_1.0.2       tools_4.4.1       pkgconfig_2.0.3   htmltools_0.5.8.1</span></span></code></pre></div>
 <p><br><br></p>
@@ -310,7 +310,7 @@ D940–6. <a href="http://dx.doi.org/10.1093/nar/gkr972" class="external-link">h
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>
