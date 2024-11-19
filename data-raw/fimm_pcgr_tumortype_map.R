@@ -132,4 +132,5 @@ fimm_icd10_final <-
                 icd10_code = identifier) |>
   dplyr::distinct()
 
-readr::write_tsv(fimm_icd10_final, "data-raw/fimm_icd10/fimm_icd10_pcgr_20241024.tsv")
+readr::write_tsv(
+  fimm_icd10_final, "data-raw/fimm_icd10/fimm_icd10_pcgr_20241024.tsv")
