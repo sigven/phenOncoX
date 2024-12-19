@@ -1830,10 +1830,22 @@ onco_pheno_map <- function(
     cat("\n")
     
     if (length(ot_code_c) > 1) {
+      if(length(minor_type) > 1){
+        minor_type <- minor_type[1]
+      }
+      if(length(ot_main_type) > 1){
+        ot_main_type <- ot_main_type[1]
+      }
+      if(length(ot_code_path_c) > 1){
+        ot_code_path_c <- ot_code_path_c[1]
+      }
+      if(length(ot_level_c) > 1){
+        ot_level_c <- ot_level_c[1]
+      }
+      if(length(ot_name_c) > 1){
+        ot_name_c <- ot_name_c[1]
+      }
       ot_code_c <- ot_code_c[1]
-      ot_code_path_c <- ot_code_path_c[1]
-      ot_level_c <- ot_level_c[1]
-      ot_name_c <- ot_name_c[1]
     }
     
     cancer_subtypes <- data.frame()

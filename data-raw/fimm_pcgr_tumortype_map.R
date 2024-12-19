@@ -6,7 +6,7 @@ icd10_map <- map_icd10(
 
 # Load phenOncoX icd10 to site mappings
 icd10_to_site <- readRDS(
-    "data-raw/gd_local/oncotree_expanded_v0.8.0.rds")$records |>
+    "data-raw/gd_local/oncotree_expanded_v0.8.2.rds")$records |>
   dplyr::select(primary_site, icd10_code) |>
   dplyr::rename(identifier = icd10_code) |>
   dplyr::mutate(identifier = stringr::str_replace(
@@ -103,6 +103,7 @@ fimm_icd10_final <-
     .groups = "drop") |>
   ## Fix some of the primary sites (misassignments)
   dplyr::mutate(primary_site = dplyr::case_when(
+    identifier == "C92" ~ "Myeloid",
     identifier == "C96" ~ "Lymphoid;Myeloid",
     identifier == "C78" ~ "Esophagus/Stomach;Lung",
     identifier == "C46" ~ "Skin;Soft Tissue",
@@ -133,4 +134,4 @@ fimm_icd10_final <-
   dplyr::distinct()
 
 readr::write_tsv(
-  fimm_icd10_final, "data-raw/fimm_icd10/fimm_icd10_pcgr_20241024.tsv")
+  fimm_icd10_final, "data-raw/fimm_icd10/fimm_icd10_pcgr_20241219.tsv")
