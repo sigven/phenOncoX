@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">phenOncoX</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -93,12 +93,12 @@ depth</em> = 2)</p>
 <span></span>
 <span><span class="va">oncotree</span> <span class="op">&lt;-</span> <span class="fu">phenOncoX</span><span class="fu">::</span><span class="fu"><a href="../reference/get_tree.html">get_tree</a></span><span class="op">(</span></span>
 <span>  cache_dir <span class="op">=</span> <span class="va">download_dir</span>, max_tree_depth <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="co">#&gt; INFO  [2025-02-07 18:41:40] Downloading remote dataset from Google Drive to cache_dir</span></span>
-<span><span class="co">#&gt; INFO  [2025-02-07 18:41:41] Reading from cache_dir = '/tmp/RtmpOdoBA2', argument force_download = FALSE</span></span>
-<span><span class="co">#&gt; INFO  [2025-02-07 18:41:41] Object 'oncotree_core' sucessfully loaded</span></span>
-<span><span class="co">#&gt; INFO  [2025-02-07 18:41:41] md5 checksum is valid: 7b9a4bb7aba44bdd5019fc69fa28394a</span></span>
-<span><span class="co">#&gt; INFO  [2025-02-07 18:41:41] Retrieved 804 records</span></span>
-<span><span class="co">#&gt; INFO  [2025-02-07 18:41:41] Limiting OncoTree terms to those with a maximum tree depth of = '2'</span></span>
+<span><span class="co">#&gt; INFO  [2025-02-27 10:59:21] Downloading remote dataset from Google Drive to cache_dir</span></span>
+<span><span class="co">#&gt; INFO  [2025-02-27 10:59:22] Reading from cache_dir = '/tmp/Rtmpem3Rkw', argument force_download = FALSE</span></span>
+<span><span class="co">#&gt; INFO  [2025-02-27 10:59:22] Object 'oncotree_core' sucessfully loaded</span></span>
+<span><span class="co">#&gt; INFO  [2025-02-27 10:59:22] md5 checksum is valid: 7b9a4bb7aba44bdd5019fc69fa28394a</span></span>
+<span><span class="co">#&gt; INFO  [2025-02-27 10:59:22] Retrieved 804 records</span></span>
+<span><span class="co">#&gt; INFO  [2025-02-27 10:59:22] Limiting OncoTree terms to those with a maximum tree depth of = '2'</span></span>
 <span></span>
 <span><span class="co">## Number of records</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">oncotree</span><span class="op">$</span><span class="va">records</span><span class="op">)</span></span>
@@ -126,11 +126,11 @@ depth</em> = 2)</p>
 <span></span>
 <span><span class="va">oncoterms</span> <span class="op">&lt;-</span> <span class="fu">phenOncoX</span><span class="fu">::</span><span class="fu"><a href="../reference/get_terms.html">get_terms</a></span><span class="op">(</span></span>
 <span>  cache_dir <span class="op">=</span> <span class="va">download_dir</span><span class="op">)</span></span>
-<span><span class="co">#&gt; INFO  [2025-02-07 18:41:41] Downloading remote dataset from Google Drive to cache_dir</span></span>
-<span><span class="co">#&gt; INFO  [2025-02-07 18:41:44] Reading from cache_dir = '/tmp/RtmpOdoBA2', argument force_download = FALSE</span></span>
-<span><span class="co">#&gt; INFO  [2025-02-07 18:41:44] Object 'oncotree_expanded' sucessfully loaded</span></span>
-<span><span class="co">#&gt; INFO  [2025-02-07 18:41:44] md5 checksum is valid: bde8ba24d69931f54f9e21a99ba1be21</span></span>
-<span><span class="co">#&gt; INFO  [2025-02-07 18:41:44] Retrieved 25482 records</span></span>
+<span><span class="co">#&gt; INFO  [2025-02-27 10:59:22] Downloading remote dataset from Google Drive to cache_dir</span></span>
+<span><span class="co">#&gt; INFO  [2025-02-27 10:59:25] Reading from cache_dir = '/tmp/Rtmpem3Rkw', argument force_download = FALSE</span></span>
+<span><span class="co">#&gt; INFO  [2025-02-27 10:59:25] Object 'oncotree_expanded' sucessfully loaded</span></span>
+<span><span class="co">#&gt; INFO  [2025-02-27 10:59:25] md5 checksum is valid: 4234f691306d6c46301ea96719c8c306</span></span>
+<span><span class="co">#&gt; INFO  [2025-02-27 10:59:25] Retrieved 25482 records</span></span>
 <span></span>
 <span><span class="co">## Number of records</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">oncoterms</span><span class="op">$</span><span class="va">records</span><span class="op">)</span></span>
@@ -147,9 +147,9 @@ tumor type/tissue<a class="anchor" aria-label="anchor" href="#number-of-oncotree
 <span></span>
 <span><span class="va">oncoterms</span> <span class="op">&lt;-</span> <span class="fu">phenOncoX</span><span class="fu">::</span><span class="fu"><a href="../reference/get_terms.html">get_terms</a></span><span class="op">(</span></span>
 <span>  cache_dir <span class="op">=</span> <span class="va">download_dir</span><span class="op">)</span></span>
-<span><span class="co">#&gt; INFO  [2025-02-07 18:41:44] Reading from cache_dir = '/tmp/RtmpOdoBA2', argument force_download = FALSE</span></span>
-<span><span class="co">#&gt; INFO  [2025-02-07 18:41:44] Object 'oncotree_expanded' sucessfully loaded</span></span>
-<span><span class="co">#&gt; INFO  [2025-02-07 18:41:44] Retrieved n = 25482 records</span></span>
+<span><span class="co">#&gt; INFO  [2025-02-27 10:59:25] Reading from cache_dir = '/tmp/Rtmpem3Rkw', argument force_download = FALSE</span></span>
+<span><span class="co">#&gt; INFO  [2025-02-27 10:59:25] Object 'oncotree_expanded' sucessfully loaded</span></span>
+<span><span class="co">#&gt; INFO  [2025-02-27 10:59:25] Retrieved n = 25482 records</span></span>
 <span></span>
 <span><span class="co">## Number of records</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">oncoterms</span><span class="op">$</span><span class="va">records</span> <span class="op">|&gt;</span></span>
@@ -229,7 +229,7 @@ prostate cancer<a class="anchor" aria-label="anchor" href="#get-all-oncotree-exp
 <span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.4.2 (2024-10-31)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu</span></span>
-<span><span class="co">#&gt; Running under: Ubuntu 24.04.1 LTS</span></span>
+<span><span class="co">#&gt; Running under: Ubuntu 24.04.2 LTS</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
 <span><span class="co">#&gt; BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 </span></span>
@@ -248,13 +248,13 @@ prostate cancer<a class="anchor" aria-label="anchor" href="#get-all-oncotree-exp
 <span><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span><span class="co">#&gt;  [1] jsonlite_1.8.9    dplyr_1.1.4       compiler_4.4.2    crayon_1.5.3     </span></span>
-<span><span class="co">#&gt;  [5] tidyselect_1.2.1  phenOncoX_0.8.3   jquerylib_0.1.4   systemfonts_1.2.1</span></span>
-<span><span class="co">#&gt;  [9] textshaping_1.0.0 yaml_2.3.10       fastmap_1.2.0     R6_2.5.1         </span></span>
-<span><span class="co">#&gt; [13] generics_0.1.3    curl_6.2.0        knitr_1.49        htmlwidgets_1.6.4</span></span>
+<span><span class="co">#&gt;  [1] jsonlite_1.9.0    dplyr_1.1.4       compiler_4.4.2    crayon_1.5.3     </span></span>
+<span><span class="co">#&gt;  [5] tidyselect_1.2.1  phenOncoX_0.8.4   jquerylib_0.1.4   systemfonts_1.2.1</span></span>
+<span><span class="co">#&gt;  [9] textshaping_1.0.0 yaml_2.3.10       fastmap_1.2.0     R6_2.6.1         </span></span>
+<span><span class="co">#&gt; [13] generics_0.1.3    curl_6.2.1        knitr_1.49        htmlwidgets_1.6.4</span></span>
 <span><span class="co">#&gt; [17] tibble_3.2.1      desc_1.4.3        bslib_0.9.0       pillar_1.10.1    </span></span>
 <span><span class="co">#&gt; [21] rlang_1.1.5       DT_0.33           cachem_1.1.0      lgr_0.4.4        </span></span>
-<span><span class="co">#&gt; [25] xfun_0.50         fs_1.6.5          sass_0.4.9        cli_3.6.3        </span></span>
+<span><span class="co">#&gt; [25] xfun_0.51         fs_1.6.5          sass_0.4.9        cli_3.6.4        </span></span>
 <span><span class="co">#&gt; [29] pkgdown_2.1.1     withr_3.0.2       magrittr_2.0.3    crosstalk_1.2.1  </span></span>
 <span><span class="co">#&gt; [33] digest_0.6.37     lifecycle_1.0.4   vctrs_0.6.5       evaluate_1.0.3   </span></span>
 <span><span class="co">#&gt; [37] gargle_1.5.2      glue_1.8.0        ragg_1.3.3        googledrive_2.1.1</span></span>
