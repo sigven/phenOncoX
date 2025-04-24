@@ -73,7 +73,7 @@ db[['oncotree_core']] <- oncotree_core
 db[['oncotree_expanded']] <- oncotree_expanded
 db[['auxiliary_maps']] <- auxiliary_maps
 
-version_bumped <- "0.8.4"
+version_bumped <- "0.9.0"
 gd_records <- list()
 db_id_ref <- data.frame()
 

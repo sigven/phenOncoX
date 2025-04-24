@@ -1304,37 +1304,53 @@ onco_pheno_map <- function(
   onco_tree <- oncotree_entries |>
     dplyr::arrange(tissue, level) |>
     dplyr::filter(code != "SRCCR") |>
-    dplyr::mutate(tissue =
-                    dplyr::if_else(tissue == "Bowel",
-                                   "Colon/Rectum",as.character(tissue))) |>
-    dplyr::mutate(main_type =
-                    dplyr::if_else(main_type == "Non-Hodgkin Lymphoma",
-                                   "Lymphoma Non_Hodgkin, NOS",
-                                   as.character(main_type))) |>
-    dplyr::mutate(main_type =
-                    dplyr::if_else(main_type == "Hodgkin Lymphoma",
-                                   "Lymphoma Hodgkin, NOS",
-                                   as.character(main_type))) |>
+    dplyr::mutate(
+      tissue =
+        dplyr::if_else(
+          tissue == "Bowel",
+          "Colon/Rectum",as.character(tissue))) |>
+    dplyr::mutate(
+      main_type =
+        dplyr::if_else(
+          main_type == "Non-Hodgkin Lymphoma",
+          "Lymphoma Non_Hodgkin, NOS",
+          as.character(main_type))) |>
+    dplyr::mutate(
+      main_type =
+        dplyr::if_else(
+          main_type == "Hodgkin Lymphoma",
+          "Lymphoma Hodgkin, NOS",
+          as.character(main_type))) |>
     
-    dplyr::mutate(name =
-                    dplyr::if_else(name == "Bowel","Colon/Rectum",
-                                   as.character(name))) |>
-    dplyr::mutate(main_type =
-                    dplyr::if_else(main_type == "Bowel Cancer" |
-                                     main_type == "Small Bowel Cancer" |
-                                   main_type == "Colorectal Cancer",
-                                   "Colorectal Cancer, NOS",
-                                   as.character(main_type))) |>
-    dplyr::mutate(cui = dplyr::if_else(
-      !is.na(nci_t) & nci_t == "C9305",
-      "C1334557",
-      as.character(cui)
-    )) |>
+    dplyr::mutate(
+      name =
+        dplyr::if_else(
+          name == "Bowel","Colon/Rectum",
+          as.character(name))) |>
+    dplyr::mutate(
+      main_type =
+        dplyr::if_else(
+          main_type == "Bowel Cancer" |
+            main_type == "Small Bowel Cancer" |
+            main_type == "Colorectal Cancer",
+          "Colorectal Cancer, NOS",
+          as.character(main_type))) |>
+    # dplyr::mutate(cui = dplyr::if_else(
+    #   !is.na(nci_t) & nci_t == "C9305",
+    #   "C1334557",
+    #   as.character(cui)
+    # )) |>
     dplyr::mutate(cui = dplyr::if_else(
       !is.na(cui) & cui == "C0206687",
       "C1332913",
       as.character(cui)
-    ))
+    )) |>
+    dplyr::mutate(cui = dplyr::if_else(
+      code == "MLNFGFR1",
+      "C3150773",
+      as.character(cui)
+    )) |>
+    dplyr::filter(code != "MT")
   
   cui_name_map_lower <- cui_name_map |>
     dplyr::mutate(cui_name_lc = tolower(cui_name))
