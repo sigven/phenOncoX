@@ -2257,6 +2257,12 @@ onco_pheno_map <- function(
     dplyr::filter(!stringr::str_detect(
       tolower(cui_name),
       "(((high|intermediate|low|increased) risk)|presence of|anatomic location)")) |>
+    dplyr::filter(!stringr::str_detect(
+      tolower(cui_name),
+      paste0(
+        "neurofibromatosis|noonan|nelson|schnitzler|",
+        "poems syndrome|ataxia-telangiectasia syndrome|",
+        "beckwith-wiedemann|angioosteohypertrophic"))) |>
     dplyr::mutate(primary_site = dplyr::if_else(
       stringr::str_detect(tolower(cui_name),"lymphoma") &
         !is.na(primary_site) &
