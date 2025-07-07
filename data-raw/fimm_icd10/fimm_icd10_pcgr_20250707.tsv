@@ -1,0 +1,137 @@
+reference_database	icd10_code	name	tumor_site_pcgr
+ICD-10	C00	Malignant neoplasm of lip	Head and Neck
+ICD-10	C01	Malignant neoplasm of base of tongue	Head and Neck
+ICD-10	C02	Malignant neoplasm of other and unspecified parts of tongue	Head and Neck
+ICD-10	C03	Malignant neoplasm of gum	Head and Neck
+ICD-10	C04	Malignant neoplasm of floor of mouth	Head and Neck
+ICD-10	C05	Malignant neoplasm of palate	Head and Neck
+ICD-10	C06	Malignant neoplasm of other and unspecified parts of mouth	Head and Neck
+ICD-10	C07	Malignant neoplasm of parotid gland	Head and Neck
+ICD-10	C08	Malignant neoplasm of other and unspecified major salivary glands	Head and Neck
+ICD-10	C09	Malignant neoplasm of tonsil	Head and Neck;Lung
+ICD-10	C10	Malignant neoplasm of oropharynx	Head and Neck
+ICD-10	C11	Malignant neoplasm of nasopharynx	Head and Neck
+ICD-10	C12	Malignant neoplasm of pyriform sinus	Head and Neck
+ICD-10	C13	Malignant neoplasm of hypopharynx	Head and Neck
+ICD-10	C14	Malignant neoplasm of other and ill-defined sites in the lip, oral cavity and pharynx	Head and Neck
+ICD-10	C15	Malignant neoplasm of oesophagus	Esophagus/Stomach
+ICD-10	C16	Malignant neoplasm of stomach	Esophagus/Stomach
+ICD-10	C17	Malignant neoplasm of small intestine	Esophagus/Stomach
+ICD-10	C18	Malignant neoplasm of colon	Colon/Rectum
+ICD-10	C19	Malignant neoplasm of rectosigmoid junction	Colon/Rectum
+ICD-10	C20	Malignant neoplasm of rectum	Colon/Rectum
+ICD-10	C21	Malignant neoplasm of anus and anal canal	Colon/Rectum
+ICD-10	C22	Malignant neoplasm of liver and intrahepatic bile ducts	Biliary Tract;CNS/Brain;Liver
+ICD-10	C23	Malignant neoplasm of gallbladder	Biliary Tract
+ICD-10	C24	Malignant neoplasm of other and unspecified parts of biliary tract	Biliary Tract
+ICD-10	C25	Malignant neoplasm of pancreas	Pancreas
+ICD-10	C26	Malignant neoplasm of other and ill-defined digestive organs	Esophagus/Stomach
+ICD-10	C30	Malignant neoplasm of nasal cavity and middle ear	Head and Neck
+ICD-10	C31	Malignant neoplasm of accessory sinuses	Head and Neck
+ICD-10	C32	Malignant neoplasm of larynx	Head and Neck;Lung
+ICD-10	C33	Malignant neoplasm of trachea	Lung
+ICD-10	C34	Malignant neoplasm of bronchus and lung	Lung
+ICD-10	C37	Malignant neoplasm of thymus	Thymus
+ICD-10	C38	Malignant neoplasm of heart, mediastinum and pleura	Lung
+ICD-10	C39	Malignant neoplasm of other and ill-defined sites in the respiratory system and intrathoracic organs	Lung
+ICD-10	C40	Malignant neoplasm of bone and articular cartilage of limbs	Bone
+ICD-10	C41	Malignant neoplasm of bone and articular cartilage of other and unspecified sites	Bone
+ICD-10	C43	Malignant melanoma of skin	Skin
+ICD-10	C44	Other malignant neoplasms of skin	Skin
+ICD-10	C45	Mesothelioma	Peritoneum;Pleura
+ICD-10	C46	Kaposi's sarcoma	Skin;Soft Tissue
+ICD-10	C47	Malignant neoplasm of peripheral nerves and autonomic nervous system	Peripheral Nervous System
+ICD-10	C48	Malignant neoplasm of retroperitoneum and peritoneum	Peritoneum
+ICD-10	C49	Malignant neoplasm of other connective and soft tissue	Soft Tissue
+ICD-10	C50	Malignant neoplasm of breast	Breast
+ICD-10	C51	Malignant neoplasm of vulva	Vulva/Vagina
+ICD-10	C52	Malignant neoplasm of vagina	Vulva/Vagina
+ICD-10	C53	Malignant neoplasm of cervix uteri	Cervix
+ICD-10	C54	Malignant neoplasm of corpus uteri	Uterus
+ICD-10	C55	Malignant neoplasm of uterus, part unspecified	Uterus
+ICD-10	C56	Malignant neoplasm of ovary	Ovary/Fallopian Tube
+ICD-10	C57	Malignant neoplasm of other and unspecified female genital organs	Ovary/Fallopian Tube
+ICD-10	C58	Malignant neoplasm of placenta	Uterus
+ICD-10	C60	Malignant neoplasm of penis	Penis
+ICD-10	C61	Malignant neoplasm of prostate	Prostate
+ICD-10	C62	Malignant neoplasm of testis	Testis
+ICD-10	C63	Malignant neoplasm of other and unspecified male genital organs	Skin
+ICD-10	C64	Malignant neoplasm of kidney, except renal pelvis	Kidney
+ICD-10	C65	Malignant neoplasm of renal pelvis	Kidney
+ICD-10	C66	Malignant neoplasm of ureter	Bladder/Urinary Tract
+ICD-10	C67	Malignant neoplasm of bladder	Bladder/Urinary Tract
+ICD-10	C68	Malignant neoplasm of other and unspecified urinary organs	Bladder/Urinary Tract
+ICD-10	C69	Malignant neoplasm of eye and adnexa	Eye
+ICD-10	C70	Malignant neoplasm of meninges	CNS/Brain
+ICD-10	C71	Malignant neoplasm of brain	CNS/Brain
+ICD-10	C72	Malignant neoplasm of spinal cord, cranial nerves and other parts of central nervous system	CNS/Brain
+ICD-10	C73	Malignant neoplasm of thyroid gland	Thyroid
+ICD-10	C74	Malignant neoplasm of adrenal gland	Adrenal Gland
+ICD-10	C75	Malignant neoplasm of other endocrine glands and related structures	Bone;CNS/Brain;Head and Neck;Soft Tissue;Thyroid
+ICD-10	C76	Malignant neoplasm of other and ill-defined sites	NA
+ICD-10	C77	Secondary and unspecified malignant neoplasm of lymph nodes	NA
+ICD-10	C78	Secondary malignant neoplasm of respiratory and digestive organs	Esophagus/Stomach;Lung
+ICD-10	C79	Secondary malignant neoplasm of other sites	NA
+ICD-10	C80	Malignant neoplasm without specification of site	NA
+ICD-10	C81	Hodgkin's disease	Lymphoid
+ICD-10	C82	Follicular [nodular] non-Hodgkin's lymphoma	Lymphoid
+ICD-10	C83	Diffuse non-Hodgkin's lymphoma	Lymphoid
+ICD-10	C84	Peripheral and cutaneous T-cell lymphomas	Lymphoid
+ICD-10	C85	Other and unspecified types of non-Hodgkin's lymphoma	Lymphoid
+ICD-10	C88	Malignant immunoproliferative diseases	Lymphoid
+ICD-10	C90	Multiple myeloma and malignant plasma cell neoplasms	Lymphoid;Myeloid
+ICD-10	C91	Lymphoid leukaemia	Myeloid
+ICD-10	C92	Myeloid leukaemia	Myeloid
+ICD-10	C93	Monocytic leukaemia	Myeloid
+ICD-10	C94	Other leukaemias of specified cell type	Myeloid
+ICD-10	C95	Leukaemia of unspecified cell type	Myeloid
+ICD-10	C96	Other and unspecified malignant neoplasms of lymphoid, haematopoietic and related tissue	Lymphoid;Myeloid
+ICD-10	C97	Malignant neoplasms of independent (primary) multiple sites	NA
+ICD-10	D00	Carcinoma in situ of oral cavity, oesophagus and stomach	Esophagus/Stomach
+ICD-10	D01	Carcinoma in situ of other and unspecified digestive organs	Esophagus/Stomach
+ICD-10	D02	Carcinoma in situ of middle ear and respiratory system	Head and Neck
+ICD-10	D03	Melanoma in situ	Skin
+ICD-10	D04	Carcinoma in situ of skin	Skin
+ICD-10	D05	Carcinoma in situ of breast	Breast
+ICD-10	D06	Carcinoma in situ of cervix uteri	Cervix
+ICD-10	D07	Carcinoma in situ of other and unspecified genital organs	Penis;Prostate;Skin
+ICD-10	D09	Carcinoma in situ of other and unspecified sites	NA
+ICD-10	D10	Benign neoplasm of mouth and pharynx	Head and Neck
+ICD-10	D11	Benign neoplasm of major salivary glands	NA
+ICD-10	D12	Benign neoplasm of colon, rectum, anus and anal canal	Colon/Rectum
+ICD-10	D13	Benign neoplasm of other and ill-defined parts of digestive system	Esophagus/Stomach;Pancreas
+ICD-10	D14	Benign neoplasm of middle ear and respiratory system	Head and Neck
+ICD-10	D15	Benign neoplasm of other and unspecified intrathoracic organs	Lung
+ICD-10	D16	Benign neoplasm of bone and articular cartilage	Bone
+ICD-10	D17	Benign lipomatous neoplasm	Soft Tissue
+ICD-10	D18	Haemangioma and lymphangioma, any site	Soft Tissue
+ICD-10	D19	Benign neoplasm of mesothelial tissue	Pleura
+ICD-10	D20	Benign neoplasm of soft tissue of retroperitoneum and peritoneum	Peritoneum;Soft Tissue
+ICD-10	D21	Other benign neoplasms of connective and other soft tissue	Soft Tissue
+ICD-10	D22	Melanocytic naevi	Skin
+ICD-10	D23	Other benign neoplasms of skin	Skin
+ICD-10	D24	Benign neoplasm of breast	Breast
+ICD-10	D25	Leiomyoma of uterus	Soft Tissue;Uterus
+ICD-10	D26	Other benign neoplasms of uterus	Uterus
+ICD-10	D27	Benign neoplasm of ovary	Ovary/Fallopian Tube
+ICD-10	D28	Benign neoplasm of other and unspecified female genital organs	NA
+ICD-10	D29	Benign neoplasm of male genital organs	Prostate
+ICD-10	D30	Benign neoplasm of urinary organs	Bladder/Urinary Tract;Kidney
+ICD-10	D31	Benign neoplasm of eye and adnexa	Eye
+ICD-10	D32	Benign neoplasm of meninges	CNS/Brain
+ICD-10	D33	Benign neoplasm of brain and other parts of central nervous system	CNS/Brain
+ICD-10	D34	Benign neoplasm of thyroid gland	Thyroid
+ICD-10	D35	Benign neoplasm of other and unspecified endocrine glands	NA
+ICD-10	D36	Benign neoplasm of other and unspecified sites	NA
+ICD-10	D37	Neoplasm of uncertain or unknown behaviour of oral cavity and digestive organs	Esophagus/Stomach
+ICD-10	D38	Neoplasm of uncertain or unknown behaviour of middle ear and respiratory and intrathoracic organs	Head and Neck
+ICD-10	D39	Neoplasm of uncertain or unknown behaviour of female genital organs	NA
+ICD-10	D40	Neoplasm of uncertain or unknown behaviour of male genital organs	NA
+ICD-10	D41	Neoplasm of uncertain or unknown behaviour of urinary organs	Bladder/Urinary Tract
+ICD-10	D42	Neoplasm of uncertain or unknown behaviour of meninges	CNS/Brain
+ICD-10	D43	Neoplasm of uncertain or unknown behaviour of brain and central nervous system	CNS/Brain
+ICD-10	D44	Neoplasm of uncertain or unknown behaviour of endocrine               glands	NA
+ICD-10	D45	Polycythaemia vera	Myeloid
+ICD-10	D46	Myelodysplastic syndromes	Lymphoid;Myeloid
+ICD-10	D47	Other neoplasms of uncertain or unknown behaviour of lymphoid, haematopoietic and related tissue	Myeloid
+ICD-10	D48	Neoplasm of uncertain or unknown behaviour of other and unspecified sites	NA

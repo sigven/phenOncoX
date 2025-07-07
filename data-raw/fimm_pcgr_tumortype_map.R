@@ -6,7 +6,7 @@ icd10_map <- map_icd10(
 
 # Load phenOncoX icd10 to site mappings
 icd10_to_site <- readRDS(
-    "data-raw/gd_local/oncotree_expanded_v0.9.1.rds")$records |>
+    "data-raw/gd_local/oncotree_expanded_v0.9.2.rds")$records |>
   dplyr::select(primary_site, icd10_code) |>
   dplyr::rename(identifier = icd10_code) |>
   dplyr::mutate(identifier = stringr::str_replace(
