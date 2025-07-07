@@ -1,7 +1,7 @@
 Package: phenOncoX
 Type: Package
 Title: A phenotype ontology map for cancer
-Version: 0.9.1
+Version: 0.9.2
 Authors@R: 
     c(person(given = "Sigve",
              family = "Nakken",
