@@ -78,7 +78,7 @@ map_efo <- function(umls_map,
     #cat(line,'\n')
     ## only include major ontologies (phenotype-related)
     if (stringr::str_detect(
-      line, "^id: (EFO|HP|DOID|MONDO|GO|Orphanet):[0-9]{1,}$")) {
+      line, "^id: (efo|HP|DOID|MONDO|GO|Orphanet):(EFO_)?[0-9]{1,}$")) {
       if (!is.na(efo_id) &
          !is.na(name) &
          !stringr::str_detect(name, "measurement|^CS") &
@@ -117,7 +117,7 @@ map_efo <- function(umls_map,
       obsolete <- FALSE
       ancestor <- NA
       ancestors <- c()
-      efo_id <- stringr::str_replace(line,"^id: ","")
+      efo_id <- stringr::str_replace(line,"^id: (efo:)?","")
     }
     if (stringr::str_detect(line,"name: .+$")) {
       name <- stringr::str_replace(line, "name: ","")
@@ -142,9 +142,9 @@ map_efo <- function(umls_map,
       snomed_id <- stringr::str_replace_all(line,"xref: SNOMEDCT:", "")
       snomed_all <- c(snomed_all, snomed_id)
     }
-    if (stringr::str_detect(line,"xref: ICD10:[A-Z]{1}[0-9]{1,2}\\.[0-9]{1,2}")) {
+    if (stringr::str_detect(line,"xref: ICD10CM:[A-Z]{1}[0-9]{1,2}\\.[0-9]{1,2}")) {
       icd10_id <- stringr::str_trim(stringr::str_replace_all(line, 
-                                                             "xref: ICD10:",""))
+                                                             "xref: ICD10CM:",""))
       icd10_id <- stringr::str_replace_all(icd10_id," \\{.+\\}$","")
       icd10_all <- c(icd10_all, icd10_id)
     }
@@ -156,18 +156,18 @@ map_efo <- function(umls_map,
     }
     if (stringr::str_detect(
       line,
-      "property_value: \"closeMatch\" http://linkedlifedata.com/resource/umls/id/")) {
+      "property_value: skos:closeMatch http://linkedlifedata.com/resource/umls/id/")) {
       cui_close <- stringr::str_replace_all(
         line,
-        "property_value: \"closeMatch\" http://linkedlifedata.com/resource/umls/id/","")
+        "property_value: skos:closeMatch http://linkedlifedata.com/resource/umls/id/","")
       cui_close_all <- c(cui_close_all, cui_close)
     }
     if (stringr::str_detect(
       line,
-      "property_value: exactMatch http://linkedlifedata.com/resource/umls/id/")) {
+      "property_value: skos:exactMatch http://linkedlifedata.com/resource/umls/id/")) {
       cui_exact <- stringr::str_replace_all(
         line,
-        "property_value: exactMatch http://linkedlifedata.com/resource/umls/id/","")
+        "property_value: skos:exactMatch http://linkedlifedata.com/resource/umls/id/","")
       cui_exact_all <- c(cui_exact_all, cui_exact)
     }
     if (stringr::str_detect(
