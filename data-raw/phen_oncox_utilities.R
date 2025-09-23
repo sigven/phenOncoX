@@ -117,7 +117,8 @@ map_efo <- function(umls_map,
       obsolete <- FALSE
       ancestor <- NA
       ancestors <- c()
-      efo_id <- stringr::str_replace(line,"^id: (efo:)?","")
+      efo_id <- stringr::str_replace(
+        stringr::str_replace(line,"^id: (efo:)?",""),"_",":")
     }
     if (stringr::str_detect(line,"name: .+$")) {
       name <- stringr::str_replace(line, "name: ","")
@@ -195,6 +196,20 @@ map_efo <- function(umls_map,
                                          as.character(NA),msh)) |>
       dplyr::mutate(cui = dplyr::if_else(cui == "",
                                          as.character(NA),cui)) |>
+      ## peripheral T-cell lymphoma - add missing CUI
+      dplyr::mutate(cui = dplyr::if_else(
+        efo_id == "EFO:0000211" &
+          is.na(cui),
+        as.character("C0079774"),
+        cui
+      )) |>
+      ## Cutaneous T-cell lymphoma - add missing CUI
+      dplyr::mutate(cui = dplyr::if_else(
+        efo_id == "EFO:0002913" &
+          is.na(cui),
+        as.character("C0079773"),
+        cui
+      )) |>
       tidyr::separate_rows(cui, sep = ",") |>
       tidyr::separate_rows(cui_close, sep = ",") |>
       tidyr::separate_rows(nci_t, sep = ",") |>
@@ -256,20 +271,27 @@ map_efo <- function(umls_map,
     ) |>
     dplyr::mutate(
       primary_site = dplyr::if_else(
-        stringr::str_detect(tolower(efo_name), "thymoma") |
-        (stringr::str_detect(tolower(efo_name), "thymic|thymus") &
-          stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplasm|tumor")),
+        stringr::str_detect(
+          tolower(efo_name), "thymoma") |
+          (stringr::str_detect(
+            tolower(efo_name), "thymic|thymus") &
+             stringr::str_detect(
+               tolower(efo_name), "carcinoma|cancer|neoplasm|tumor")),
         "Thymus",
         as.character(primary_site)
       )
     ) |>
     dplyr::mutate(
       primary_site = dplyr::if_else(
-        stringr::str_detect(tolower(efo_name),"schwannoma") |
-          (stringr::str_detect(tolower(efo_name), 
-                               "neuroectodermal|peripheral nervous|peripheral nerve sheath") &
-             stringr::str_detect(tolower(efo_name), 
-                                 "carcinoma|cancer|neoplasm|tumor")),
+        stringr::str_detect(
+          tolower(efo_name),
+          "schwannoma") |
+          (stringr::str_detect(
+            tolower(efo_name), 
+            "neuroectodermal|peripheral nervous|peripheral nerve sheath") &
+             stringr::str_detect(
+               tolower(efo_name), 
+               "carcinoma|cancer|neoplasm|tumor")),
         "Peripheral Nervous System",
         as.character(primary_site)
       )
@@ -285,22 +307,30 @@ map_efo <- function(umls_map,
     ) |>
     dplyr::mutate(
       primary_site = dplyr::if_else(
-        stringr::str_detect(tolower(efo_name), "^myelo") |
-        stringr::str_detect(tolower(efo_name), "leukemia|myeloma") |
-          (stringr::str_detect(tolower(efo_name), "t-cell|b-cell") &
-             stringr::str_detect(tolower(efo_name), "cancer|tumor|neoplasm")) |
-          (stringr::str_detect(tolower(efo_name), "myeloid") &
-             stringr::str_detect(tolower(efo_name), "leukemia|neoplasm")),
+        stringr::str_detect(
+          tolower(efo_name), "^myelo") |
+          stringr::str_detect(
+            tolower(efo_name), "leukemia|myeloma") |
+          (stringr::str_detect(
+            tolower(efo_name), "t-cell|b-cell") &
+             stringr::str_detect(
+               tolower(efo_name), "cancer|tumor|neoplasm")) |
+          (stringr::str_detect(
+            tolower(efo_name), "myeloid") &
+             stringr::str_detect(
+               tolower(efo_name), "leukemia|neoplasm")),
         "Myeloid",
         as.character(primary_site)
       )
     ) |>
     dplyr::mutate(
       primary_site = dplyr::if_else(
-        stringr::str_detect(tolower(efo_name), 
-                            "gastric|stomach|esophagus|esophageal") &
-          stringr::str_detect(tolower(efo_name), 
-                              "carcinoma|cancer|neoplas|tumor"),
+        stringr::str_detect(
+          tolower(efo_name), 
+          "gastric|stomach|esophagus|esophageal") &
+          stringr::str_detect(
+            tolower(efo_name), 
+            "carcinoma|cancer|neoplas|tumor"),
         "Esophagus/Stomach",
         as.character(primary_site)
       )
@@ -308,30 +338,41 @@ map_efo <- function(umls_map,
     dplyr::mutate(
       primary_site = dplyr::if_else(
         stringr::str_detect(tolower(efo_name), "retinoblastoma") |
-        (stringr::str_detect(
-          tolower(efo_name), 
-          "eye |ocular |orbit(al)? |retinal |((uveal|ocular) melanoma)|lacrimal gland|palbrepal ") &
-           stringr::str_detect(tolower(efo_name), 
-                               "carcinoma|cancer|neoplas|tumor")),
+          (stringr::str_detect(
+            tolower(efo_name), 
+            paste0(
+              "eye |ocular |orbit(al)? |retinal |",
+              "((uveal|ocular) melanoma)|lacrimal gland|palbrepal ")) &
+             stringr::str_detect(
+               tolower(efo_name), 
+               "carcinoma|cancer|neoplas|tumor")),
         "Eye",
         as.character(primary_site)
       )
     ) |>
     dplyr::mutate(
       primary_site = dplyr::if_else(
-        stringr::str_detect(tolower(efo_name), 
-                            "gallbladder|biliary tract|bile duct|hepatobiliary|cholangio|biliary intraepithelial") &
-          stringr::str_detect(tolower(efo_name), 
-                              "carcinoma|cancer|neoplas|tumor"),
+        stringr::str_detect(
+          tolower(efo_name), 
+          paste0(
+            "gallbladder|biliary tract|bile duct|hepatobiliary|",
+            "cholangio|biliary intraepithelial")) &
+          stringr::str_detect(
+            tolower(efo_name), 
+            "carcinoma|cancer|neoplas|tumor"),
         "Biliary Tract",
         as.character(primary_site)
       )
     ) |>
     dplyr::mutate(
       primary_site = dplyr::if_else(
-        stringr::str_detect(tolower(efo_name), "chondroblastom|chordoma|giant cell") |
+        stringr::str_detect(
+          tolower(efo_name), 
+          "chondroblastom|chordoma|giant cell") |
           (stringr::str_detect(tolower(efo_name), "bone") &
-             stringr::str_detect(tolower(efo_name), "carcinoma|sarcom|cancer|neoplas|tumor")),
+             stringr::str_detect(
+               tolower(efo_name), 
+               "carcinoma|sarcom|cancer|neoplas|tumor")),
         "Bone",
         as.character(primary_site)
       )
@@ -339,115 +380,180 @@ map_efo <- function(umls_map,
     dplyr::mutate(
       primary_site = dplyr::if_else(
         !stringr::str_detect(tolower(efo_name), "bone") &
-          stringr::str_detect(tolower(efo_name), 
-                              "sarcom|soft tissue|gastrointestinal stromal|leiomy|connective tissue"),
+          stringr::str_detect(
+            tolower(efo_name), 
+            "sarcom|soft tissue|gastrointestinal stromal|leiomy|connective tissue"),
         "Soft Tissue",
         as.character(primary_site)
       )
     ) |>
     dplyr::mutate(
       primary_site = dplyr::if_else(
-        stringr::str_detect(tolower(efo_name), "prostat") &
-          stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplas|tumor"),
+        stringr::str_detect(
+          tolower(efo_name), 
+          "prostat") &
+          stringr::str_detect(
+            tolower(efo_name), 
+            "carcinoma|cancer|neoplas|tumor"),
         "Prostate",
         as.character(primary_site)
       )
     ) |>
     dplyr::mutate(
       primary_site = dplyr::if_else(
-        stringr::str_detect(tolower(efo_name), "ovary|ovarian|fallopian tube") &
-          stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplas|blastom|tumor"),
+        stringr::str_detect(
+          tolower(efo_name), 
+          "ovary|ovarian|fallopian tube") &
+          stringr::str_detect(
+            tolower(efo_name), 
+            "carcinoma|cancer|neoplas|blastom|tumor"),
         "Ovary/Fallopian Tube",
         as.character(primary_site)
       )
     ) |>
     dplyr::mutate(
       primary_site = dplyr::if_else(
-        stringr::str_detect(tolower(efo_name), "uterine|endometri|female reproductive") &
-          stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplas|tumor"),
+        stringr::str_detect(
+          tolower(efo_name), 
+          "uterine|endometri|female reproductive") &
+          stringr::str_detect(
+            tolower(efo_name), 
+            "carcinoma|cancer|neoplas|tumor"),
         "Uterus",
         as.character(primary_site)
       )
     ) |>
     dplyr::mutate(
       primary_site = dplyr::if_else(
-        stringr::str_detect(tolower(efo_name), "cervix|cervical") &
-          stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplas|tumor"),
+        stringr::str_detect(
+          tolower(efo_name), 
+          "cervix|cervical") &
+          stringr::str_detect(
+            tolower(efo_name), 
+            "carcinoma|cancer|neoplas|tumor"),
         "Cervix",
         as.character(primary_site)
       )
     ) |>
     dplyr::mutate(
       primary_site = dplyr::if_else(
-        stringr::str_detect(tolower(efo_name), "tonsil |tonsillar |head and neck|mouth|neck|glottis|larynx|pharynx |pharyngeal |gum |lip |parotid gland|salivary gland|oral squamous|tongue|nasal cavity|nasopharyngeal|laryngeal|sinus |hypopharyn|oral cavity|oropharynx") &
-          stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplas|tumor"),
+        stringr::str_detect(
+          tolower(efo_name), 
+          paste0(
+            "tonsil |tonsillar |head and neck|mouth|",
+            "neck|glottis|larynx|pharynx |pharyngeal |",
+            "gum |lip |parotid gland|salivary gland|",
+            "oral squamous|tongue|nasal cavity|",
+            "upper aerodigestive tract|hypopharyngeal|",
+            "nasopharyngeal|laryngeal|sinus |",
+            "hypopharyn|oral cavity|oropharynx")) &
+          stringr::str_detect(
+            tolower(efo_name), 
+            "carcinoma|cancer|neoplas|tumor"),
         "Head and Neck",
         as.character(primary_site)
       )
     ) |>
     dplyr::mutate(
       primary_site = dplyr::if_else(
-        stringr::str_detect(tolower(efo_name), "liver|hepatocellular") &
-          stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplas|tumor"),
+        stringr::str_detect(
+          tolower(efo_name), 
+          "liver|hepatocellular") &
+          stringr::str_detect(
+            tolower(efo_name), 
+            "carcinoma|cancer|neoplas|tumor"),
         "Liver",
         as.character(primary_site)
       )
     ) |>
     dplyr::mutate(
       primary_site = dplyr::if_else(
-        stringr::str_detect(tolower(efo_name), "peritone") &
-          stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplas|tumor|mesotheliom"),
+        stringr::str_detect(
+          tolower(efo_name), 
+          "peritone") &
+          stringr::str_detect(
+            tolower(efo_name), 
+            "carcinoma|cancer|neoplas|tumor|mesotheliom"),
         "Peritoneum",
         as.character(primary_site)
       )
     ) |>
     dplyr::mutate(
       primary_site = dplyr::if_else(
-        stringr::str_detect(tolower(efo_name), "penis|penile") &
-          stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplas|tumor"),
+        stringr::str_detect(
+          tolower(efo_name), "penis|penile") &
+          stringr::str_detect(
+            tolower(efo_name), "carcinoma|cancer|neoplas|tumor"),
         "Penis",
         as.character(primary_site)
       )
     ) |>
     dplyr::mutate(
       primary_site = dplyr::if_else(
-        stringr::str_detect(tolower(efo_name),"mesotheliom|mesothelial") |
+        stringr::str_detect(
+          tolower(efo_name),"mesotheliom|mesothelial") |
           (stringr::str_detect(tolower(efo_name), "pleura") &
-             stringr::str_detect(tolower(efo_name), "carcinoma|cancer|mesotheliom|neoplas|tumor")),
+             stringr::str_detect(
+               tolower(efo_name), 
+               "carcinoma|cancer|mesotheliom|neoplas|tumor")),
         "Pleura",
         as.character(primary_site)
       )
     ) |>
     dplyr::mutate(
       primary_site = dplyr::if_else(
-        stringr::str_detect(tolower(efo_name), "thoracic|lung|bronchi|bronchogenic|bronchus|bronchoalveolar|respiratory system|large cell neuroendocrine") &
-          stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplas|tumor"),
+        stringr::str_detect(
+          tolower(efo_name), 
+          paste0(
+            "thoracic|lung|bronchi|bronchogenic|bronchus|",
+            "bronchoalveolar|respiratory system|large cell neuroendocrine")) &
+          stringr::str_detect(
+            tolower(efo_name), "carcinoma|cancer|neoplas|tumor"),
         "Lung",
         as.character(primary_site)
       )
     ) |>
     dplyr::mutate(
       primary_site = dplyr::if_else(
-        stringr::str_detect(tolower(efo_name), "neuroblastom|meningiom|glioblastom|medulloblastom|glioma|cerebellum cancer|hemangioblastom|cerebellar neoplasm|astrocytom|scwhannom") |
-          (stringr::str_detect(tolower(efo_name), "glioneuronal|central nervous|skull |pituitary |nervous system|neuronal |brain|cerebellar|cerebral") &
-             stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplas|tumor|teratoma")),
+        stringr::str_detect(
+          tolower(efo_name), 
+          paste0(
+            "neuroblastom|meningiom|glioblastom|medulloblastom|",
+            "glioma|cerebellum cancer|hemangioblastom|cerebellar",
+            "neoplasm|astrocytom|scwhannom")) |
+          (stringr::str_detect(
+            tolower(efo_name), 
+            paste0(
+              "glioneuronal|central nervous|skull |pituitary |",
+              "nervous system|neuronal |brain|cerebellar|cerebral")) &
+             stringr::str_detect(
+               tolower(efo_name), "carcinoma|cancer|neoplas|tumor|teratoma")),
         "CNS/Brain",
         as.character(primary_site)
       )
     ) |>
     dplyr::mutate(
       primary_site = dplyr::if_else(
-        stringr::str_detect(tolower(efo_name), "breast|nipple") &
-          stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplas|tumor"),
+        stringr::str_detect(
+          tolower(efo_name), 
+          "breast|nipple") &
+          stringr::str_detect(
+            tolower(efo_name), 
+            "carcinoma|cancer|neoplas|tumor"),
         "Breast",
         as.character(primary_site)
       )
     ) |>
     dplyr::mutate(
       primary_site = dplyr::if_else(
-        stringr::str_detect(tolower(efo_name), "kidney|renal|wilms|clear cell|nephroblastom") &
-          !stringr::str_detect(tolower(efo_name),"ovarian|cervical") &
-          stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplas|tumor"),
+        stringr::str_detect(
+          tolower(efo_name), 
+          "kidney|renal|wilms|clear cell|nephroblastom") &
+          !stringr::str_detect(
+            tolower(efo_name),
+            "ovarian|cervical") &
+          stringr::str_detect(
+            tolower(efo_name), "carcinoma|cancer|neoplas|tumor"),
         "Kidney",
         as.character(primary_site)
       )
@@ -455,37 +561,64 @@ map_efo <- function(umls_map,
     dplyr::mutate(
       primary_site = dplyr::if_else(
         stringr::str_detect(tolower(efo_name),"seminoma") |
-          (stringr::str_detect(tolower(efo_name), "testis|testicular|embryonal|male reproductive|germ cell") &
-             !stringr::str_detect(tolower(efo_name),"female|endometri|ovarian") &
-             stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplas|tumor")),
+          (stringr::str_detect(
+            tolower(efo_name), 
+            "testis|testicular|embryonal|male reproductive|germ cell") &
+             !stringr::str_detect(
+               tolower(efo_name),"female|endometri|ovarian") &
+             stringr::str_detect(
+               tolower(efo_name), "carcinoma|cancer|neoplas|tumor")),
         "Testis",
         as.character(primary_site)
       )
     ) |>
     dplyr::mutate(
       primary_site = dplyr::if_else(
-        stringr::str_detect(tolower(efo_name),"melanoma|ear cancer") |
-          (stringr::str_detect(tolower(efo_name), "skin|keratinocyte|eccrine") &
-             stringr::str_detect(tolower(efo_name), "squamous cell|carcinoma|cancer|neoplas|tumor")),
+        stringr::str_detect(
+          tolower(efo_name),
+          "melanoma|ear cancer") |
+          (stringr::str_detect(
+            tolower(efo_name), 
+            "skin|keratinocyte|eccrine") &
+             stringr::str_detect(
+               tolower(efo_name), 
+               "squamous cell|carcinoma|cancer|neoplas|tumor")),
         "Skin",
         as.character(primary_site)
       )
     ) |>
     dplyr::mutate(
       primary_site = dplyr::if_else(
-        (stringr::str_detect(tolower(efo_name), "vulva|vagina|bartholin gland") &
-           stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplas|tumor")),
+        (stringr::str_detect(
+          tolower(efo_name), 
+          "vulva|vagina|bartholin gland") &
+           stringr::str_detect(
+             tolower(efo_name), 
+             "carcinoma|cancer|neoplas|tumor")),
         "Vulva/Vagina",
         as.character(primary_site)
       )
     ) |>
     dplyr::mutate(
       primary_site = dplyr::if_else(
-        stringr::str_detect(tolower(efo_name), "lynch|li-fraumeni|cowden|von hippel|myelodysplastic syndrome|familial adenomatous ") |
-          (stringr::str_detect(tolower(efo_name), "syndrome") &
-             stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neoplas|tumor")) |
-          (stringr::str_detect(tolower(efo_name), "hereditary|familial|susceptibility") &
-             stringr::str_detect(tolower(efo_name), "carcinoma|cancer|neuroblast|sarcoma|glioma|melanoma|myeloma|lymphoma|neoplas|tumor")),
+        stringr::str_detect(
+          tolower(efo_name), 
+          paste0(
+            "lynch|li-fraumeni|cowden|von hippel|",
+            "myelodysplastic syndrome|familial adenomatous ")) |
+          (stringr::str_detect(
+            tolower(efo_name), "syndrome") &
+             stringr::str_detect(
+               tolower(efo_name), 
+               "carcinoma|cancer|neoplas|tumor")) |
+          (stringr::str_detect(
+            tolower(efo_name), 
+            "hereditary|familial|susceptibility") &
+             stringr::str_detect(
+               tolower(efo_name), 
+               paste0(
+                 "carcinoma|cancer|neuroblast|sarcoma|glioma|",
+                 "melanoma|myeloma|lymphoma|neoplas|tumor"))),
         "Other/Unknown",
         as.character(primary_site)
       )
@@ -493,9 +626,15 @@ map_efo <- function(umls_map,
     dplyr::mutate(
       primary_site = dplyr::if_else(
         #stringr::str_detect(tolower(cui_name), "waldenstr") |
-        stringr::str_detect(tolower(efo_name), "lymphom") |
-          (stringr::str_detect(tolower(efo_name), "cancer|neoplasm") &
-             stringr::str_detect(tolower(efo_name), "lympho|hematopoietic"))
+        stringr::str_detect(
+          tolower(efo_name), 
+          "lymphom") |
+          (stringr::str_detect(
+            tolower(efo_name), 
+            "cancer|neoplasm") &
+             stringr::str_detect(
+               tolower(efo_name), 
+               "lympho|hematopoietic"))
         ,
         "Lymphoid",
         as.character(primary_site)
@@ -503,8 +642,12 @@ map_efo <- function(umls_map,
     ) |>
     dplyr::mutate(
       primary_site = dplyr::if_else(
-        stringr::str_detect(tolower(efo_name), "adrenal gland|adrenal") &
-          stringr::str_detect(tolower(efo_name), "carcinoma|pheochromocytoma|cancer|neoplas|tumor|blastom|lipom"),
+        stringr::str_detect(
+          tolower(efo_name), 
+          "adrenal gland|adrenal") &
+          stringr::str_detect(
+            tolower(efo_name), 
+            "carcinoma|pheochromocytoma|cancer|neoplas|tumor|blastom|lipom"),
         "Adrenal Gland",
         as.character(primary_site)
       )
@@ -1176,7 +1319,7 @@ onco_pheno_map <- function(
   efo_map = NULL,
   do_map = NULL,
   icd10_map = NULL,
-  oncotree_release = "2021_11_02",
+  oncotree_release = "2025_04_08",
   efo_release = NA,
   do_release = NA) {
   
@@ -2104,7 +2247,10 @@ onco_pheno_map <- function(
       tolower(cui_name), "hepatocellular") & 
         (!is.na(primary_site) & primary_site == "CNS/Brain"))) |>
     dplyr::filter(!(stringr::str_detect(
-      tolower(cui_name), "pharyngeal|nasopharyn|oropharyng|glotti| sinus | sinus|laryngeal|paranasal|olfactory|thymic|mesothelioma|pharynx") & 
+      tolower(cui_name), 
+      paste0(
+        "pharyngeal|nasopharyn|oropharyng|glotti| sinus |",
+        "sinus|laryngeal|paranasal|olfactory|thymic|mesothelioma|pharynx")) & 
         (!is.na(primary_site) & primary_site == "Lung"))) |>
     dplyr::arrange(ot_main_type) |>
     dplyr::mutate(ot_main_type = stringr::str_replace_all(ot_main_type," |/|, ","_")) |>
@@ -2327,9 +2473,19 @@ onco_pheno_map <- function(
                "ot_main_type" = "Hereditary_Cancer_Susceptibility_NOS",
                "source" = "oncotree_basic_hereditary_extra_expanded",
                minor_type = F),
+    data.frame("cui" = "C3714644", 
+               "ot_main_type" = "Thymic_Cancer_NOS", 
+                primary_site = "Thymus",
+               "source" = "oncotree_basic_hereditary_extra_expanded", 
+               minor_type = F),
     data.frame("cui" = "C0042138", 
                "ot_main_type" = "Uterine_Cancer_NOS", 
-                primary_site = "Uterus",
+               primary_site = "Uterus",
+               "source" = "oncotree_basic_hereditary_extra_expanded", 
+               minor_type = F),
+    data.frame("cui" = "C0153567", 
+               "ot_main_type" = "Uterine_Cancer_NOS", 
+               primary_site = "Uterus",
                "source" = "oncotree_basic_hereditary_extra_expanded", 
                minor_type = F),
     data.frame("cui" = "C0014170", 
@@ -2350,6 +2506,11 @@ onco_pheno_map <- function(
     data.frame("cui" = "C0031149", 
                "ot_main_type" = "Peritoneal_Cancer_NOS", 
                primary_site = "Peritoneum",
+               "source" = "oncotree_basic_hereditary_extra_expanded", 
+               minor_type = F),
+    data.frame("cui" = "C0887900", 
+               "ot_main_type" = "Head_And_Neck_Cancer_NOS", 
+               primary_site = "Head and Neck",
                "source" = "oncotree_basic_hereditary_extra_expanded", 
                minor_type = F),
     data.frame("cui" = "C0238301", 

@@ -21,7 +21,7 @@ lgr::lgr$appenders$console$set_layout(
 )
 ## Get UMLS / DiseaseOntology / EFO mappings
 umls_map <- map_umls(
-  update = T,
+  update = F,
   basedir = here::here())
 
 icd10_map <- map_icd10(
@@ -73,7 +73,7 @@ db[['oncotree_core']] <- oncotree_core
 db[['oncotree_expanded']] <- oncotree_expanded
 db[['auxiliary_maps']] <- auxiliary_maps
 
-version_bumped <- "1.0.0"
+version_bumped <- "1.0.1"
 gd_records <- list()
 db_id_ref <- data.frame()
 
