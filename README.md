@@ -43,11 +43,11 @@ with phenotype terms from [EFO](https://github.com/EBISPOT/efo),
 [DO](https://disease-ontology.org/), and 
 the [ICD10 classification](https://www.who.int/standards/classifications/classification-of-diseases).
 
-As of late September 2025, the following ontology versions are used to create the mapping:
+As of early November, the following ontology versions are used to create the mapping:
 
 -   OncoTree (2025_04_08)
--   Experimental Factor Ontology v3.82.0 (2025-09-15)
--   Disease Ontology (v2025-08-29)
+-   Experimental Factor Ontology v3.83.0 (2025-10-15)
+-   Disease Ontology (v2025-10-31)
 
 **IMPORTANT NOTE**: The mapping established by **phenOncoX** attempts 
 to be comprehensive, but we acknowledge that the presence of missing or 
