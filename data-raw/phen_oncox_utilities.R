@@ -1319,7 +1319,7 @@ onco_pheno_map <- function(
   efo_map = NULL,
   do_map = NULL,
   icd10_map = NULL,
-  oncotree_release = "2025_04_08",
+  oncotree_release = "2025_10_03",
   efo_release = NA,
   do_release = NA) {
   
