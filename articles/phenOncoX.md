@@ -60,7 +60,7 @@ oncoterms <- phenOncoX::get_terms(
 
 ## Number of records
 nrow(oncoterms$records)
-#> [1] 25488
+#> [1] 25492
 ```
 
   
@@ -83,37 +83,37 @@ as.data.frame(oncoterms$records |>
                    .groups = "drop") |>
   dplyr::arrange(dplyr::desc(num_terms)))
 #>                 primary_site num_terms
-#> 1                   Lymphoid      4047
-#> 2                Soft Tissue      2833
-#> 3                  CNS/Brain      2293
-#> 4              Head and Neck      2288
-#> 5                       Skin      1817
-#> 6                    Myeloid      1811
-#> 7                       Lung      1135
-#> 8               Colon/Rectum      1005
-#> 9       Ovary/Fallopian Tube       866
-#> 10                    Breast       760
-#> 11         Esophagus/Stomach       733
-#> 12                      Bone       550
+#> 1                   Lymphoid      4113
+#> 2                Soft Tissue      2799
+#> 3              Head and Neck      2331
+#> 4                  CNS/Brain      2277
+#> 5                       Skin      1820
+#> 6                    Myeloid      1772
+#> 7                       Lung      1142
+#> 8               Colon/Rectum      1009
+#> 9       Ovary/Fallopian Tube       885
+#> 10                    Breast       764
+#> 11         Esophagus/Stomach       739
+#> 12                      Bone       491
 #> 13     Bladder/Urinary Tract       488
-#> 14                    Uterus       452
-#> 15                    Kidney       408
-#> 16                     Liver       394
-#> 17             Biliary Tract       375
-#> 18                  Pancreas       352
-#> 19                    Cervix       287
-#> 20 Peripheral Nervous System       285
-#> 21                       Eye       280
+#> 14                    Uterus       455
+#> 15                    Kidney       413
+#> 16             Biliary Tract       398
+#> 17                     Liver       386
+#> 18                  Pancreas       347
+#> 19                    Cervix       286
+#> 20 Peripheral Nervous System       280
+#> 21                       Eye       279
 #> 22              Vulva/Vagina       260
-#> 23                   Thyroid       249
-#> 24                    Testis       237
-#> 25                  Prostate       213
-#> 26             Other/Unknown       170
-#> 27                    Pleura       124
-#> 28                Peritoneum        99
+#> 23                   Thyroid       241
+#> 24                    Testis       236
+#> 25                  Prostate       221
+#> 26             Other/Unknown       171
+#> 27                    Pleura       117
+#> 28                Peritoneum       101
 #> 29                    Thymus        87
-#> 30             Adrenal Gland        70
-#> 31                     Penis        61
+#> 30             Adrenal Gland        72
+#> 31                     Penis        60
 #> 32          Ampulla of Vater        46
 ```
 
@@ -173,17 +173,17 @@ sessionInfo()
 #> 
 #> loaded via a namespace (and not attached):
 #>  [1] jsonlite_2.0.0    dplyr_1.1.4       compiler_4.5.2    crayon_1.5.3     
-#>  [5] tidyselect_1.2.1  phenOncoX_1.1.0   jquerylib_0.1.4   systemfonts_1.3.1
-#>  [9] textshaping_1.0.4 yaml_2.3.11       fastmap_1.2.0     R6_2.6.1         
-#> [13] generics_0.1.4    curl_7.0.0        knitr_1.50        htmlwidgets_1.6.4
+#>  [5] tidyselect_1.2.1  phenOncoX_1.1.1   jquerylib_0.1.4   systemfonts_1.3.1
+#>  [9] textshaping_1.0.4 yaml_2.3.12       fastmap_1.2.0     R6_2.6.1         
+#> [13] generics_0.1.4    curl_7.0.0        knitr_1.51        htmlwidgets_1.6.4
 #> [17] tibble_3.3.0      desc_1.4.3        bslib_0.9.0       pillar_1.11.1    
 #> [21] rlang_1.1.6       DT_0.34.0         cachem_1.1.0      lgr_0.5.0        
-#> [25] xfun_0.54         fs_1.6.6          sass_0.4.10       cli_3.6.5        
-#> [29] pkgdown_2.2.0     withr_3.0.2       magrittr_2.0.4    crosstalk_1.2.2  
-#> [33] digest_0.6.39     lifecycle_1.0.4   vctrs_0.6.5       evaluate_1.0.5   
-#> [37] gargle_1.6.0      glue_1.8.0        ragg_1.5.0        googledrive_2.1.2
-#> [41] rmarkdown_2.30    purrr_1.2.0       httr_1.4.7        tools_4.5.2      
-#> [45] pkgconfig_2.0.3   htmltools_0.5.8.1
+#> [25] xfun_0.55         fs_1.6.6          sass_0.4.10       otel_0.2.0       
+#> [29] cli_3.6.5         withr_3.0.2       pkgdown_2.2.0     magrittr_2.0.4   
+#> [33] crosstalk_1.2.2   digest_0.6.39     lifecycle_1.0.4   vctrs_0.6.5      
+#> [37] evaluate_1.0.5    gargle_1.6.0      glue_1.8.0        ragg_1.5.0       
+#> [41] googledrive_2.1.2 httr_1.4.7        rmarkdown_2.30    purrr_1.2.0      
+#> [45] tools_4.5.2       pkgconfig_2.0.3   htmltools_0.5.9
 ```
 
   
