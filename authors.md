@@ -11,12 +11,12 @@ Source:
 [`DESCRIPTION`](https://github.com/sigven/phenOncoX/blob/main/DESCRIPTION)
 
 Nakken S (2026). *phenOncoX: A phenotype ontology map for cancer*. R
-package version 1.1.1, <https://sigven.github.io/phenOncoX>.
+package version 1.1.2, <https://sigven.github.io/phenOncoX>.
 
     @Manual{,
       title = {phenOncoX: A phenotype ontology map for cancer},
       author = {Sigve Nakken},
       year = {2026},
-      note = {R package version 1.1.1},
+      note = {R package version 1.1.2},
       url = {https://sigven.github.io/phenOncoX},
     }
