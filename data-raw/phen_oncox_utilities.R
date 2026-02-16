@@ -1446,7 +1446,8 @@ onco_pheno_map <- function(
   
   onco_tree <- oncotree_entries |>
     dplyr::arrange(tissue, level) |>
-    dplyr::filter(code != "SRCCR") |>
+    dplyr::filter(
+      (!(code == "SRCCR" & cui == "C0279654"))) |>
     dplyr::mutate(
       tissue =
         dplyr::if_else(
@@ -1571,7 +1572,6 @@ onco_pheno_map <- function(
     dplyr::mutate(lc_name = tolower(cui_name)) |> 
     dplyr::filter(nchar(lc_name) >= min(nchar(remain$lc_name)) - 2 &
                     nchar(lc_name) <= max(nchar(remain$lc_name)) + 2)
-  
   
   
   onco_tree_fuzzyjoin_matched <- onco_tree |>
@@ -1787,12 +1787,19 @@ onco_pheno_map <- function(
     dplyr::filter(!is.na(cui_name)) |>
     dplyr::filter(ot_code != "PANET") |>
     dplyr::filter(ot_code != "UCCC") |>
-    #dplyr::filter(ot_code != "BRCNOS") |>
     dplyr::filter(ot_code != "UASC") |>
     dplyr::filter(ot_code != "ACN") |>
-    dplyr::select(-nci_t) |>
+    dplyr::filter(
+      !(ot_code == "ODG2" & cui == "CN377579")
+    ) |>
+    dplyr::filter(
+      !(ot_code == "FHRCC" & cui == "C4744841")
+    ) |>
+    
+    #dplyr::select(-nci_t) |>
     dplyr::distinct() |>
-    dplyr::rename(primary_site = tissue, ot_main_type = main_type) |>
+    dplyr::rename(primary_site = tissue, 
+                  ot_main_type = main_type) |>
     dplyr::distinct() |>
     dplyr::rename(ot_code_path = code_path) |>
     dplyr::rename(ot_name = name) |>
@@ -1802,9 +1809,21 @@ onco_pheno_map <- function(
                   cui, cui_name, dplyr::everything()) |>
     dplyr::arrange(primary_site, ot_main_type, ot_level)
   
-  remain <- onco_tree |>
+  nonmapped_oncotree_entries <- onco_tree |>
     dplyr::anti_join(
-      all_oncotree_entries_final, by = c("code" = "ot_code"))
+      all_oncotree_entries_final, 
+      by = c("code" = "ot_code")) |>
+    dplyr::mutate(
+      source = "oncotree_basic"
+    ) |>
+    dplyr::rename(
+      primary_site = tissue,
+      ot_code = code,
+      ot_main_type = main_type,
+      ot_name = name,
+      ot_level = level,
+      ot_code_path = code_path
+    )
   
   n_mapped_externally <- 
     nrow(onco_tree_name_matched) + nrow(onco_tree_fuzzyjoin_matched) + 
@@ -1814,11 +1833,18 @@ onco_pheno_map <- function(
   n_nonmapped <- nrow(onco_tree) - nrow(all_oncotree_entries_final)
   cat("OncoTree entries - UMLS-mapped internally (OncoTree): ", 
       n_mapped_internally, '\n')
-  cat("OncoTree entries - UMLS-mapped by phenOncoX (by name matching (exact/fuzzy) and manual curation): ", n_mapped_externally, '\n')
+  cat("OncoTree entries - UMLS-mapped by phenOncoX (by name matching ")
+  cat("(exact/fuzzy) and manual curation): ", n_mapped_externally, '\n')
   cat("OncoTree entries - NOT UMLS mapped: ", 
       n_nonmapped, '\n')
   
-  oncotree_curated <- all_oncotree_entries_final
+  all_oncotree_entries_final$main_tree_curated <- T
+  nonmapped_oncotree_entries$main_tree_curated <- F
+  
+  oncotree_curated <- dplyr::bind_rows(
+    all_oncotree_entries_final,
+    nonmapped_oncotree_entries) |>
+    dplyr::arrange(primary_site, ot_main_type, ot_level)
   
   umls_icd10_mapping <- read.table(
     gzfile("data-raw/disgenet/disease_mappings.tsv.gz"), 
@@ -1864,7 +1890,8 @@ onco_pheno_map <- function(
     dplyr::bind_rows(syndromes_ding, susceptibility_ding) |>
     dplyr::mutate(ot_main_type = name) |>
     dplyr::distinct() |>
-    dplyr::select(-c(tcga_cohort, tmb_high, name, cosmic_mutational_signatures))
+    dplyr::select(-c(tcga_cohort, tmb_high, 
+                     name, cosmic_mutational_signatures))
   
   other_cuis <- as.data.frame(readr::read_tsv(
     file = "data-raw/other/missing_cui.tsv", na = c("."),
@@ -1872,7 +1899,9 @@ onco_pheno_map <- function(
   ))
   
   oncotree_plus_hereditary <- dplyr::bind_rows(
-    all_oncotree_entries_final, hereditary_cancers, other_cuis) |>
+    all_oncotree_entries_final, 
+    hereditary_cancers, 
+    other_cuis) |>
     dplyr::mutate(minor_type = dplyr::if_else(
       is.na(minor_type),FALSE,as.logical(minor_type))) |>
     dplyr::select(primary_site, ot_main_type, ot_name,
