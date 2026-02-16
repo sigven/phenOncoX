@@ -30,7 +30,7 @@ oncotree <- phenOncoX::get_tree(
 
 ## Number of records
 nrow(oncotree$records)
-#> [1] 249
+#> [1] 265
 
 ## Show metadata for underlying resources
 oncotree$metadata
@@ -60,7 +60,7 @@ oncoterms <- phenOncoX::get_terms(
 
 ## Number of records
 nrow(oncoterms$records)
-#> [1] 25492
+#> [1] 25519
 ```
 
   
@@ -84,29 +84,29 @@ as.data.frame(oncoterms$records |>
   dplyr::arrange(dplyr::desc(num_terms)))
 #>                 primary_site num_terms
 #> 1                   Lymphoid      4113
-#> 2                Soft Tissue      2799
+#> 2                Soft Tissue      2798
 #> 3              Head and Neck      2331
-#> 4                  CNS/Brain      2277
+#> 4                  CNS/Brain      2291
 #> 5                       Skin      1820
-#> 6                    Myeloid      1772
+#> 6                    Myeloid      1775
 #> 7                       Lung      1142
-#> 8               Colon/Rectum      1009
-#> 9       Ovary/Fallopian Tube       885
+#> 8               Colon/Rectum      1010
+#> 9       Ovary/Fallopian Tube       887
 #> 10                    Breast       764
-#> 11         Esophagus/Stomach       739
-#> 12                      Bone       491
-#> 13     Bladder/Urinary Tract       488
+#> 11         Esophagus/Stomach       740
+#> 12                      Bone       492
+#> 13     Bladder/Urinary Tract       489
 #> 14                    Uterus       455
-#> 15                    Kidney       413
+#> 15                    Kidney       412
 #> 16             Biliary Tract       398
 #> 17                     Liver       386
-#> 18                  Pancreas       347
-#> 19                    Cervix       286
+#> 18                  Pancreas       350
+#> 19                    Cervix       287
 #> 20 Peripheral Nervous System       280
 #> 21                       Eye       279
 #> 22              Vulva/Vagina       260
-#> 23                   Thyroid       241
-#> 24                    Testis       236
+#> 23                   Thyroid       242
+#> 24                    Testis       237
 #> 25                  Prostate       221
 #> 26             Other/Unknown       171
 #> 27                    Pleura       117
@@ -172,8 +172,8 @@ sessionInfo()
 #> [1] stats     graphics  grDevices utils     datasets  methods   base     
 #> 
 #> loaded via a namespace (and not attached):
-#>  [1] jsonlite_2.0.0    dplyr_1.1.4       compiler_4.5.2    crayon_1.5.3     
-#>  [5] tidyselect_1.2.1  phenOncoX_1.1.2   jquerylib_0.1.4   systemfonts_1.3.1
+#>  [1] jsonlite_2.0.0    dplyr_1.2.0       compiler_4.5.2    crayon_1.5.3     
+#>  [5] tidyselect_1.2.1  phenOncoX_1.1.3   jquerylib_0.1.4   systemfonts_1.3.1
 #>  [9] textshaping_1.0.4 yaml_2.3.12       fastmap_1.2.0     R6_2.6.1         
 #> [13] generics_0.1.4    curl_7.0.0        knitr_1.51        htmlwidgets_1.6.4
 #> [17] tibble_3.3.1      desc_1.4.3        bslib_0.10.0      pillar_1.11.1    
@@ -182,7 +182,7 @@ sessionInfo()
 #> [29] cli_3.6.5         withr_3.0.2       pkgdown_2.2.0     magrittr_2.0.4   
 #> [33] crosstalk_1.2.2   digest_0.6.39     lifecycle_1.0.5   vctrs_0.7.1      
 #> [37] evaluate_1.0.5    gargle_1.6.1      glue_1.8.0        ragg_1.5.0       
-#> [41] googledrive_2.1.2 httr_1.4.7        rmarkdown_2.30    purrr_1.2.1      
+#> [41] googledrive_2.1.2 httr_1.4.8        rmarkdown_2.30    purrr_1.2.1      
 #> [45] tools_4.5.2       pkgconfig_2.0.3   htmltools_0.5.9
 ```
 
