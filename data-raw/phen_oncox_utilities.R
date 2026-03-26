@@ -22,7 +22,7 @@ map_icd10 <- function(basedir = NULL) {
   
 }
 map_efo <- function(umls_map,
-                    efo_release = "v3.47.0",
+                    efo_release = "v3.88.0",
                     update = T,
                     basedir = NULL) {
   
@@ -58,10 +58,12 @@ map_efo <- function(umls_map,
   msh_id <- NA
   icd10_id <- NA
   snomed_id <- NA
+  efo_mondo_id <- NA
   cui_all <- c()
   cui_close_all <- c()
   cui_exact <- NA
   cui_exact_all <- c()
+  efo_mondo_id_all <- c()
   msh_all <- c()
   nci_all <- c()
   icd10_all <- c()
@@ -89,6 +91,7 @@ map_efo <- function(umls_map,
                      "msh" = paste(unique(msh_all),collapse = ","),
                      "cui" = paste(unique(cui_all),collapse = ","),
                      "icd10" = paste(unique(icd10_all), collapse = ","),
+                     "efo_mondo_id" = paste(unique(efo_mondo_id_all), collapse = ","),
                      "snomed" = paste(unique(snomed_all), collapse = ","),
                      "cui_exact" = paste(unique(cui_exact_all), collapse = ","),
                      "efo_name" = name,
@@ -103,6 +106,7 @@ map_efo <- function(umls_map,
       msh_id <- NA
       cui <- NA
       icd10_id <- NA
+      efo_mondo_id <- NA
       cui_close <- NA
       cui_exact <- NA
       snomed_id <- NA
@@ -110,6 +114,7 @@ map_efo <- function(umls_map,
       cui_all <- c()
       cui_close_all <- c()
       cui_exact_all <- c()
+      efo_mondo_id_all <- c()
       snomed_all <- c()
       msh_all <- c()
       nci_all <- c()
@@ -129,6 +134,13 @@ map_efo <- function(umls_map,
     if (stringr::str_detect(line,"is_obsolete: true$")) {
       obsolete <- TRUE
     }
+    
+    if(stringr::str_detect(line, "source=\"MONDO:equivalentTo\", source=\"MONDO:EFO\"")){
+      efo_mondo_id <- stringr::str_replace(
+        stringr::str_match(line, "EFO:[0-9]{1,} ")[[1]]," ","")
+      efo_mondo_id_all <- c(efo_mondo_id_all, efo_mondo_id)
+    }
+    
     if (stringr::str_detect(line,"is_a: EFO:[0-9]{1,} ")) {
       ancestor <- stringr::str_replace(
         stringr::str_match(line, "EFO:[0-9]{1,} ")[[1]]," ","")
@@ -228,7 +240,11 @@ map_efo <- function(umls_map,
   )
   
   efo2name <- efo_map |>
-    dplyr::select(efo_id, efo_name) |>
+    dplyr::select(efo_id, efo_mondo_id, efo_name) |>
+    dplyr::mutate(efo_id = paste(efo_id, efo_mondo_id, sep = ",")) |>
+    tidyr::separate_rows(efo_id, sep = ",") |>
+    dplyr::filter(nchar(efo_id) > 0) |>
+    dplyr::select(-c("efo_mondo_id")) |>
     dplyr::distinct() |>
     dplyr::mutate(
       primary_site = dplyr::if_else(
