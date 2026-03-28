@@ -49,6 +49,76 @@ map_efo <- function(umls_map,
         paste0("efo.",
                efo_release,".obo")),
     open = "r")
+  # 
+  # efo_index <- 
+  #   ontologyIndex::get_ontology(
+  #     file.path(
+  #       basedir,"data-raw","efo",
+  #       paste0("efo.",
+  #              efo_release,".obo")),
+  #     extract_tags = "everything")
+  # 
+  # i <- 1
+  # j <- 1
+  # 
+  # 
+  # efo_ids <- efo_index$id
+  # efo_names <- efo_index$name
+  # names(efo_ids) <- NULL
+  # names(efo_names) <- NULL
+  # efo_map <- data.frame()
+  # #do_map_top <- data.frame()
+  # while(i < length(efo_ids)) {
+  #   efo_id <- efo_ids[i]
+  #   if (stringr::str_detect(
+  #     efo_id,"^(efo|HP|DOID|MONDO|GO|Orphanet|EFO)")) {
+  #     efo_name <- efo_names[i]
+  #     all_xref <-
+  #       ontologyIndex::get_term_property(
+  #         ontology = efo_index,
+  #         property_name = "equivalent_to",
+  #         term = efo_id)
+  #     all_subset <-
+  #       ontologyIndex::get_term_property(
+  #         ontology = do_index,
+  #         property_name = "subset",
+  #         term = do_id)
+  #     cui <- NA
+  #     do_cancer_slim <- FALSE
+  #     do_rare_slim <- FALSE
+  #     do_cancer_slim_top <- FALSE
+  #     top_node_cancer_do_id <- NA
+  #     top_node_cancer <- data.frame()
+  #     cui_ids <- c()
+  #     if (length(all_xref) > 0) {
+  #       j <- 1
+  #       while(j <= length(all_xref)) {
+  #         if (stringr::str_detect(all_xref[j],"^UMLS_CUI:C[0-9]{1,}$")) {
+  #           cui <- stringr::str_replace(all_xref[j],"^UMLS_CUI:","")
+  #           cui_ids <- c(cui_ids,cui)
+  #         }
+  #         j <- j + 1
+  #       }
+  #     }
+  #   }
+  # }
+  # 
+  # 
+  # while(i <= length(efo_index$id)){
+  #   id_entry <- efo_index$id[i]
+  #   if (stringr::str_detect(
+  #     id_entry, "^(efo|HP|DOID|MONDO|GO|Orphanet|EFO)")){
+  #     cat(id_entry," - ",j,'\n')
+  #     j <- j + 1
+  #   }
+  #   i <- i + 1
+  # }
+  # 
+  # 
+  # 
+  # 
+  # 
+  # 
   lines <- readLines(con)
   close(con)
   
@@ -57,139 +127,180 @@ map_efo <- function(umls_map,
   nci_t <- NA
   msh_id <- NA
   icd10_id <- NA
+  icd10cm_id <- NA
   snomed_id <- NA
   efo_mondo_id <- NA
   cui_all <- c()
-  cui_close_all <- c()
-  cui_exact <- NA
-  cui_exact_all <- c()
   efo_mondo_id_all <- c()
   msh_all <- c()
   nci_all <- c()
   icd10_all <- c()
+  icd10cm_all <- c()
   snomed_all <- c()
-  efo_map <- NULL
+  oncotree_all <- c()
+  efo_map <- data.frame()
   name <- NA
   cui <- NA
-  cui_close <- NA
+  process <- FALSE
   obsolete <- FALSE
   ancestor <- NA
   ancestors <- c()
+  #while(i <= 100000){
   while (i <= length(lines)) {
     line <- lines[i]
-    #cat(line,'\n')
     ## only include major ontologies (phenotype-related)
     if (stringr::str_detect(
       line, "^id: (efo|HP|DOID|MONDO|GO|Orphanet):(EFO_)?[0-9]{1,}$")) {
       if (!is.na(efo_id) &
          !is.na(name) &
-         !stringr::str_detect(name, "measurement|^CS") &
-         obsolete == FALSE) {
+         !stringr::str_detect(name, "measurement|^CS")){ #&
+         #obsolete == FALSE) {
         df <-
-          data.frame("efo_id" = efo_id,
-                     "nci_t" = paste(unique(nci_all),collapse = ","),
-                     "msh" = paste(unique(msh_all),collapse = ","),
-                     "cui" = paste(unique(cui_all),collapse = ","),
-                     "icd10" = paste(unique(icd10_all), collapse = ","),
-                     "efo_mondo_id" = paste(unique(efo_mondo_id_all), collapse = ","),
-                     "snomed" = paste(unique(snomed_all), collapse = ","),
-                     "cui_exact" = paste(unique(cui_exact_all), collapse = ","),
-                     "efo_name" = name,
-                     "cui_close" = paste(unique(cui_close_all), collapse = ","),
-                     "ancestors" = paste(ancestors,collapse = ","),
-                     stringsAsFactors = F)
+          data.frame(
+            "efo_id" = efo_id,
+            "efo_name" = name,
+            "nci_t" = paste(unique(nci_all),collapse = ","),
+            "msh" = paste(unique(msh_all),collapse = ","),
+            "cui" = paste(unique(cui_all),collapse = ","),
+            "icd10" = paste(unique(icd10_all), collapse = ","),
+            "icd10cm" = paste(unique(icd10cm_all), collapse = ","),
+            "efo_mondo_id" = paste(unique(efo_mondo_id_all), collapse = ","),
+            #"snomed" = paste(unique(snomed_all), collapse = ","),
+            "oncotree" = paste(unique(oncotree_all), collapse = ","),
+            #"ancestors" = paste(ancestors,collapse = ","),
+            "efo_id_replacement" = efo_id_replacement,
+            "obsolete" = obsolete,
+            stringsAsFactors = F)
         efo_map <- rbind(efo_map, df)
       }
+      process <- TRUE
       do_id <- NA
       name <- NA
       nci_t <- NA
       msh_id <- NA
       cui <- NA
       icd10_id <- NA
+      icd10cm_id <- NA
       efo_mondo_id <- NA
-      cui_close <- NA
-      cui_exact <- NA
       snomed_id <- NA
       icd10_all <- c()
+      icd10cm_all <- c()
       cui_all <- c()
-      cui_close_all <- c()
-      cui_exact_all <- c()
       efo_mondo_id_all <- c()
       snomed_all <- c()
       msh_all <- c()
+      oncotree_all <- c()
       nci_all <- c()
       cell_line <- FALSE
       obsolete <- FALSE
+      #process <- FALSE
       ancestor <- NA
+      efo_id_replacement <- NA
       ancestors <- c()
       efo_id <- stringr::str_replace(
         stringr::str_replace(line,"^id: (efo:)?",""),"_",":")
-    }
-    if (stringr::str_detect(line,"name: .+$")) {
-      name <- stringr::str_replace(line, "name: ","")
-      if ("http" %in% name) {
-        name <- NA
+    }else{
+      if (stringr::str_detect(line, "^id: ")) {
+        process <- FALSE
       }
     }
-    if (stringr::str_detect(line,"is_obsolete: true$")) {
-      obsolete <- TRUE
-    }
-    
-    if(stringr::str_detect(line, "source=\"MONDO:equivalentTo\", source=\"MONDO:EFO\"")){
-      efo_mondo_id <- stringr::str_replace(
-        stringr::str_match(line, "EFO:[0-9]{1,} ")[[1]]," ","")
-      efo_mondo_id_all <- c(efo_mondo_id_all, efo_mondo_id)
-    }
-    
-    if (stringr::str_detect(line,"is_a: EFO:[0-9]{1,} ")) {
-      ancestor <- stringr::str_replace(
-        stringr::str_match(line, "EFO:[0-9]{1,} ")[[1]]," ","")
-      ancestors <- c(ancestors,ancestor)
-    }
-    
-    if (stringr::str_detect(line,"xref: MSH:[A-Z]{1,2}[0-9]{1,}")) {
-      msh_id <- stringr::str_replace_all(line,"xref: MSH:", "")
-      msh_all <- c(msh_all, msh_id)
-    }
-    if (stringr::str_detect(line,"xref: SNOMEDCT:[0-9]{1,}")) {
-      snomed_id <- stringr::str_replace_all(line,"xref: SNOMEDCT:", "")
-      snomed_all <- c(snomed_all, snomed_id)
-    }
-    if (stringr::str_detect(line,"xref: ICD10CM:[A-Z]{1}[0-9]{1,2}\\.[0-9]{1,2}")) {
-      icd10_id <- stringr::str_trim(stringr::str_replace_all(line, 
-                                                             "xref: ICD10CM:",""))
-      icd10_id <- stringr::str_replace_all(icd10_id," \\{.+\\}$","")
-      icd10_all <- c(icd10_all, icd10_id)
-    }
-    if (stringr::str_detect(line,"xref: UMLS:[A-Z]{1,2}[0-9]{1,}")) {
-      cui <- stringr::str_replace_all(
-        stringr::str_match(line,"xref: UMLS:[A-Z]{1,2}[0-9]{1,}")[[1]],
-        "xref: UMLS:","")
-      cui_all <- c(cui_all, cui)
-    }
-    if (stringr::str_detect(
-      line,
-      "property_value: skos:closeMatch http://linkedlifedata.com/resource/umls/id/")) {
-      cui_close <- stringr::str_replace_all(
+    if(process == TRUE){
+      if (stringr::str_detect(line,"name: .+$")) {
+        name <- stringr::str_replace(line, "name: ","")
+        if ("http" %in% name) {
+          name <- NA
+        }
+      }
+      if (stringr::str_detect(line,"is_obsolete: true$")) {
+        obsolete <- TRUE
+      }
+      
+      if (stringr::str_detect(
+        line, "replaced_by: http:")){
+        efo_id_replacement <- 
+          stringr::str_replace(
+            line, "replaced_by: http://purl.obolibrary.org/obo/", "")
+      }
+      
+      if(stringr::str_detect(
+        line, "source=\"MONDO:equivalentTo\", source=\"MONDO:EFO\"")){
+        efo_mondo_id <- stringr::str_replace(
+          stringr::str_match(line, "EFO:[0-9]{1,} ")[[1]]," ","")
+        efo_mondo_id_all <- c(efo_mondo_id_all, efo_mondo_id)
+      }
+      
+      # if (stringr::str_detect(line,"is_a: EFO:[0-9]{1,} ")) {
+      #   ancestor <- stringr::str_replace(
+      #     stringr::str_match(line, "EFO:[0-9]{1,} ")[[1]]," ","")
+      #   ancestors <- c(ancestors,ancestor)
+      # }
+      
+      if (stringr::str_detect(line,"xref: MESH:[A-Z]{1,2}[0-9]{1,}") &
+          !stringr::str_detect(line, "relatedTo")) {
+        msh_id <- stringr::str_replace_all(line,"xref: MESH:", "")
+        msh_id <- stringr::str_replace_all(msh_id," \\{.+\\}$","")
+        msh_all <- c(msh_all, msh_id)
+      }
+      if (stringr::str_detect(line,"xref: SNOMEDCT:[0-9]{1,}")) {
+        snomed_id <- stringr::str_replace_all(line,"xref: SNOMEDCT:", "")
+        snomed_all <- c(snomed_all, snomed_id)
+      }
+      if (stringr::str_detect(line,"xref: ONCOTREE:[A-Z]{1,}") &
+          !stringr::str_detect(line, "relatedTo")) {
+        oncotree_id <- stringr::str_replace_all(
+          line,
+          "xref: ONCOTREE:", "")
+        oncotree_id <- stringr::str_replace_all(oncotree_id," \\{.+\\}$","")
+        oncotree_all <- c(oncotree_all, oncotree_id)
+      }
+      if (stringr::str_detect(line,"xref: ICD10CM:[A-Z]{1}[0-9]{1,2}\\.[0-9]{1,2}") &
+          !stringr::str_detect(line, "relatedTo")) {
+        icd10cm_id <- stringr::str_trim(
+          stringr::str_replace_all(
+            line, 
+            "xref: ICD10CM:",""))
+        icd10cm_id <- stringr::str_replace_all(icd10cm_id," \\{.+\\}$","")
+        icd10cm_all <- c(icd10cm_all, icd10cm_id)
+      }
+      if (stringr::str_detect(line,"xref: ICD10:[A-Z]{1}[0-9]{1,2}") &
+          !stringr::str_detect(line, "relatedTo")) {
+        icd10_id <- stringr::str_trim(
+          stringr::str_replace_all(
+            line, 
+            "xref: ICD10:",""))
+        icd10_id <- stringr::str_replace_all(icd10_id," \\{.+\\}$","")
+        icd10_all <- c(icd10_all, icd10_id)
+      }
+      if (stringr::str_detect(line,"xref: UMLS:[A-Z]{1,2}[0-9]{1,}")) {
+        cui <- stringr::str_replace_all(
+          stringr::str_match(line,"xref: UMLS:[A-Z]{1,2}[0-9]{1,}")[[1]],
+          "xref: UMLS:","")
+        cui_all <- c(cui_all, cui)
+      }
+      # if (stringr::str_detect(
+      #   line,
+      #   "property_value: skos:closeMatch http://linkedlifedata.com/resource/umls/id/")) {
+      #   cui_close <- stringr::str_replace_all(
+      #     line,
+      #     "property_value: skos:closeMatch http://linkedlifedata.com/resource/umls/id/","")
+      #   cui_close_all <- c(cui_close_all, cui_close)
+      # }
+      # if (stringr::str_detect(
+      #   line,
+      #   "property_value: skos:exactMatch http://linkedlifedata.com/resource/umls/id/")) {
+      #   cui_exact <- stringr::str_replace_all(
+      #     line,
+      #     "property_value: skos:exactMatch http://linkedlifedata.com/resource/umls/id/","")
+      #   cui_exact_all <- c(cui_exact_all, cui_exact)
+      # }
+      if (stringr::str_detect(
         line,
-        "property_value: skos:closeMatch http://linkedlifedata.com/resource/umls/id/","")
-      cui_close_all <- c(cui_close_all, cui_close)
-    }
-    if (stringr::str_detect(
-      line,
-      "property_value: skos:exactMatch http://linkedlifedata.com/resource/umls/id/")) {
-      cui_exact <- stringr::str_replace_all(
-        line,
-        "property_value: skos:exactMatch http://linkedlifedata.com/resource/umls/id/","")
-      cui_exact_all <- c(cui_exact_all, cui_exact)
-    }
-    if (stringr::str_detect(
-      line,
-      "^xref: NCIt:")) {
-      nci_t <- stringr::str_replace_all(
-        line,
-        "xref: NCIt:","")
-      nci_all <- c(nci_all, nci_t)
+        "^xref: NCIt:")) {
+        nci_t <- stringr::str_replace_all(
+          line,
+          "xref: NCIt:","")
+        nci_all <- c(nci_all, nci_t)
+      }
     }
     if(i %% 10000 == 0){
       cat(paste0("Processing line: ", i), sep="",'\n')
@@ -199,15 +310,20 @@ map_efo <- function(umls_map,
   
   efo_map <- as.data.frame(
     efo_map |>
-      dplyr::mutate(cui_close =
-                      dplyr::if_else(cui_close == "",
-                                     as.character(NA),cui_close)) |>
+      dplyr::mutate(icd10 = dplyr::if_else(icd10 == "",
+                                           as.character(NA),icd10)) |>
+      dplyr::mutate(icd10cm = dplyr::if_else(icd10cm == "",
+                                           as.character(NA),icd10cm)) |>
+      dplyr::mutate(efo_mondo_id = dplyr::if_else(efo_mondo_id == "",
+                                           as.character(NA),efo_mondo_id)) |>
       dplyr::mutate(nci_t = dplyr::if_else(nci_t == "",
                                            as.character(NA),nci_t)) |>
       dplyr::mutate(msh = dplyr::if_else(msh == "",
                                          as.character(NA),msh)) |>
       dplyr::mutate(cui = dplyr::if_else(cui == "",
                                          as.character(NA),cui)) |>
+      dplyr::mutate(oncotree = dplyr::if_else(oncotree == "",
+                                         as.character(NA),oncotree)) |>
       ## peripheral T-cell lymphoma - add missing CUI
       dplyr::mutate(cui = dplyr::if_else(
         efo_id == "EFO:0000211" &
@@ -223,7 +339,7 @@ map_efo <- function(umls_map,
         cui
       )) |>
       tidyr::separate_rows(cui, sep = ",") |>
-      tidyr::separate_rows(cui_close, sep = ",") |>
+      #tidyr::separate_rows(cui_close, sep = ",") |>
       tidyr::separate_rows(nci_t, sep = ",") |>
       tidyr::separate_rows(msh, sep = ",") |>
       dplyr::mutate(
@@ -234,7 +350,7 @@ map_efo <- function(umls_map,
       dplyr::mutate(
         efo_name =
           stringr::str_replace(
-            efo_name,'"http://www.ebi.ac.uk/ontology/webulous#OPPL_pattern"\\}',
+            efo_name,'obsolete_|"http://www.ebi.ac.uk/ontology/webulous#OPPL_pattern"\\}',
             '')) |>
       dplyr::distinct() 
   )
@@ -245,6 +361,7 @@ map_efo <- function(umls_map,
     tidyr::separate_rows(efo_id, sep = ",") |>
     dplyr::filter(nchar(efo_id) > 0) |>
     dplyr::select(-c("efo_mondo_id")) |>
+    dplyr::filter(!is.na(efo_id)) |>
     dplyr::distinct() |>
     dplyr::mutate(
       primary_site = dplyr::if_else(
@@ -719,33 +836,33 @@ map_efo <- function(umls_map,
     #                 stringi::stri_enc_toascii(cui_name)) |>
     dplyr::distinct()
   
-  snomed_map <- efo_map |>
-    dplyr::filter(!is.na(snomed)) |>
-    dplyr::select(efo_id, snomed) |>
-    tidyr::separate_rows(snomed) |>
-    dplyr::left_join(
-      umls_map$snomedXref, 
-      by = "snomed", multiple = "all",
-      relationship = "many-to-many") |>
-    dplyr::left_join(
-      dplyr::filter(
-        umls_map$concept, main_term == T),
-      by = "cui", multiple = "all",
-      relationship = "many-to-many") |>
-    dplyr::filter(!is.na(cui)) |>
-    dplyr::mutate(xref_source = "SNOMED") |>
-    # dplyr::mutate(cui_name =
-    #                 stringi::stri_enc_toascii(cui_name)) |>
-    dplyr::select(efo_id, cui, 
-                  cui_name, xref_source) |>
-    dplyr::distinct()
+  # snomed_map <- efo_map |>
+  #   dplyr::filter(!is.na(snomed)) |>
+  #   dplyr::select(efo_id, snomed) |>
+  #   tidyr::separate_rows(snomed) |>
+  #   dplyr::left_join(
+  #     umls_map$snomedXref, 
+  #     by = "snomed", multiple = "all",
+  #     relationship = "many-to-many") |>
+  #   dplyr::left_join(
+  #     dplyr::filter(
+  #       umls_map$concept, main_term == T),
+  #     by = "cui", multiple = "all",
+  #     relationship = "many-to-many") |>
+  #   dplyr::filter(!is.na(cui)) |>
+  #   dplyr::mutate(xref_source = "SNOMED") |>
+  #   # dplyr::mutate(cui_name =
+  #   #                 stringi::stri_enc_toascii(cui_name)) |>
+  #   dplyr::select(efo_id, cui, 
+  #                 cui_name, xref_source) |>
+  #   dplyr::distinct()
   
   efo2xref <- dplyr::bind_rows(
     cui_map, 
     #cui_map_close, 
     msh_map, 
-    nci_map, 
-    snomed_map) |>
+    nci_map) |>
+   # snomed_map) |>
     dplyr::distinct() |>
     dplyr::left_join(
       efo2name, by = "efo_id",
