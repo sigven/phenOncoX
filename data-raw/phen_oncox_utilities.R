@@ -277,22 +277,6 @@ map_efo <- function(umls_map,
           "xref: UMLS:","")
         cui_all <- c(cui_all, cui)
       }
-      # if (stringr::str_detect(
-      #   line,
-      #   "property_value: skos:closeMatch http://linkedlifedata.com/resource/umls/id/")) {
-      #   cui_close <- stringr::str_replace_all(
-      #     line,
-      #     "property_value: skos:closeMatch http://linkedlifedata.com/resource/umls/id/","")
-      #   cui_close_all <- c(cui_close_all, cui_close)
-      # }
-      # if (stringr::str_detect(
-      #   line,
-      #   "property_value: skos:exactMatch http://linkedlifedata.com/resource/umls/id/")) {
-      #   cui_exact <- stringr::str_replace_all(
-      #     line,
-      #     "property_value: skos:exactMatch http://linkedlifedata.com/resource/umls/id/","")
-      #   cui_exact_all <- c(cui_exact_all, cui_exact)
-      # }
       if (stringr::str_detect(
         line,
         "^xref: NCIt:")) {
@@ -356,12 +340,12 @@ map_efo <- function(umls_map,
   )
   
   efo2name <- efo_map |>
-    dplyr::select(efo_id, efo_mondo_id, efo_name) |>
+    dplyr::select(efo_id, efo_mondo_id, efo_name, obsolete) |>
     dplyr::mutate(efo_id = paste(efo_id, efo_mondo_id, sep = ",")) |>
     tidyr::separate_rows(efo_id, sep = ",") |>
     dplyr::filter(nchar(efo_id) > 0) |>
     dplyr::select(-c("efo_mondo_id")) |>
-    dplyr::filter(!is.na(efo_id)) |>
+    dplyr::filter(!is.na(efo_id) & efo_id != "NA") |>
     dplyr::distinct() |>
     dplyr::mutate(
       primary_site = dplyr::if_else(
@@ -786,6 +770,30 @@ map_efo <- function(umls_map,
       )
     )
   
+  
+  dup_entries <- efo2name |>
+    dplyr::group_by(efo_id) |>
+    dplyr::summarise(n = n()) |>
+    dplyr::filter(n > 1)
+  
+  nondup_entries <- efo2name |>
+    dplyr::anti_join(dup_entries, by = "efo_id") 
+  
+  dup_entries_resolved <- dup_entries |>
+    dplyr::select(efo_id) |>
+    dplyr::inner_join(efo2name, by = "efo_id") |>
+    dplyr::filter(obsolete == F) |>
+    dplyr::distinct()
+  
+  efo2name <- dplyr::bind_rows(
+    nondup_entries,
+    dup_entries_resolved) |>
+    dplyr::distinct()
+  
+  efo_map <- efo_map |>
+    dplyr::semi_join(
+      efo2name, by = c("efo_id","efo_name"))
+  
   cui_map <- efo_map |>
     dplyr::filter(!is.na(cui)) |>
     dplyr::select(efo_id, cui) |>
@@ -832,37 +840,12 @@ map_efo <- function(umls_map,
     dplyr::mutate(xref_source = "MESH") |>
     dplyr::select(efo_id, cui, 
                   cui_name, xref_source) |>
-    # dplyr::mutate(cui_name =
-    #                 stringi::stri_enc_toascii(cui_name)) |>
     dplyr::distinct()
-  
-  # snomed_map <- efo_map |>
-  #   dplyr::filter(!is.na(snomed)) |>
-  #   dplyr::select(efo_id, snomed) |>
-  #   tidyr::separate_rows(snomed) |>
-  #   dplyr::left_join(
-  #     umls_map$snomedXref, 
-  #     by = "snomed", multiple = "all",
-  #     relationship = "many-to-many") |>
-  #   dplyr::left_join(
-  #     dplyr::filter(
-  #       umls_map$concept, main_term == T),
-  #     by = "cui", multiple = "all",
-  #     relationship = "many-to-many") |>
-  #   dplyr::filter(!is.na(cui)) |>
-  #   dplyr::mutate(xref_source = "SNOMED") |>
-  #   # dplyr::mutate(cui_name =
-  #   #                 stringi::stri_enc_toascii(cui_name)) |>
-  #   dplyr::select(efo_id, cui, 
-  #                 cui_name, xref_source) |>
-  #   dplyr::distinct()
-  
+
   efo2xref <- dplyr::bind_rows(
     cui_map, 
-    #cui_map_close, 
     msh_map, 
     nci_map) |>
-   # snomed_map) |>
     dplyr::distinct() |>
     dplyr::left_join(
       efo2name, by = "efo_id",
