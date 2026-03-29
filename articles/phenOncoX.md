@@ -60,7 +60,7 @@ oncoterms <- phenOncoX::get_terms(
 
 ## Number of records
 nrow(oncoterms$records)
-#> [1] 28752
+#> [1] 27033
 ```
 
   
@@ -83,38 +83,38 @@ as.data.frame(oncoterms$records |>
                    .groups = "drop") |>
   dplyr::arrange(dplyr::desc(num_terms)))
 #>                 primary_site num_terms
-#> 1                   Lymphoid      4494
-#> 2                Soft Tissue      3114
-#> 3                  CNS/Brain      2815
-#> 4              Head and Neck      2565
-#> 5                    Myeloid      2056
-#> 6                       Skin      1911
-#> 7                       Lung      1239
-#> 8               Colon/Rectum      1153
-#> 9       Ovary/Fallopian Tube       982
-#> 10                    Breast       848
-#> 11         Esophagus/Stomach       808
-#> 12                      Bone       544
-#> 13                    Uterus       540
-#> 14     Bladder/Urinary Tract       539
-#> 15                    Kidney       506
-#> 16             Biliary Tract       450
-#> 17                     Liver       406
-#> 18                  Pancreas       404
-#> 19 Peripheral Nervous System       329
-#> 20                    Cervix       327
-#> 21                       Eye       321
-#> 22                   Thyroid       284
-#> 23              Vulva/Vagina       283
-#> 24                    Testis       263
-#> 25                  Prostate       235
-#> 26             Other/Unknown       186
-#> 27                    Pleura       156
-#> 28                Peritoneum       111
-#> 29                    Thymus       111
-#> 30             Adrenal Gland       109
+#> 1                   Lymphoid      4228
+#> 2                Soft Tissue      2975
+#> 3                  CNS/Brain      2612
+#> 4              Head and Neck      2411
+#> 5                    Myeloid      1890
+#> 6                       Skin      1875
+#> 7                       Lung      1186
+#> 8               Colon/Rectum      1081
+#> 9       Ovary/Fallopian Tube       909
+#> 10                    Breast       806
+#> 11         Esophagus/Stomach       765
+#> 12                      Bone       528
+#> 13     Bladder/Urinary Tract       499
+#> 14                    Kidney       490
+#> 15                    Uterus       486
+#> 16             Biliary Tract       420
+#> 17                     Liver       398
+#> 18                  Pancreas       376
+#> 19 Peripheral Nervous System       310
+#> 20                    Cervix       295
+#> 21                       Eye       285
+#> 22              Vulva/Vagina       269
+#> 23                   Thyroid       247
+#> 24                    Testis       243
+#> 25                  Prostate       226
+#> 26             Other/Unknown       176
+#> 27                    Pleura       124
+#> 28                Peritoneum       103
+#> 29             Adrenal Gland        93
+#> 30                    Thymus        90
 #> 31                     Penis        65
-#> 32          Ampulla of Vater        50
+#> 32          Ampulla of Vater        46
 ```
 
 ### Get all (OncoTree-expanded) cancer phenotype terms relevant for prostate cancer
@@ -173,7 +173,7 @@ sessionInfo()
 #> 
 #> loaded via a namespace (and not attached):
 #>  [1] jsonlite_2.0.0    dplyr_1.2.0       compiler_4.5.3    crayon_1.5.3     
-#>  [5] tidyselect_1.2.1  phenOncoX_1.1.6   jquerylib_0.1.4   systemfonts_1.3.2
+#>  [5] tidyselect_1.2.1  phenOncoX_1.1.7   jquerylib_0.1.4   systemfonts_1.3.2
 #>  [9] textshaping_1.0.5 yaml_2.3.12       fastmap_1.2.0     R6_2.6.1         
 #> [13] generics_0.1.4    curl_7.0.0        knitr_1.51        htmlwidgets_1.6.4
 #> [17] tibble_3.3.1      desc_1.4.3        bslib_0.10.0      pillar_1.11.1    
