@@ -46,8 +46,8 @@ the [ICD10 classification](https://www.who.int/standards/classifications/classif
 As of late March 2026, the following ontology versions are used to create the mapping:
 
 -   OncoTree (2025_10_03)
--   Experimental Factor Ontology v3.88.0 (2026-03-16)
--   Disease Ontology (v2026-02-28)
+-   Experimental Factor Ontology v3.90.0 (2026-05-16)
+-   Disease Ontology (v2026-04-30)
 
 **IMPORTANT NOTE**: The mapping established by **phenOncoX** attempts 
 to be comprehensive, but we acknowledge that the presence of missing or 

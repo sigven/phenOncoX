@@ -21,7 +21,7 @@ lgr::lgr$appenders$console$set_layout(
 )
 ## Get UMLS / DiseaseOntology / EFO mappings
 umls_map <- map_umls(
-  update = F,
+  update = T,
   basedir = here::here())
 
 icd10_map <- map_icd10(
@@ -40,11 +40,11 @@ efo_map <- map_efo(
   umls_map = umls_map,
   efo_release = metadata$phen_oncox[
     metadata$phen_oncox$source == "Experimental Factor Ontology",]$source_version,
-  update = F,
+  update = T,
   basedir = here::here())
 
 ## Use OncoTree as starting point for phenotype cross-map
-onco_map <- onco_pheno_map(
+phOnco_map <- phen_onco_xmap(
   umls_map = umls_map,
   efo_map = efo_map,
   do_map = do_map,
@@ -52,11 +52,11 @@ onco_map <- onco_pheno_map(
 
 
 oncotree_expanded <- list()
-oncotree_expanded$records <- onco_map$oncotree_expanded
+oncotree_expanded$records <- phOnco_map$oncotree_expanded
 oncotree_expanded$metadata <- metadata$phen_oncox
 
 oncotree_core <- list()
-oncotree_core$records <- onco_map$oncotree
+oncotree_core$records <- phOnco_map$oncotree
 oncotree_core$metadata <- metadata$phen_oncox[1,]
 
 auxiliary_maps <- list()
@@ -73,7 +73,7 @@ db[['oncotree_core']] <- oncotree_core
 db[['oncotree_expanded']] <- oncotree_expanded
 db[['auxiliary_maps']] <- auxiliary_maps
 
-version_bumped <- "1.1.7"
+version_bumped <- "1.2.0"
 gd_records <- list()
 db_id_ref <- data.frame()
 
