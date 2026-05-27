@@ -876,6 +876,57 @@ map_efo <- function(umls_map,
       dplyr::everything()
     )
   
+  
+  ## rescue obsolete ID's that are still in use (OTP)
+  ## - use the current mapping/names of their current ID's 
+  ## to get their names, and keep the obsolete ID's as well
+  
+  obsolete_rescued_xref <- efo2name |>
+    dplyr::filter(efo_is_obsolete == TRUE &
+                    !is.na(primary_site)) |>
+    dplyr::select(
+      efo_id, efo_current_id, 
+      efo_obsolete_name, efo_is_obsolete) |>
+    dplyr::left_join(
+      efo2xref |>
+        dplyr::select(
+          efo_id, efo_name, 
+          cui, cui_name, xref_source,
+          primary_site),
+      by = c("efo_current_id" = "efo_id"),
+      relationship = "many-to-many"
+    ) |>
+    dplyr::select(
+      c("efo_id", 
+        "efo_name", 
+        "efo_current_id", 
+        "efo_is_obsolete",
+        "efo_obsolete_name", 
+        "cui", 
+        "cui_name", 
+        "xref_source",
+        "primary_site")) |>
+    dplyr::filter(!is.na(efo_name))
+  
+  efo2xref <- dplyr::bind_rows(
+    efo2xref,
+    obsolete_rescued_xref) |>
+    dplyr::distinct() |>
+    dplyr::arrange(efo_name) |>
+    dplyr::select(
+      c("efo_id", 
+        "efo_name", 
+        "efo_current_id", 
+        "efo_is_obsolete",
+        "efo_obsolete_name", 
+        "cui", 
+        "cui_name", 
+        "xref_source",
+        "primary_site"),
+      dplyr::everything()
+    )
+  
+  
   return(list("efo2name" = efo2name,
               "efo2xref" = efo2xref))
 }
