@@ -95,6 +95,7 @@ get_tree(
 ## Examples
 
 ``` r
+
 if (FALSE) { # \dontrun{
 library(phenOncoX)
 oncology_terms <- get_tree(cache_dir = tempdir())

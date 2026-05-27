@@ -56,6 +56,7 @@ get_aux_maps(cache_dir = NA, force_download = FALSE)
 ## Examples
 
 ``` r
+
 if (FALSE) { # \dontrun{
 library(phenOncoX)
 oncology_terms <- get_aux_maps(cache_dir = tempdir())

@@ -107,6 +107,7 @@ get_terms(
 ## Examples
 
 ``` r
+
 if (FALSE) { # \dontrun{
 library(phenOncoX)
 oncology_terms <- get_terms(cache_dir = tempdir())
