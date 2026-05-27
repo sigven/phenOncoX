@@ -21,10 +21,10 @@ nocite: |
 #| echo: true
 #| eval: false
 
-#if (!("remotes" %in% installed.packages())) {
-#  install.packages("remotes")
-#}
-#remotes::install_github('sigven/phenOncoX')
+if (!("remotes" %in% installed.packages())) {
+ install.packages("remotes")
+}
+remotes::install_github('sigven/phenOncoX')
 ```
 
 
@@ -39,9 +39,7 @@ This shows how to retrieve cancer phenotype terms in, as defined in
 #| echo: true
 
 ## load the data
-#download_dir <- tempdir()
-download_dir <- 
-  "/Users/sigven/project_data/packages/package__phenOncoX/phenOncoX/data-raw/gd_local"
+download_dir <- tempdir()
 
 oncotree <- phenOncoX::get_tree(
   cache_dir = download_dir, max_tree_depth = 2)
