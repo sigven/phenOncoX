@@ -3054,6 +3054,186 @@ phen_onco_xmap <- function(
       dplyr::filter(
         !(stringr::str_detect(tolower(cui_name), "non-hereditary"))
       ) |>
+      ## One-to-many primary_site corrections:
+      ## Remove clearly wrong site assignments to enforce 1:1 mappings.
+      ## Uses exact matches on cui_name only — str_detect on efo_name is
+      ## intentionally avoided here because efo_name at this stage reflects
+      ## the EFO parent term (e.g. "neuroblastoma"), which is shared by many
+      ## specific NCI-thesaurus variants and would cause over-filtering.
+      dplyr::filter(!(
+        tolower(cui_name) %in% c(
+          ## Cholangiocarcinoma (non-intrahepatic) → Biliary Tract, not Liver
+          "cholangiocarcinoma"
+        ) & !is.na(primary_site) & primary_site == "Liver"
+      )) |>
+      dplyr::filter(!(
+        tolower(cui_name) %in% c(
+          ## Intrahepatic CCA + Cholangiolocellular → Liver, not Biliary Tract
+          "intrahepatic cholangiocarcinoma",
+          "cholangiolocellular carcinoma"
+        ) & !is.na(primary_site) & primary_site == "Biliary Tract"
+      )) |>
+      dplyr::filter(!(
+        tolower(cui_name) %in% c(
+          ## Colon Mucinous Adenocarcinoma → Colon/Rectum, not Cervix
+          "colon mucinous adenocarcinoma"
+        ) & !is.na(primary_site) & primary_site == "Cervix"
+      )) |>
+      dplyr::filter(!(
+        tolower(cui_name) %in% c(
+          ## Pseudomyxoma Peritonei → Peritoneum, not Cervix / Esophagus/Stomach
+          "pseudomyxoma peritonei"
+        ) & !is.na(primary_site) &
+          primary_site %in% c("Cervix", "Esophagus/Stomach")
+      )) |>
+      dplyr::filter(!(
+        tolower(cui_name) %in% c(
+          ## Peritoneal Mesothelioma → Peritoneum, not Pleura
+          "peritoneal mesothelioma"
+        ) & !is.na(primary_site) & primary_site == "Pleura"
+      )) |>
+      dplyr::filter(!(
+        tolower(cui_name) %in% c(
+          ## Kidney Clear Cell Sarcoma → Kidney, not Soft Tissue
+          "kidney clear cell sarcoma"
+        ) & !is.na(primary_site) & primary_site == "Soft Tissue"
+      )) |>
+      dplyr::filter(!(
+        tolower(cui_name) %in% c(
+          ## Granulosa Cell Tumor / Sertoli-Leydig → Ovary/Fallopian Tube, not Other/Unknown
+          "granulosa cell tumor",
+          "sertoli-leydig cell tumor"
+        ) & !is.na(primary_site) & primary_site == "Other/Unknown"
+      )) |>
+      dplyr::filter(!(
+        tolower(cui_name) %in% c(
+          ## Neuroblastoma / Ganglioneuroblastoma → Peripheral Nervous System, not CNS/Brain
+          "neuroblastoma",
+          "ganglioneuroblastoma"
+        ) & !is.na(primary_site) & primary_site == "CNS/Brain"
+      )) |>
+      dplyr::filter(!(
+        tolower(cui_name) %in% c(
+          ## Adrenal Gland Pheochromocytoma / Paraganglioma
+          ## → Peripheral Nervous System, not Soft Tissue
+          "adrenal gland pheochromocytoma",
+          "paraganglioma"
+        ) & !is.na(primary_site) & primary_site == "Soft Tissue"
+      )) |>
+      dplyr::filter(!(
+        ## MPNST (all variants) → Soft Tissue only, not Peripheral Nervous System
+        stringr::str_detect(
+          tolower(cui_name), "peripheral nerve sheath tumor"
+        ) & !is.na(primary_site) & primary_site == "Peripheral Nervous System"
+      )) |>
+      dplyr::filter(!(
+        tolower(cui_name) %in% c(
+          ## Primary bone tumors → Bone, not Soft Tissue
+          "bone giant cell tumor",
+          "chondroblastoma",
+          "chondrosarcoma",
+          "mesenchymal chondrosarcoma",
+          "osteoblastoma",
+          "osteosarcoma"
+        ) & !is.na(primary_site) & primary_site == "Soft Tissue"
+      )) |>
+      dplyr::filter(!(
+        tolower(cui_name) %in% c(
+          ## Systemic Mastocytosis → Myeloid, not Soft Tissue
+          "systemic mastocytosis"
+        ) & !is.na(primary_site) & primary_site == "Soft Tissue"
+      )) |>
+      dplyr::filter(!(
+        tolower(cui_name) %in% c(
+          ## Vagina Sarcoma → Vulva/Vagina, not Soft Tissue
+          "vagina sarcoma"
+        ) & !is.na(primary_site) & primary_site == "Soft Tissue"
+      )) |>
+      ## Force primary_site = "Soft Tissue" for any entry whose cui_name or
+      ## efo_name contains "peripheral nerve sheath tumor" or "neurofibrosarcoma"
+      ## (covers all staging/modifier variants, both cases)
+      dplyr::mutate(
+        primary_site = dplyr::if_else(
+          stringr::str_detect(
+            tolower(cui_name),
+            "peripheral nerve sheath tumor|neurofibrosarcoma"
+          ) |
+            (!is.na(efo_name) & stringr::str_detect(
+              tolower(efo_name),
+              "peripheral nerve sheath tumor|neurofibrosarcoma"
+            )),
+          "Soft Tissue",
+          as.character(primary_site)
+        )
+      ) |>
+      ## Force primary_site = "Peripheral Nervous System" for any entry whose
+      ## cui_name or efo_name contains "neuroblastoma" (catches all adrenal,
+      ## childhood, stage-specific, and other modifier variants)
+      dplyr::mutate(
+        primary_site = dplyr::if_else(
+          stringr::str_detect(tolower(cui_name), "neuroblastoma") |
+            (!is.na(efo_name) & stringr::str_detect(
+              tolower(efo_name), "neuroblastoma"
+            )),
+          "Peripheral Nervous System",
+          as.character(primary_site)
+        )
+      ) |>
+      ## Force primary_site = "Liver" for any entry whose cui_name or efo_name
+      ## contains "intrahepatic cholangiocarcinoma" (catches all stage-specific
+      ## and modifier variants that slip through the exact-match filter above)
+      dplyr::mutate(
+        primary_site = dplyr::if_else(
+          stringr::str_detect(
+            tolower(cui_name), "intrahepatic cholangiocarcinoma"
+          ) |
+            (!is.na(efo_name) & stringr::str_detect(
+              tolower(efo_name), "intrahepatic cholangiocarcinoma"
+            )),
+          "Liver",
+          as.character(primary_site)
+        )
+      ) |>
+      ## Force primary_site = "Liver" for hepatoblastoma (all variants)
+      dplyr::mutate(
+        primary_site = dplyr::if_else(
+          stringr::str_detect(tolower(cui_name), "hepatoblastoma") |
+            (!is.na(efo_name) & stringr::str_detect(
+              tolower(efo_name), "hepatoblastoma"
+            )),
+          "Liver",
+          as.character(primary_site)
+        )
+      ) |>
+      ## Force primary_site = "Soft Tissue" for botryoid rhabdomyosarcoma
+      ## (all variants — vaginal/vulvar-specific ones remain multi-site via
+      ## their separate Vulva/Vagina rows which are not overridden here)
+      dplyr::mutate(
+        primary_site = dplyr::if_else(
+          stringr::str_detect(tolower(cui_name), "botryoid") |
+            (!is.na(efo_name) & stringr::str_detect(
+              tolower(efo_name), "botryoid"
+            )),
+          "Soft Tissue",
+          as.character(primary_site)
+        )
+      ) |>
+      ## Force primary_site = "Ovary/Fallopian Tube" for granulosa cell tumor
+      ## and Sertoli cell tumor variants (all modifier/staging forms)
+      dplyr::mutate(
+        primary_site = dplyr::if_else(
+          stringr::str_detect(
+            tolower(cui_name),
+            "granulosa cell tumor|sertoli cell tumor|sertoli-leydig"
+          ) |
+            (!is.na(efo_name) & stringr::str_detect(
+              tolower(efo_name),
+              "granulosa cell tumor|sertoli cell tumor|sertoli-leydig"
+            )),
+          "Ovary/Fallopian Tube",
+          as.character(primary_site)
+        )
+      ) |>
       dplyr::select(
         primary_site,
         ot_main_type,
