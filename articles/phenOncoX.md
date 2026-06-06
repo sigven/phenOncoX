@@ -67,7 +67,7 @@ oncoterms <- phenOncoX::get_terms(
 nrow(oncoterms$records)
 ```
 
-    [1] 27309
+    [1] 27236
 
   
   
@@ -91,34 +91,34 @@ as.data.frame(oncoterms$records |>
 
                     primary_site num_terms
     1                   Lymphoid      4306
-    2                Soft Tissue      2988
-    3                  CNS/Brain      2624
-    4              Head and Neck      2472
+    2                Soft Tissue      2996
+    3              Head and Neck      2462
+    4                  CNS/Brain      2432
     5                    Myeloid      1927
     6                       Skin      1880
-    7                       Lung      1191
+    7                       Lung      1186
     8               Colon/Rectum      1110
-    9       Ovary/Fallopian Tube       912
+    9       Ovary/Fallopian Tube       927
     10                    Breast       815
-    11         Esophagus/Stomach       764
-    12                      Bone       517
+    11         Esophagus/Stomach       763
+    12                      Bone       515
     13     Bladder/Urinary Tract       495
     14                    Uterus       481
-    15                    Kidney       460
-    16             Biliary Tract       427
-    17                     Liver       404
+    15                     Liver       470
+    16 Peripheral Nervous System       467
+    17                    Kidney       458
     18                  Pancreas       370
-    19 Peripheral Nervous System       303
+    19             Biliary Tract       357
     20                       Eye       296
-    21                    Cervix       291
-    22              Vulva/Vagina       269
+    21                    Cervix       286
+    22              Vulva/Vagina       265
     23                   Thyroid       255
-    24                    Testis       253
+    24                    Testis       242
     25                  Prostate       225
-    26             Other/Unknown       182
+    26             Other/Unknown       172
     27                    Pleura       135
     28                Peritoneum       109
-    29             Adrenal Gland       107
+    29             Adrenal Gland       102
     30                    Thymus        95
     31                     Penis        63
     32          Ampulla of Vater        47
@@ -194,10 +194,10 @@ sessionInfo()
 
     loaded via a namespace (and not attached):
      [1] jsonlite_2.0.0    dplyr_1.2.1       compiler_4.6.0    crayon_1.5.3
-     [5] tidyselect_1.2.1  phenOncoX_1.2.1   yaml_2.3.12       fastmap_1.2.0
+     [5] tidyselect_1.2.1  phenOncoX_1.2.2   yaml_2.3.12       fastmap_1.2.0
      [9] R6_2.6.1          generics_0.1.4    curl_7.1.0        knitr_1.51
     [13] htmlwidgets_1.6.4 tibble_3.3.1      reactable_0.4.5   pillar_1.11.1
-    [17] rlang_1.2.0       lgr_0.5.2         reactR_0.6.1      xfun_0.57
+    [17] rlang_1.2.0       lgr_0.5.2         reactR_0.6.1      xfun_0.58
     [21] fs_2.1.0          otel_0.2.0        cli_3.6.6         withr_3.0.2
     [25] magrittr_2.0.5    crosstalk_1.2.2   digest_0.6.39     lifecycle_1.0.5
     [29] vctrs_0.7.3       evaluate_1.0.5    gargle_1.6.1      glue_1.8.1
