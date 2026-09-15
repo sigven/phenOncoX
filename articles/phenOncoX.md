@@ -67,7 +67,7 @@ oncoterms <- phenOncoX::get_terms(
 nrow(oncoterms$records)
 ```
 
-    [1] 27705
+    [1] 27593
 
   
   
@@ -91,20 +91,20 @@ as.data.frame(oncoterms$records |>
 
                     primary_site num_terms
     1                   Lymphoid      4374
-    2                Soft Tissue      3061
-    3              Head and Neck      2608
-    4                  CNS/Brain      2475
+    2                Soft Tissue      2844
+    3              Head and Neck      2604
+    4                  CNS/Brain      2473
     5                    Myeloid      1954
     6                       Skin      1885
-    7                       Lung      1197
+    7                       Lung      1196
     8               Colon/Rectum      1122
     9       Ovary/Fallopian Tube       938
-    10                    Breast       821
+    10                    Breast       819
     11         Esophagus/Stomach       758
-    12                      Bone       563
+    12                      Bone       680
     13     Bladder/Urinary Tract       496
     14                    Uterus       486
-    15                     Liver       478
+    15                     Liver       476
     16                    Kidney       474
     17 Peripheral Nervous System       469
     18                  Pancreas       368
@@ -114,7 +114,7 @@ as.data.frame(oncoterms$records |>
     22              Vulva/Vagina       269
     23                   Thyroid       260
     24                    Testis       243
-    25                  Prostate       227
+    25                  Prostate       226
     26             Other/Unknown       187
     27                    Pleura       135
     28                Peritoneum       110
@@ -174,7 +174,7 @@ sessionInfo()
 
     R version 4.6.1 (2026-06-24)
     Platform: x86_64-pc-linux-gnu
-    Running under: Ubuntu 24.04.4 LTS
+    Running under: Ubuntu 24.04.5 LTS
 
     Matrix products: default
     BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3
@@ -194,8 +194,8 @@ sessionInfo()
 
     loaded via a namespace (and not attached):
      [1] jsonlite_2.0.0    dplyr_1.2.1       compiler_4.6.1    crayon_1.5.3
-     [5] tidyselect_1.2.1  phenOncoX_1.2.4   yaml_2.3.12       fastmap_1.2.0
-     [9] R6_2.6.1          generics_0.1.4    curl_8.0.0        knitr_1.51
+     [5] tidyselect_1.2.1  phenOncoX_1.2.5   yaml_2.3.12       fastmap_1.2.0
+     [9] R6_2.6.1          generics_0.1.4    curl_8.0.0        knitr_1.52
     [13] htmlwidgets_1.6.4 tibble_3.3.1      reactable_0.4.5   pillar_1.11.1
     [17] rlang_1.3.0       lgr_0.5.2         reactR_0.6.1      xfun_0.60
     [21] fs_2.1.0          otel_0.2.0        cli_3.6.6         withr_3.0.3
