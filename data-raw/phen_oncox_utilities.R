@@ -2476,6 +2476,32 @@ phen_onco_xmap <- function(
       primary_site == "Other","Other/Unknown",
       as.character(primary_site))) |>
     #dplyr::mutate(primary_site = ot_tissue) |>
+    
+    
+    dplyr::mutate(ot_main_type = dplyr::if_else(
+      !is.na(ot_main_type) &
+      stringr::str_detect(
+        tolower(cui_name),
+        paste0(
+          "(bone giant cell tumor|chondroblastoma|",
+          "chondrosarcoma|",
+          "osteoblastoma|osteosarcoma)")
+      ),
+      "Bone_Cancer_NOS",
+      as.character(ot_main_type)
+    )) |>
+    dplyr::mutate(primary_site = dplyr::if_else(
+      !is.na(primary_site) &
+      stringr::str_detect(
+        tolower(cui_name),
+        paste0(
+          "(bone giant cell tumor|chondroblastoma|",
+          "chondrosarcoma|",
+          "osteoblastoma|osteosarcoma)")
+      ),
+      "Bone",
+      as.character(primary_site)
+    )) |>
     dplyr::mutate(ot_main_type =
                     dplyr::if_else(stringr::str_detect(tolower(cui_name),
                                                        "thyroid") &
@@ -3127,15 +3153,14 @@ phen_onco_xmap <- function(
         ) & !is.na(primary_site) & primary_site == "Peripheral Nervous System"
       )) |>
       dplyr::filter(!(
-        tolower(cui_name) %in% c(
-          ## Primary bone tumors → Bone, not Soft Tissue
-          "bone giant cell tumor",
-          "chondroblastoma",
-          "chondrosarcoma",
-          "mesenchymal chondrosarcoma",
-          "osteoblastoma",
-          "osteosarcoma"
-        ) & !is.na(primary_site) & primary_site == "Soft Tissue"
+        stringr::str_detect(
+          tolower(cui_name),
+          paste0(
+            "(bone giant cell tumor|chondroblastoma|",
+            "chondrosarcoma|",
+            "osteoblastoma|osteosarcoma)")
+        )
+        & !is.na(primary_site) & primary_site == "Soft Tissue"
       )) |>
       dplyr::filter(!(
         tolower(cui_name) %in% c(
