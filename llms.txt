@@ -44,12 +44,12 @@ cross-mappings with phenotype terms from
 [DO](https://disease-ontology.org/), and the [ICD10
 classification](https://www.who.int/standards/classifications/classification-of-diseases).
 
-As of late September 2026, the following ontology versions are used to
+As of late October 2026, the following ontology versions are used to
 create the mapping:
 
 - OncoTree (2025_10_03)
-- Experimental Factor Ontology v3.94.0 (2026-09-15)
-- Disease Ontology (v2026-08-31)
+- Experimental Factor Ontology v3.95.0 (2026-10-15)
+- Disease Ontology (v2026-09-31)
 
 The package offers a few pre-processed datasets, along with metadata,
 that the user can retrieve and use for their own projects or set-ups.

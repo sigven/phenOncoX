@@ -67,7 +67,7 @@ oncoterms <- phenOncoX::get_terms(
 nrow(oncoterms$records)
 ```
 
-    [1] 27533
+    [1] 27535
 
   
   
@@ -90,24 +90,24 @@ as.data.frame(oncoterms$records |>
 ```
 
                     primary_site num_terms
-    1                   Lymphoid      4356
+    1                   Lymphoid      4625
     2                Soft Tissue      2839
-    3              Head and Neck      2601
+    3              Head and Neck      2602
     4                  CNS/Brain      2468
-    5                    Myeloid      1944
-    6                       Skin      1883
+    5                       Skin      1883
+    6                    Myeloid      1673
     7                       Lung      1195
     8               Colon/Rectum      1122
-    9       Ovary/Fallopian Tube       938
+    9       Ovary/Fallopian Tube       939
     10                    Breast       819
-    11         Esophagus/Stomach       758
+    11         Esophagus/Stomach       759
     12                      Bone       679
     13     Bladder/Urinary Tract       497
     14                    Uterus       484
     15                     Liver       475
     16                    Kidney       472
     17 Peripheral Nervous System       468
-    18                  Pancreas       365
+    18                  Pancreas       366
     19             Biliary Tract       357
     20                    Cervix       287
     21                       Eye       270
@@ -194,10 +194,10 @@ sessionInfo()
 
     loaded via a namespace (and not attached):
      [1] jsonlite_2.0.0    dplyr_1.2.1       compiler_4.6.1    crayon_1.5.3
-     [5] tidyselect_1.2.1  phenOncoX_1.2.6   yaml_2.3.12       fastmap_1.2.0
-     [9] R6_2.6.1          generics_0.1.4    curl_8.0.0        knitr_1.52
+     [5] tidyselect_1.2.1  phenOncoX_1.2.7   yaml_2.3.12       fastmap_1.2.0
+     [9] R6_2.6.1          generics_0.1.4    curl_8.1.0        knitr_1.52
     [13] htmlwidgets_1.6.4 tibble_3.3.1      reactable_0.4.5   pillar_1.11.1
-    [17] rlang_1.3.0       lgr_0.5.2         reactR_0.6.1      xfun_0.61
+    [17] rlang_1.3.0       lgr_0.5.2         reactR_0.6.1      xfun_0.62
     [21] fs_2.1.0          otel_0.2.0        cli_3.6.6         withr_3.0.3
     [25] magrittr_2.0.5    crosstalk_1.2.2   digest_0.6.39     lifecycle_1.0.5
     [29] vctrs_0.7.3       evaluate_1.0.5    gargle_1.6.1      glue_1.8.1
