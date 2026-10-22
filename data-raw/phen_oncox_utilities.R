@@ -2669,13 +2669,23 @@ phen_onco_xmap <- function(
     )) |>
     dplyr::mutate(primary_site = dplyr::if_else(
       stringr::str_detect(tolower(cui_name),"leukemia") &
+        !stringr::str_detect(tolower(cui_name),"lymphoblastic leukemia") &
         !is.na(primary_site) &
         primary_site != "Myeloid",
       "Myeloid",
       as.character(primary_site)
     )) |>
+    dplyr::mutate(primary_site = dplyr::if_else(
+      stringr::str_detect(
+        tolower(cui_name),"lymphoblastic leukemia") &
+        !is.na(primary_site) &
+        primary_site != "Lymphoid",
+      "Lymphoid",
+      as.character(primary_site)
+    )) |>
     dplyr::mutate(ot_main_type = dplyr::if_else(
       stringr::str_detect(tolower(cui_name),"leukemia") &
+        !stringr::str_detect(tolower(cui_name),"lymphoblastic leukemia") &
         !is.na(primary_site) &
         primary_site != "Myeloid",
       "Blood_Cancer_NOS",
